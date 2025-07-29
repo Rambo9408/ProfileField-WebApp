@@ -1,0 +1,51 @@
+<div class="viewpnlCls width-460 padding-left-50 pull-left line-height-15">
+  <b>View Panels</b>
+
+  <table width="100%" class="visiblity-cls">
+    <tbody>
+      <tr>
+        <td>
+          <div class="radio-sec">
+            <input
+              type="radio"
+              name="viewPanelOption"
+              id="viewAllPanel"
+              [value]="1"
+              [(ngModel)]="selectedOption"
+            />
+          </div>
+          <div class="text-sec1">
+            <label for="viewAllPanel">View All Active Panels</label>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="radio-sec">
+            <input
+              type="radio"
+              name="viewPanelOption"
+              id="viewTargetPanel"
+              [value]="2"
+              [(ngModel)]="selectedOption"
+            />
+          </div>
+          <div class="text-sec1">
+            <label for="viewTargetPanel">View Panels Targeted to Type 1 Associations</label>
+
+            <div
+              id="panelTargetTypeOneAssociation"
+              class="panelTargetTypeOneAssociation full-sec"
+              [style.marginLeft.px]="25"
+              *ngIf="selectedOption == 2"
+            >
+              <!-- You can place additional dynamic content here -->
+              <p>Targeted Panels Info Goes Here</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,16 @@
+.midheader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;    
+}
+
+.left-anchor-tags {
+    display: flex;
+    gap: 10px;
+}
+
+.right-anchor-tags {
+    display: flex;
+    gap: 10px;
+    // margin-left: auto;
+}

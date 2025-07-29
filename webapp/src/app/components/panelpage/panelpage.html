@@ -1,0 +1,13 @@
+<div>
+    <div class="page-heading">
+        <img src="manage_volunteers_new.gif" alt="Logo" class="logo" />
+        <p class="page-name">Profile Layout Manager</p>
+    </div>
+    <div class="top-controls">
+        <app-panelview></app-panelview>
+        <app-panelaction></app-panelaction>
+    </div>
+    <div *ngFor="let pname of panelNames; let i = index">
+        <app-panellists [pname]="pname"></app-panellists>
+    </div>
+</div>

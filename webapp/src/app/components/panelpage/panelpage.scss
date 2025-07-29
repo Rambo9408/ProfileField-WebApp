@@ -1,0 +1,27 @@
+.page-heading {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.page-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    // border: 2px solid red;
+    padding: 10px;
+}
+
+.panel-list {
+    // border: 2px solid red;
+    padding: 10px;
+}

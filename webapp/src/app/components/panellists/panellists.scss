@@ -1,0 +1,50 @@
+.profile-panel {
+  margin: 15px 0;
+
+  .panel-header {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+
+    .toggle-icon {
+      margin-right: 10px;
+      color: #7ddc37;
+    }
+
+    .panel-actions {
+      display: flex;
+      gap: 5px;
+
+      .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+
+        img {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  .panel-body {
+    padding: 10px 20px;
+
+    .panel-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+
+      .panel-cell {
+        width: 48%;
+        padding: 4px 8px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+    }
+  }
+}
