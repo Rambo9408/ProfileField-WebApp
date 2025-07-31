@@ -1,14 +1,23 @@
-<div class="profile-panel" *ngFor="let panel of panelNames">
-  <div class="panel-header" (click)="togglePanel(panel._id!)">
-    <span class="toggle-icon">{{ openPanels[panel._id!] ? '▼' : '▶' }}</span>
-    <span class="panel-title">{{ panel.panelName }}</span>
-    <!-- <div class="panel-actions">
+<div class="profile-panel-container" cdkDropList (cdkDropListDropped)="dropPanel($event)">
+  <div class="profile-panel" *ngFor="let panel of panelNames" cdkDrag>
+    <div class="panel-header" (click)="togglePanel(panel._id!)">
+      <!-- <span class="material-icons toggle-icon">
+        {{ openPanels[panel._id!] ? 'expand_more' : 'chevron_right' }}
+      </span> -->
+      <span class="toggle-icon" style="font-size: 2.4rem;">
+        {{ openPanels[panel._id!] ? '▾' : '▸' }}
+      </span>
+
+
+      <span class="panel-title">{{ panel.panelName }}</span>
+      <!-- <div class="panel-actions">
       <button class="action-btn" title="Edit"><img src="assets/edit-icon.png" /></button>
       <button class="action-btn" title="Add"><img src="assets/add-icon.png" /></button>
     </div> -->
-  </div>
+    </div>
 
-  <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
-    <app-fielddetails *ngIf="panel.fieldId?.length" [fields]="panel.fieldId"></app-fielddetails>
+    <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
+      <app-fielddetails *ngIf="panel.fieldId?.length" [fields]="panel.fieldId"></app-fielddetails>
+    </div>
   </div>
 </div>

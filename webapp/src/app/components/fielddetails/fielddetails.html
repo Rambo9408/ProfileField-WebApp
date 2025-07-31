@@ -1,12 +1,16 @@
-<div class="panel-grid">
-  <div class="panel-column">
-    <div class="panel-cell" *ngFor="let field of leftFields">
+<div class="profile-field-container panel-grid">
+  <!-- Left Column -->
+  <div class="panel-column" cdkDropList id="leftColumn" #leftColumn="cdkDropList" [cdkDropListData]="leftFields"
+    [cdkDropListConnectedTo]="['rightColumn']" (cdkDropListDropped)="dropField($event)">
+    <div class="panel-cell" *ngFor="let field of leftFields" cdkDrag>
       {{ field.fieldName }}
     </div>
   </div>
 
-  <div class="panel-column">
-    <div class="panel-cell" *ngFor="let field of rightFields">
+  <!-- Right Column -->
+  <div class="panel-column" cdkDropList id="rightColumn" #rightColumn="cdkDropList" [cdkDropListData]="rightFields"
+    [cdkDropListConnectedTo]="['leftColumn']" (cdkDropListDropped)="dropField($event)">
+    <div class="panel-cell" *ngFor="let field of rightFields" cdkDrag>
       {{ field.fieldName }}
     </div>
   </div>

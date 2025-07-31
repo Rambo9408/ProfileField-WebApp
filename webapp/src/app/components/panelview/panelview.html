@@ -6,13 +6,7 @@
       <tr>
         <td>
           <div class="radio-sec">
-            <input
-              type="radio"
-              name="viewPanelOption"
-              id="viewAllPanel"
-              [value]="1"
-              [(ngModel)]="selectedOption"
-            />
+            <input type="radio" name="viewPanelOption" id="viewAllPanel" [value]="1" [(ngModel)]="selectedOption" />
           </div>
           <div class="text-sec1">
             <label for="viewAllPanel">View All Active Panels</label>
@@ -23,23 +17,13 @@
       <tr>
         <td>
           <div class="radio-sec">
-            <input
-              type="radio"
-              name="viewPanelOption"
-              id="viewTargetPanel"
-              [value]="2"
-              [(ngModel)]="selectedOption"
-            />
+            <input type="radio" name="viewPanelOption" id="viewTargetPanel" [value]="2" [(ngModel)]="selectedOption" />
           </div>
           <div class="text-sec1">
             <label for="viewTargetPanel">View Panels Targeted to Type 1 Associations</label>
 
-            <div
-              id="panelTargetTypeOneAssociation"
-              class="panelTargetTypeOneAssociation full-sec"
-              [style.marginLeft.px]="25"
-              *ngIf="selectedOption == 2"
-            >
+            <div id="panelTargetTypeOneAssociation" class="panelTargetTypeOneAssociation full-sec"
+              [style.marginLeft.px]="25" *ngIf="selectedOption == 2">
               <!-- You can place additional dynamic content here -->
               <p>Targeted Panels Info Goes Here</p>
             </div>

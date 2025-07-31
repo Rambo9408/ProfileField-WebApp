@@ -16,3 +16,5 @@ the above lib is used to gaurd the session login
 | `.toObject()`                   | Converts Mongoose doc → plain object |
 | `res.json(category.toObject())` | Safer, cleaner JSON output           |
 | `.lean()` in query              | Skips Mongoose doc creation entirely |
+
+npm install @angular/cdk :- this is used for drag drop(Component Development kit)
