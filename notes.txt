@@ -1,1 +1,18 @@
-sdefsdgf
+ng generate guard guards/auth
+the above lib is used to gaurd the session login 
+
+
+| Library                  | Use Case                           | Easy to Use     | Good for Production |
+| ------------------------ | ---------------------------------- | --------------  | ------------------- |
+| **Multer**               | Most common, Express-specific      | ✅              | ✅                  |
+| **Formidable**           | Advanced form parsing              | ⚠️ Medium       | ✅                  |
+| **Busboy**               | Low-level, high performance        | ❌              | ✅                  |
+| **Express-fileupload**   | Very simple, quick apps            | ✅              | ⚠️ Basic only       |
+| **Direct Cloud Uploads** | Upload directly to cloud (S3, GCS) | ❌ (more setup) | ✅                  |
+
+
+| Use Case                        | Why it's useful                      |
+| ------------------------------- | ------------------------------------ |
+| `.toObject()`                   | Converts Mongoose doc → plain object |
+| `res.json(category.toObject())` | Safer, cleaner JSON output           |
+| `.lean()` in query              | Skips Mongoose doc creation entirely |

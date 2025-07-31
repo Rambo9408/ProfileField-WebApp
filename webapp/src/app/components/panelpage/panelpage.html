@@ -7,7 +7,5 @@
         <app-panelview></app-panelview>
         <app-panelaction></app-panelaction>
     </div>
-    <div *ngFor="let pname of panelNames; let i = index">
-        <app-panellists [pname]="pname"></app-panellists>
-    </div>
+    <app-panellists [panelNames]="panelNames"></app-panellists>
 </div>

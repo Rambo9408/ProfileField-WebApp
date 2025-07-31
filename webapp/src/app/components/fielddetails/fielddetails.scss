@@ -1,0 +1,14 @@
+.panel-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.panel-column {
+  flex: 1;
+}
+
+.panel-cell {
+  padding: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 8px;
+}

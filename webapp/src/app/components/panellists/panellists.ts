@@ -2,10 +2,15 @@ import { Component, Input } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Fielddetails } from "../fielddetails/fielddetails";
+import { Fieldservice } from '../../services/fieldservice';
+import { Fieldinterface } from '../../interfaces/fieldinterface';
+import { Panelinterface } from '../../interfaces/panelinterface';
 
 @Component({
   selector: 'app-panellists',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, Fielddetails],
   templateUrl: './panellists.html',
   styleUrl: './panellists.scss',
   animations: [
@@ -13,7 +18,7 @@ import { CommonModule } from '@angular/common';
       state('open', style({
         height: '*',
         opacity: 1,
-        padding: '10px 20px',
+        padding: '10px 33px',
       })),
       state('closed', style({
         height: '0px',
@@ -26,22 +31,26 @@ import { CommonModule } from '@angular/common';
       ])
     ])
   ]
-
 })
 export class Panellists {
   isOpen = false;
-  @Input() pname !: string;
+  fields: Fieldinterface[] = [];
+  openPanels: { [panelId: string]: boolean } = {};  // Track open/closed panels
+  // fieldsMap: { [panelId: string]: Fieldinterface[] } = {};
 
-  fields = [
-    ['First Name', 'Last Name'],
-    ['Account Status', 'E-mail'],
-    ['Logs Participation', 'Password'],
-    ['Mobile', 'Receive Texts'],
-    ['Date Created', 'Date Archived'],
-  ];
+  @Input() panelNames: Panelinterface[] = [];
 
+  constructor(private fieldService: Fieldservice) { }
 
-  togglePanel(): void {
-    this.isOpen = !this.isOpen;
+  loadPanelFields(): void {
+    this.fieldService.getFields().subscribe(data => {
+      console.log("Fetched fields:", data);
+      this.fields = data;
+    });
   }
+
+  togglePanel(panelId: string): void {
+    this.openPanels[panelId] = !this.openPanels[panelId];
+  }
+
 }

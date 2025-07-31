@@ -1,0 +1,183 @@
+const FieldType = require('../models/fieldtype');
+const PanelType = require('../models/paneltype');
+
+const addFieldType = async (req, res) => {
+    try {
+        const { fieldName, panelId, colId } = req.body;
+
+        if (!fieldName || fieldName.trim() === '') {
+            return res.status(400).send({ message: "Field name is required." });
+        }
+
+        // Check if the panel exists
+        const panel = await PanelType.findById(panelId);
+        if (!panel) {
+            return res.status(404).send({ message: "Panel not found." });
+        }
+
+        // Get the number of existing fields in that panel to determine the orderId
+        const existingFieldCount = await FieldType.countDocuments({ panelId });
+
+        // Create and save new field
+        const newField = new FieldType({
+            fieldName: fieldName.trim(),
+            panelId,
+            colId,
+            orderId: existingFieldCount + 1
+        });
+
+        const savedField = await newField.save();
+
+        // Update the panel to include the new field ID
+        panel.fieldId.push(savedField._id);
+        await panel.save();
+
+        res.status(201).json({
+            message: "Field added and linked to panel successfully.",
+            data: savedField
+        });
+    } catch (err) {
+        console.error('Error adding field:', err);
+        res.status(500).send({
+            message: err.message || "Error adding field."
+        });
+    }
+};
+
+const addMultipleFieldTypes = async (req, res) => {
+    try {
+        const { panelId, fields } = req.body;
+console.log(req.body);
+
+        if (!Array.isArray(fields) || fields.length === 0) {
+            return res.status(400).send({ message: "An array of fields is required." });
+        }
+
+        const panel = await PanelType.findById(panelId);
+        console.log(panel);
+        
+        if (!panel) {
+            return res.status(404).send({ message: "Panel not found." });
+        }
+
+        // Get existing count to calculate proper orderId
+        let orderStart = await FieldType.countDocuments({ panelId });
+
+        const savedFields = [];
+
+        for (const field of fields) {
+            const { fieldName, colId } = field;
+
+            if (!fieldName || typeof fieldName !== 'string' || fieldName.trim() === '') continue;
+
+            const newField = new FieldType({
+                fieldName: fieldName.trim(),
+                panelId,
+                colId,
+                orderId: ++orderStart
+            });
+
+            const saved = await newField.save();
+
+            // Add to panel.fieldId
+            panel.fieldId.push(saved._id);
+            savedFields.push(saved);
+        }
+
+        await panel.save();
+
+        res.status(201).json({
+            message: "Multiple fields added and linked to panel successfully.",
+            data: savedFields
+        });
+    } catch (err) {
+        console.error('Error adding multiple fields:', err);
+        res.status(500).send({
+            message: err.message || "Error adding multiple fields."
+        });
+    }
+};
+
+const findField = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        if (id) {
+            const field = await FieldType.findById(id);
+
+            if (!panel) {
+                return res.status(404).send({ message: `No panel found with ID ${id}` });
+            }
+
+            return res.status(200).json(field);
+        }
+
+        const allFields = await FieldType.find();
+
+        res.status(200).json(allFields);
+    } catch (err) {
+        console.error("Find error:", err);
+        res.status(500).send({ message: err.message || "Error retrieving panel(s)." });
+    }
+};
+
+const updateFieldType = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { fieldName, colId, orderId } = req.body;
+
+        const field = await FieldType.findById(id);
+        if (!field) {
+            return res.status(404).send({ message: `No field found with ID ${id}` });
+        }
+
+        if (fieldName !== undefined) field.fieldName = fieldName.trim();
+        if (colId !== undefined) field.colId = colId;
+        if (orderId !== undefined) field.orderId = orderId;
+
+        const updated = await field.save();
+
+        res.status(200).json({
+            message: "Field updated successfully.",
+            data: updated
+        });
+    } catch (err) {
+        console.error("Error updating field:", err);
+        res.status(500).send({ message: err.message || "Error updating field." });
+    }
+};
+
+const deleteFieldType = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const field = await FieldType.findById(id);
+        if (!field) {
+            return res.status(404).send({ message: `No field found with ID ${id}` });
+        }
+
+        // Remove reference from Panel
+        await PanelType.findByIdAndUpdate(field.panelId, {
+            $pull: { fieldId: field._id }
+        });
+
+        // Delete the field itself
+        await FieldType.findByIdAndDelete(id);
+
+        res.status(200).json({
+            message: "Field deleted successfully."
+        });
+    } catch (err) {
+        console.error("Error deleting field:", err);
+        res.status(500).send({ message: err.message || "Error deleting field." });
+    }
+};
+
+
+module.exports = {
+    addFieldType,
+    findField,
+    addMultipleFieldTypes,
+    updateFieldType,
+    deleteFieldType
+};
