@@ -1,0 +1,126 @@
+.context-dialog-wrapper {
+    border: 5px solid #1976d2; // Material blue 700
+    padding: 20px;
+
+    .info-text {
+        font-size: 14px;
+        color:  rgb(0, 119, 0);
+        font-weight: bold;
+    }
+
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .dropdown-section {
+            .dropdown-label {
+                margin-right: 10px;
+                font-weight: bold;
+            }
+        }
+
+        .checkbox-section {
+
+            .checkbox-subsection {
+                margin-left: 40px;
+            }
+
+            .checkbox-label {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .editor-toolbar {
+        display: flex;
+        gap: 8px;
+        background-color: #f0f0f0;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+
+        .toolbar-button {
+            border: none;
+            background-color: #e2e2e2;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover {
+                background-color: #d1d1d1;
+            }
+        }
+    }
+
+    .editor-content {
+        min-height: 150px;
+        max-height: 250px;
+        /* Limit height to avoid overflow */
+        padding: 10px;
+        border: 1px solid #1976d2;
+        border-radius: 4px;
+        background-color: #fff;
+        font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        ;
+        outline: none;
+        white-space: pre-wrap;
+        overflow-y: auto;
+        /* Enables scroll if content is long */
+        word-break: break-word;
+        /* Break long words if needed */
+    }
+
+
+    .btn-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .dropdown-section,
+    .checkbox-section {
+        margin-top: 10px;
+    }
+
+    .required {
+        color: red;
+    }
+
+    .field-type-label {
+        margin: 10px 0;
+        font-weight: bold;
+    }
+
+    .field-type-toggle {
+        cursor: pointer;
+        color: #3f51b5;
+        font-size: 14px;
+        margin-left: 8px;
+    }
+
+    .field-type-options {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .long-text-limit {
+        width: 200px;
+        margin-top: 10px;
+    }
+
+    .field-type-options {
+        display: flex;
+        flex-direction: column;
+        border: 1px dotted #3f51b5;
+
+        mat-radio-button {
+            margin-bottom: 8px; // spacing between radios
+        }
+    }
+
+}

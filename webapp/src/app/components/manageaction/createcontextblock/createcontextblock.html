@@ -1,0 +1,49 @@
+<div class="context-dialog-wrapper">
+    <h2 mat-dialog-title>Create a Context Block</h2>
+
+    <div mat-dialog-content class="form-container">
+
+        <!-- Toolbar -->
+        <div class="editor-toolbar">
+            <button type="button" class="toolbar-button" (click)="formatText('bold')">B</button>
+            <button type="button" class="toolbar-button" (click)="formatText('italic')">I</button>
+            <button type="button" class="toolbar-button" (click)="formatText('underline')">U</button>
+            <button type="button" class="toolbar-button" (click)="formatText('insertUnorderedList')">•</button>
+            <button type="button" class="toolbar-button" (click)="formatText('insertOrderedList')">≡</button>
+            <button type="button" class="toolbar-button" (click)="formatText('createLink')">🔗</button>
+        </div>
+
+        <!-- Contenteditable div instead of textarea -->
+        <div class="editor-content" contenteditable="true" #editor placeholder="Type your content here..."></div>
+
+        <!-- Attachment checkbox -->
+        <mat-checkbox class="checkbox">
+            Include up to 10 attachments at the bottom of this Context Block.
+        </mat-checkbox>
+
+        <!-- Add to Panel dropdown -->
+        <div class="dropdown-section">
+            <label class="dropdown-label"><span class="required">*</span> Add to Panel:</label>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-select [(ngModel)]="selectedPanel" name="selectedPanel" required>
+                    <mat-option value="">Select One</mat-option>
+                    <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Volunteers checkbox -->
+        <div class="checkbox-section">
+            <label class="checkbox-label">Volunteers Profile Access:</label>
+            <mat-checkbox [(ngModel)]="volunteerAccess" name="volunteerAccess">
+                Allow volunteers to see this context block.
+            </mat-checkbox>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-group">
+            <button mat-raised-button color="primary" (click)="onCreate()">Create</button>
+            <button mat-button (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
+</div>

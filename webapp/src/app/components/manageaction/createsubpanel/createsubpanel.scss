@@ -1,0 +1,29 @@
+.full-width {
+  width: 100%;
+}
+
+.required-note {
+  color: red;
+}
+
+.section-label {
+  font-weight: bold;
+  display: block;
+  margin-top: 1rem;
+}
+
+.form-section {
+  margin-top: 1rem;
+}
+
+.dialog-container {
+  border: 5px solid #1976d2; // Material blue 700
+//   border-radius: 8px;
+  padding: 16px;
+}
+
+.mat-mdc-dialog-surface{
+    border-radius: 0px !important;
+    padding: 16px;
+}
+
