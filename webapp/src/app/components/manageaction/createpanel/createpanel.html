@@ -1,0 +1,41 @@
+<div class="dialog-container">
+    <h2 mat-dialog-title>Create a Panel</h2>
+    <div mat-dialog-content class="form-container">
+        <p class="required-note">*Required Items</p>
+        
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>*Panel Name</mat-label>
+            <input matInput [(ngModel)]="panelName" required>
+        </mat-form-field>
+        
+        <div class="form-section">
+            <label class="section-label">*Volunteer Visibility Settings:</label>
+            <mat-checkbox [(ngModel)]="hideFromVolunteers">Temporarily hide this panel from volunteers.</mat-checkbox><br>
+            <mat-radio-group [(ngModel)]="visibility">
+                <mat-radio-button value="all">Grant access to all volunteers.</mat-radio-button><br>
+                <mat-radio-button value="type1">Limit access to volunteers by Type 1 Association.</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        
+        <div class="form-section">
+            <label class="section-label">*Show on Import Page?</label>
+            <mat-radio-group [(ngModel)]="showOnImport">
+                <mat-radio-button value="yes">Yes</mat-radio-button>
+                <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        
+        <div class="form-section">
+            <label class="section-label">*Open Panel on Page Load?</label>
+            <mat-radio-group [(ngModel)]="openOnLoad">
+                <mat-radio-button value="yes">Yes</mat-radio-button>
+                <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+    
+    <div mat-dialog-actions align="center">
+        <button mat-raised-button color="primary" (click)="onCreate()">Create</button>
+        <button mat-button (click)="onCancel()">Cancel</button>
+    </div>
+</div>

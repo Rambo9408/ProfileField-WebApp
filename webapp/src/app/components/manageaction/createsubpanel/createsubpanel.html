@@ -1,0 +1,25 @@
+<div class="dialog-container">
+    <h2 mat-dialog-title>Create a Sub-Panel</h2>
+    <div mat-dialog-content class="form-container">
+        <p class="required-note">*Required Items</p>
+        <form (ngSubmit)="onCreate()" #form="ngForm">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>*Sub-panel Name</mat-label>
+                <input matInput [(ngModel)]="subPanelName" name="subPanelName" placeholder="Enter name" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>*Add to Panel</mat-label>
+                <mat-select name="selectedPanel" [(ngModel)]="selectedPanel" placeholder="Select Panel" required>
+                    <mat-option value="">Select One</mat-option>
+                    <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div mat-dialog-actions align="center">
+                <button mat-raised-button color="primary" type="submit">Create</button>
+                <button mat-button (click)="onCancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

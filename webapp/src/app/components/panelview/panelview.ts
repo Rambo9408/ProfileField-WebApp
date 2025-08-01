@@ -9,6 +9,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './panelview.scss'
 })
 export class Panelview {
-selectedOption: any;
+selectedOption: number = 1;
 
 }

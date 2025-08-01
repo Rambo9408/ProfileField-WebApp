@@ -13,6 +13,7 @@ export class Fieldservice {
   private getUrl = "http://localhost:3000/api/fields";
   private addUrl = "http://localhost:3000/api/addFields";
   private updateUrl = "http://localhost:3000/api/updateField";
+  private updateOrderUrl = "http://localhost:3000/api/updateFieldOrder";
   private deleteUrl = "http://localhost:3000/api/deleteField";
 
   constructor(private http: HttpClient) { }
@@ -54,6 +55,11 @@ export class Fieldservice {
 
   deleteField(_id: string): Observable<Fieldinterface> {
     return this.http.delete<Fieldinterface>(`${this.deleteUrl}/${_id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateFieldOrder(fields: Fieldinterface[]): Observable<Fieldinterface[]> {
+    return this.http.put<Fieldinterface[]>(this.updateOrderUrl, fields)
       .pipe(catchError(this.handleError));
   }
 }

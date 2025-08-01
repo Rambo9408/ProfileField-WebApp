@@ -47,7 +47,7 @@ const addFieldType = async (req, res) => {
 const addMultipleFieldTypes = async (req, res) => {
     try {
         const { panelId, fields } = req.body;
-console.log(req.body);
+        console.log(req.body);
 
         if (!Array.isArray(fields) || fields.length === 0) {
             return res.status(400).send({ message: "An array of fields is required." });
@@ -55,7 +55,7 @@ console.log(req.body);
 
         const panel = await PanelType.findById(panelId);
         console.log(panel);
-        
+
         if (!panel) {
             return res.status(404).send({ message: "Panel not found." });
         }
@@ -173,11 +173,39 @@ const deleteFieldType = async (req, res) => {
     }
 };
 
+const updateFieldOrder = async (req, res) => {
+    try {
+        const fields = req.body;
+
+        if (!Array.isArray(fields) || fields.length === 0) {
+            return res.status(400).send({ message: "An array of fields with orderId is required." });
+        }
+
+        for (const field of fields) {
+            const { _id, orderId, colId } = field;
+
+            if (!_id || orderId === undefined || colId === undefined) continue;
+
+            await FieldType.findByIdAndUpdate(_id, { orderId, colId });
+        }
+
+        const updatedField = await FieldType.find();
+        res.status(200).json({
+            message: "Field order updated successfully.",
+            updatedField
+        });
+
+    } catch (err) {
+        console.error("Error deleting field:", err);
+        res.status(500).send({ message: err.message || "Error deleting field." });
+    }
+}
 
 module.exports = {
     addFieldType,
     findField,
     addMultipleFieldTypes,
     updateFieldType,
-    deleteFieldType
+    deleteFieldType,
+    updateFieldOrder
 };

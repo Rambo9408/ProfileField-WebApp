@@ -11,6 +11,7 @@ export class Panelservice {
   private getUrl = "http://localhost:3000/api/panel";
   private addUrl = "http://localhost:3000/api/addPanel";
   private updateUrl = "http://localhost:3000/api/updatePanel";
+  private updateOrderUrl = "http://localhost:3000/api/updatePanelOrder";
   private deleteUrl = "http://localhost:3000/api/deletePanel";
 
   constructor(private http: HttpClient) { }
@@ -33,5 +34,9 @@ export class Panelservice {
 
   deletePanel(_id: string): Observable<Panelinterface> {
     return this.http.delete<Panelinterface>(`${this.deleteUrl}/${_id}`);
+  }
+  
+  updatePanelOrder(panels: Panelinterface[]): Observable<Panelinterface[]> {
+    return this.http.put<Panelinterface[]>(this.updateOrderUrl, panels);
   }
 }

@@ -6,11 +6,14 @@ import { Fielddetails } from "../fielddetails/fielddetails";
 import { Fieldservice } from '../../services/fieldservice';
 import { Fieldinterface } from '../../interfaces/fieldinterface';
 import { Panelinterface } from '../../interfaces/panelinterface';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Panelservice } from '../../services/panelservice';
 
 @Component({
   selector: 'app-panellists',
   standalone: true,
-  imports: [CommonModule, FormsModule, Fielddetails],
+  imports: [CommonModule, FormsModule, Fielddetails, DragDropModule],
   templateUrl: './panellists.html',
   styleUrl: './panellists.scss',
   animations: [
@@ -40,7 +43,7 @@ export class Panellists {
 
   @Input() panelNames: Panelinterface[] = [];
 
-  constructor(private fieldService: Fieldservice) { }
+  constructor(private fieldService: Fieldservice, private panelService : Panelservice) { }
 
   loadPanelFields(): void {
     this.fieldService.getFields().subscribe(data => {
@@ -51,6 +54,25 @@ export class Panellists {
 
   togglePanel(panelId: string): void {
     this.openPanels[panelId] = !this.openPanels[panelId];
+  }
+
+  dropPanel(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.panelNames, event.previousIndex, event.currentIndex);
+
+    this.panelNames.forEach((panel, index) => {
+      panel.orderId = index + 1;
+    });
+
+    console.log("Updated panel order:", this.panelNames);
+
+    this.panelService.updatePanelOrder(this.panelNames).subscribe({
+      next: (response) => {
+        console.log("Panel order updated successfully:", response);
+      },
+      error: (error) => {
+        console.error("Error updating panel order:", error);
+      }
+    });
   }
 
 }

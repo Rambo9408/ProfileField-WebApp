@@ -147,10 +147,44 @@ const find = async (req, res) => {
     }
 };
 
+const updatePanelOrder = async (req, res) => {
+    try {
+        const panels = req.body;
+        
+        if (!Array.isArray(panels) || panels.length === 0) {
+            return res.status(400).send({ message: "Request body must be a non-empty array of panels." });
+        }
+
+        // Validate that all panels have an orderId
+        for (const panel of panels) {
+            if (typeof panel.orderId !== 'number') {
+                return res.status(400).send({ message: "Each panel must have a valid orderId." });
+            }
+        }
+
+        // Update each panel's orderId
+        const updatePromises = panels.map(panel => {
+            return PanelTypes.findByIdAndUpdate(panel._id, { orderId: panel.orderId }, { new: true });
+        });
+
+        const updatedPanels = await Promise.all(updatePromises);
+
+        res.status(200).json({
+            message: "Panel order updated successfully.",
+            data: updatedPanels
+        });
+        
+    } catch (err) {
+        console.error("Find error:", err);
+        res.status(500).send({ message: err.message || "Error retrieving panel(s)." });
+    }
+}
+
 module.exports = {
     addPanelType,
     updatePanelType,
     deletePanelType,
     addMultiplePanels,
-    find
+    find,
+    updatePanelOrder
 };
