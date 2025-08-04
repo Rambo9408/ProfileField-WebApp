@@ -1,5 +1,10 @@
 <div class="dialog-container">
-    <h2 mat-dialog-title>Create a Sub-Panel</h2>
+    <div class="hedder-content">
+        <h2 mat-dialog-title><strong>Sub-Panel</strong></h2>
+        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
     <div mat-dialog-content class="form-container">
         <p class="required-note">*Required Items</p>
         <form (ngSubmit)="onCreate()" #form="ngForm">

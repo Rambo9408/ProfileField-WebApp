@@ -1,23 +1,44 @@
 <div class="profile-panel-container" cdkDropList (cdkDropListDropped)="dropPanel($event)">
   <div class="profile-panel" *ngFor="let panel of panelNames" cdkDrag>
-    <div class="panel-header" (click)="togglePanel(panel._id!)">
+    <div class="panel-header">
       <!-- <span class="material-icons toggle-icon">
         {{ openPanels[panel._id!] ? 'expand_more' : 'chevron_right' }}
       </span> -->
-      <span class="toggle-icon" style="font-size: 2.1rem;">
+      <span class="toggle-icon" (click)="togglePanel(panel._id!)" style="font-size: 2.1rem;">
         {{ openPanels[panel._id!] ? '▾' : '▸' }}
       </span>
 
-
-      <span class="panel-title">{{ panel.panelName }}</span>
-      <!-- <div class="panel-actions">
-      <button class="action-btn" title="Edit"><img src="assets/edit-icon.png" /></button>
-      <button class="action-btn" title="Add"><img src="assets/add-icon.png" /></button>
-    </div> -->
+      <div class="panel-header-content">
+        <span class="panel-title">{{ panel.panelName }}</span>
+        <div class="panel-img-icon" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
+          <div class="panel-img">
+            <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Panel" align="absmiddle" alt="&nbsp;"
+              class="action-icon" (click)="editPanel(panel._id!)" />
+          </div>
+          <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName) || panel.panelName === 'Name & Contact Details'">
+            <img src="attachment_link.gif" width="23" height="23" title="Create a Sub-panel" align="absmiddle"
+              alt="&nbsp;" class="action-icon" (click)="createSubPanel(panel._id!)" />
+          </div>
+          <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName)">
+            <img src="clone question.png" width="23" height="23" title="Clone a Panel" align="absmiddle" alt="&nbsp;"
+              class="action-icon" (click)="addField(panel._id!)" />
+          </div>
+          <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName)">
+            <img src="delete_large.png" width="23" height="23" title="Delete this Panel" align="absmiddle"
+              alt="&nbsp;" class="action-icon" (click)="deletePanel(panel._id!)" />
+          </div>
+        </div>
+      </div>
     </div>
-
     <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
-      <app-fielddetails *ngIf="panel.fieldId?.length" [fields]="panel.fieldId"></app-fielddetails>
+      <div *ngIf="panel.fieldId?.length; else nofieldAddedDisplay" class="panel-actions">
+        <app-fielddetails [fields]="panel.fieldId"></app-fielddetails>
+      </div>
+      <ng-template #nofieldAddedDisplay>
+        <span>
+          No Fields Added
+        </span>
+      </ng-template>
     </div>
   </div>
 </div>

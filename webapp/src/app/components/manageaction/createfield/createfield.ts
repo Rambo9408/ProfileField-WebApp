@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { Panelservice } from '../../../services/panelservice';
+import { Subpanelservice } from '../../../services/subpanelservice';
+import { Panelinterface } from '../../../interfaces/panelinterface';
 
 @Component({
   selector: 'app-createfield',
@@ -22,21 +26,23 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatInputModule,
     CommonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ],
   templateUrl: './createfield.html',
   styleUrl: './createfield.scss'
 })
 export class Createfield {
-  panelName = '';
+  fieldName = '';
   fieldDescription = '';
   fieldType !: any;
   longTextLimit !: any;
   editPanelImport = '';
   archivingAccount = '';
-  selectedPanel = '';
+  panelId = '';
+  selectedSubPanel = '';
   selectedColumnWidth = '';
-  staffAccess = '';
+  staffAccess = 'all';
   volunteerCanSee = false;
   radioGroup = false;
   volunteerCanEdit = false;
@@ -48,14 +54,28 @@ export class Createfield {
   volunteerQuickAccess = false;
   volunteerReviewRequired = false;
 
-  panels = ['Panel 1', 'Panel 2', 'Panel 3'];
-  columnWidths = ['25%', '50%', '75%', '100%'];
+  panels: Panelinterface[] = [];
+  columnWidths = [50 , 100];
 
-  constructor(public dialogRef : MatDialogRef<Createfield>) { }
+  constructor(
+    public dialogRef: MatDialogRef<Createfield>,
+    private panelService: Panelservice,
+    private subPanelService: Subpanelservice,
+    private cdRef: ChangeDetectorRef
+  ) { }
 
-  onCreate(): void {
-    console.log('Field created with panel:', this.selectedPanel);
+  ngOnInit(): void {
+    this.panelService.getPanels().subscribe((panels : Panelinterface[]) => {
+      // this.panels = panels.filter(panel => panel.isRemovable).map(panel => panel.panelName);
+      this.panels = panels.filter(panel => panel.isRemovable);
+      this.cdRef.detectChanges();
+    });
+  }
+
+  onCreate(fieldForm: NgForm): void {
+    console.log('Field created with panel:', fieldForm.value);
     // Logic to handle field creation
+    this.dialogRef.close(fieldForm.value);
   }
   onCancel(): void {
     this.dialogRef.close();

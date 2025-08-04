@@ -3,26 +3,36 @@ const PanelType = require('../models/paneltype');
 
 const addFieldType = async (req, res) => {
     try {
-        const { fieldName, panelId, colId } = req.body;
+        const data = req.body;
+        console.log('Adding field with data:', data);
 
-        if (!fieldName || fieldName.trim() === '') {
+        if (!data.fieldName || data.fieldName.trim() === '') {
             return res.status(400).send({ message: "Field name is required." });
         }
 
         // Check if the panel exists
-        const panel = await PanelType.findById(panelId);
+        const panel = await PanelType.findById(data.panelId);
         if (!panel) {
             return res.status(404).send({ message: "Panel not found." });
         }
 
         // Get the number of existing fields in that panel to determine the orderId
-        const existingFieldCount = await FieldType.countDocuments({ panelId });
+        const existingFieldCount = await FieldType.countDocuments({ panelId: data.panelId });
+
+        // Get the last colId in the panel
+        const existingFieldInPanel = await PanelType.findById(data.panelId).populate('fieldId');
+        const lastColId = existingFieldInPanel.fieldId.length > 0
+            ? existingFieldInPanel.fieldId[existingFieldInPanel.fieldId.length - 1].colId
+            : 0;
 
         // Create and save new field
         const newField = new FieldType({
-            fieldName: fieldName.trim(),
-            panelId,
-            colId,
+            fieldName: data.fieldName.trim(),
+            panelId: data.panelId,
+            fieldDescription: data.fieldDescription ? data.fieldDescription.trim() : '',
+            fieldType: data.fieldType,
+            colWidth: data.selectedColumnWidth || 100,
+            colId: lastColId === 0 ? 1 : 0,
             orderId: existingFieldCount + 1
         });
 
@@ -47,14 +57,12 @@ const addFieldType = async (req, res) => {
 const addMultipleFieldTypes = async (req, res) => {
     try {
         const { panelId, fields } = req.body;
-        console.log(req.body);
 
         if (!Array.isArray(fields) || fields.length === 0) {
             return res.status(400).send({ message: "An array of fields is required." });
         }
 
         const panel = await PanelType.findById(panelId);
-        console.log(panel);
 
         if (!panel) {
             return res.status(404).send({ message: "Panel not found." });

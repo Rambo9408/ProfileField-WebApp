@@ -1,4 +1,4 @@
-<div class="profile-field-container panel-grid">
+<div *ngIf="leftFields && rightFields" class="profile-field-container panel-grid">
   <!-- Left Column -->
   <div class="panel-column" cdkDropList #leftColumn="cdkDropList" [cdkDropListData]="leftFields"
     [cdkDropListConnectedTo]="[rightColumn]" (cdkDropListDropped)="dropField($event)">
@@ -11,6 +11,14 @@
   <div class="panel-column" cdkDropList #rightColumn="cdkDropList" [cdkDropListData]="rightFields"
     [cdkDropListConnectedTo]="[leftColumn]" (cdkDropListDropped)="dropField($event)">
     <div class="panel-cell" *ngFor="let field of rightFields" cdkDrag>
+      {{ field.fieldName }}
+    </div>
+  </div>
+</div>
+
+<div *ngIf="fullWidthField?.length" class="profile-field-container panel-grid">
+  <div class="panel-column">
+    <div class="panel-cell" *ngFor="let field of fullWidthField">
       {{ field.fieldName }}
     </div>
   </div>

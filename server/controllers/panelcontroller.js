@@ -36,8 +36,9 @@ const addPanelType = async (req, res) => {
 const updatePanelType = async (req, res) => {
     try {
         const id = req.params.id;
-        const { panelName, fieldId, orderId } = req.body;
-
+        const updateData = req.body;
+        // const { panelName, fieldId, orderId } = req.body;
+        console.log("Add Panel Request Body:", req.body);
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).send({ message: "Data to update cannot be empty." });
         }
@@ -47,9 +48,13 @@ const updatePanelType = async (req, res) => {
             return res.status(404).send({ message: `Cannot update panel with ID ${id}. Panel not found.` });
         }
 
-        existingPanel.panelName = panelName ?? existingPanel.panelName;
-        existingPanel.fieldId = fieldId ?? existingPanel.fieldId;
-        existingPanel.orderId = orderId ?? existingPanel.orderId;
+        // existingPanel.panelName = panelName ?? existingPanel.panelName;
+        // existingPanel.fieldId = fieldId ?? existingPanel.fieldId;
+        // existingPanel.orderId = orderId ?? existingPanel.orderId;
+
+        Object.keys(updateData).forEach((key) => {
+            existingPanel[key] = updateData[key];
+        });
 
         const updatedPanel = await existingPanel.save();
 
@@ -127,7 +132,7 @@ const find = async (req, res) => {
 
         if (id) {
             const panel = await PanelTypes.findById(id)
-                .populate("fieldId", "fieldName colId orderId");
+                .populate("fieldId", "-_id -createdAt -updatedAt -__v");
 
             if (!panel) {
                 return res.status(404).send({ message: `No panel found with ID ${id}` });
@@ -138,7 +143,7 @@ const find = async (req, res) => {
 
         const allPanels = await PanelTypes.find()
             .sort({ orderId: 1 })
-            .populate("fieldId", "fieldName colId orderId");
+            .populate("fieldId", "-_id -createdAt -updatedAt -__v");
 
         res.status(200).json(allPanels);
     } catch (err) {
@@ -150,7 +155,7 @@ const find = async (req, res) => {
 const updatePanelOrder = async (req, res) => {
     try {
         const panels = req.body;
-        
+
         if (!Array.isArray(panels) || panels.length === 0) {
             return res.status(400).send({ message: "Request body must be a non-empty array of panels." });
         }
@@ -173,7 +178,7 @@ const updatePanelOrder = async (req, res) => {
             message: "Panel order updated successfully.",
             data: updatedPanels
         });
-        
+
     } catch (err) {
         console.error("Find error:", err);
         res.status(500).send({ message: err.message || "Error retrieving panel(s)." });

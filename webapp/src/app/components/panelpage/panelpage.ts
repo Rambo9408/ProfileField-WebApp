@@ -15,25 +15,28 @@ import { Panelinterface } from '../../interfaces/panelinterface';
 export class Panelpage {
 
   panelNames !: Panelinterface[];
-  
+
   constructor(private panelService: Panelservice, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadPanelNames();
+    this.panelService.refreshPanels$.subscribe(() => {
+      this.loadPanelNames();
+    });
   }
 
   loadPanelNames(): void {
     this.panelService.getPanels().subscribe({
       next: (data: Panelinterface[]) => {
         this.panelNames = data;
-        console.log("Panel Names:", this.panelNames);
+        // console.log("Panel Names:", this.panelNames);
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error("Error loading panel names:", error);
       }
     })
-   
+
   }
 
 }

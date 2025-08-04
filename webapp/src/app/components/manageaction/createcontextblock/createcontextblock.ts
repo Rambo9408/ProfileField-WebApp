@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
@@ -22,7 +23,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatInputModule,
     CommonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ],
   templateUrl: './createcontextblock.html',
   styleUrl: './createcontextblock.scss'
@@ -34,7 +36,7 @@ export class Createcontextblock {
   panels = ['Panel 1', 'Panel 2', 'Panel 3'];
 
 
-  constructor(private dialogRef: MatDialogRef<Createcontextblock>) { }
+  constructor(public dialogRef: MatDialogRef<Createcontextblock>) { }
   
   onCancel(): void {
       this.dialogRef.close();

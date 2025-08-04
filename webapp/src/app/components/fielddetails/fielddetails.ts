@@ -16,12 +16,13 @@ export class Fielddetails {
   @Input() fields !: Fieldinterface[];
   leftFields: Fieldinterface[] = [];
   rightFields: Fieldinterface[] = [];
+  fullWidthField: Fieldinterface[] = [];
 
   constructor(private fieldService: Fieldservice) { }
 
   ngOnChanges(): void {
     if (!this.fields) return;
-    const fieldsCopy = [...this.fields];
+    const fieldsCopy = [...this.fields];    
     // Reset first
     this.leftFields = fieldsCopy
       .filter(f => f.colId === 0)
@@ -31,19 +32,19 @@ export class Fielddetails {
       .filter(f => f.colId === 1)
       .sort((a, b) => a.orderId - b.orderId);
 
-    console.log('Left Fields:', this.leftFields);
-    console.log('Right Fields:', this.rightFields);
+    if (this.leftFields.length === 0 && this.rightFields.length === 0) {
+      this.fullWidthField = fieldsCopy;
+    } else {
+      this.fullWidthField = [];
+    }
   }
 
   dropField(event: CdkDragDrop<Fieldinterface[]>) {
-    
+
     if (event.previousContainer === event.container) {
       // Moved within the same list
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Moved between left and right columns
-      console.log("Moved between left and right columns");
-      
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -60,9 +61,6 @@ export class Fielddetails {
     // Update orderId after reordering
     this.leftFields.forEach((field, index) => field.orderId = index + 1);
     this.rightFields.forEach((field, index) => field.orderId = index + 1);
-
-    console.log("Updated left:", this.leftFields);
-    console.log("Updated right:", this.rightFields);
 
     const updatedFields = [...this.leftFields, ...this.rightFields];
     this.fieldService.updateFieldOrder(updatedFields).subscribe({

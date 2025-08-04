@@ -3,13 +3,33 @@
 
   .panel-header {
     padding: 10px;
-    cursor: pointer;
+    // cursor: pointer;
     display: flex;
     align-items: center;
     font-weight: bold;
 
+    .panel-header-content {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .panel-img-icon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        // img {
+        //   width: 23px;
+        //   height: 23px;
+        //   cursor: pointer;
+        // }
+      }
+    }
+
     .toggle-icon {
       // margin: 6px 10px 10px 0px;
+      cursor: pointer;
       color: #66cc33;
     }
 
@@ -31,6 +51,11 @@
   }
 
   .panel-body {
-    padding: 10px 20px;
+    padding: 10px 0px 10px 40px;
+    width: 92%;
   }
+}
+
+.action-icon {
+  cursor: pointer;
 }

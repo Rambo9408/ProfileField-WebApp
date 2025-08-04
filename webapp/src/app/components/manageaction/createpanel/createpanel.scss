@@ -18,12 +18,17 @@
 
 .dialog-container {
   border: 5px solid #1976d2; // Material blue 700
-//   border-radius: 8px;
+  //   border-radius: 8px;
   padding: 16px;
 }
 
-.mat-mdc-dialog-surface{
-    border-radius: 0px !important;
-    padding: 16px;
+.hedder-content {
+  display: flex;
+  justify-content: space-between;
+  // align-items: center;
 }
 
+.mat-mdc-dialog-surface {
+  border-radius: 0px !important;
+  padding: 16px;
+}

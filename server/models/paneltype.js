@@ -12,8 +12,28 @@ const PanelTypeSchema = new mongoose.Schema(
             ref: "FieldType",
             required: false,
         }],
+        subpanelId: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SubPanel",
+            required: false,
+        }],
         orderId: {
             type: Number,
+            required: false
+        },
+        isRemovable: {
+            type: Boolean,
+            default: true,
+            required: false
+        },
+        isPanelOpen: {
+            type: Boolean,
+            default: true,
+            required: false
+        },
+        isShownOnImport: {
+            type: Boolean,
+            default: true,
             required: false
         }
     },

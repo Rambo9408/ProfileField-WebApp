@@ -1,165 +1,186 @@
 <div class="context-dialog-wrapper">
-    <h2 mat-dialog-title><strong>Create a Field</strong></h2>
+    <div class="hedder-content">
+        <h2 mat-dialog-title><strong>Create a Field</strong></h2>
+        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
 
     <div mat-dialog-content class="form-container">
         <p class="required">*Required Items</p>
+        <form #fieldForm="ngForm" (ngSubmit)="onCreate(fieldForm)">
+            <!-- Panel Name -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Field Name</mat-label>
+                <input matInput [(ngModel)]="fieldName" name="fieldName" required>
+            </mat-form-field>
+            <br>
+            <!-- Field Description -->
+            <span class="info-text">
+                Individuals can choose to see this when viewing and entering data into the field.
+            </span>
+            <br>
 
-        <!-- Panel Name -->
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Field Name</mat-label>
-            <input matInput [(ngModel)]="panelName" required>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Field Description</mat-label>
+                <input matInput [(ngModel)]="fieldDescription" name="fieldDescription" required>
+            </mat-form-field>
 
-        <!-- Field Description -->
-        <span class="info-text">
-            Individuals can choose to see this when viewing and entering data into the field.
-        </span>
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Field Description</mat-label>
-            <input matInput [(ngModel)]="fieldDescription" required>
-        </mat-form-field>
-
-        <!-- Field Type -->
-        <!-- Field Type -->
-        <div class="field-type-label">
-            <label><span class="required">*</span> Field Type
+            <!-- Field Type -->
+            <!-- Field Type -->
+            <div class="field-type-label">
+                <label><span class="required">*</span> Field Type</label>
                 <a class="field-type-toggle" (click)="radioGroupEnable()">[Select]</a>
-            </label>
-        </div>
-
-        <div class="field-type-options" *ngIf="radioGroup">
-            <mat-radio-group [(ngModel)]="fieldType" name="fieldType" required>
-                <mat-radio-button value="age">Current Age (Converts birthdate to age in years)</mat-radio-button>
-                <mat-radio-button value="date">Date (Select a date from a calendar.)</mat-radio-button>
-                <mat-radio-button value="email">E-mail Address</mat-radio-button>
-                <mat-radio-button value="file">File Attachment(s)</mat-radio-button>
-                <mat-radio-button value="sign">Document Signing</mat-radio-button>
-                <mat-radio-button value="phone">Phone Number (Enter any 10 digit phone number.)</mat-radio-button>
-                <mat-radio-button value="photo">Photo Upload</mat-radio-button>
-                <mat-radio-button value="number">Quantitative Field (Type a number into a box.)</mat-radio-button>
-                <mat-radio-button value="qsingle-quant">Quantitative - Single Select</mat-radio-button>
-                <mat-radio-button value="qmulti-quant">Quantitative - Multi-Select</mat-radio-button>
-                <mat-radio-button value="qsingle-qual">Qualitative - Single Select</mat-radio-button>
-                <mat-radio-button value="qmulti-qual">Qualitative - Multi-Select</mat-radio-button>
-                <mat-radio-button value="text">Free Text (Enter up to 120 characters.)</mat-radio-button>
-                <mat-radio-button value="encrypted">Encrypted Text (Enter up to 120 characters.)</mat-radio-button>
-                <mat-radio-button value="longText">Text - Long</mat-radio-button>
-                <mat-radio-button value="state">U.S. State or Territory</mat-radio-button>
-            </mat-radio-group>
-
-            <!-- Conditional input for long text -->
-            <mat-form-field appearance="outline" *ngIf="fieldType === 'longText'" class="long-text-limit">
-                <mat-label>Character Limit</mat-label>
-                <input matInput type="number" [(ngModel)]="longTextLimit" min="1" max="1000">
-            </mat-form-field>
-        </div>
-
-
-        <!-- Column Width -->
-        <div class="dropdown-section">
-            <label class="dropdown-label"><span class="required">*</span> Column Width:</label>
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-select [(ngModel)]="selectedColumnWidth" name="selectedColumnWidth" required>
-                    <mat-option value="">Select One</mat-option>
-                    <mat-option *ngFor="let width of columnWidths" [value]="width">{{ width }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <!-- Add to Panel -->
-        <div class="dropdown-section">
-            <label class="dropdown-label"><span class="required">*</span> Add to Panel:</label>
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-select [(ngModel)]="selectedPanel" name="selectedPanel" required>
-                    <mat-option value="">Select One</mat-option>
-                    <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <!-- Volunteer Access -->
-        <div class="checkbox-section">
-            <label class="checkbox-label">Volunteers Profile Access:</label>
-            <br />
-
-            <mat-checkbox [(ngModel)]="volunteerCanSee" name="volunteerCanSee">
-                Allow volunteers to see this field.
-            </mat-checkbox>
-
-            <mat-checkbox [(ngModel)]="volunteerCanEdit" name="volunteerCanEdit">
-                Allow volunteers to populate and edit this field.
-            </mat-checkbox>
-
-            <div class="checkbox-subsection">
-                <mat-checkbox [(ngModel)]="volunteerLockAfterEdit" name="volunteerLockAfterEdit"
-                    [disabled]="!volunteerCanEdit">
-                    Once this field is populated, lock the field for the volunteer. Do not allow them to edit unless
-                    required for review.
-                </mat-checkbox>
-
-                <mat-checkbox [(ngModel)]="volunteerQuickAccess" name="volunteerQuickAccess"
-                    [disabled]="!volunteerCanEdit">
-                    Add this field to volunteers' Quick Access To Do list.
-                </mat-checkbox>
-
-                <mat-checkbox [(ngModel)]="volunteerReviewRequired" name="volunteerReviewRequired"
-                    [disabled]="!volunteerCanEdit">
-                    Require this field to be reviewed by volunteers when assigned to a Type 1 Association item.
-                </mat-checkbox>
             </div>
-        </div>
 
-         <!-- Volunteer Enrollment Options -->
-        <div class="checkbox-section">
-            <label class="checkbox-label">Volunteer Enrollment Options:</label>
-            <br />
+            <div class="field-type-options" *ngIf="radioGroup">
+                <mat-radio-group [(ngModel)]="fieldType" name="fieldType" required>
+                    <mat-radio-button value="age">Current Age (Converts birthdate to age in years)</mat-radio-button>
+                    <mat-radio-button value="date">Date (Select a date from a calendar.)</mat-radio-button>
+                    <mat-radio-button value="email">E-mail Address</mat-radio-button>
+                    <mat-radio-button value="file">File Attachment(s)</mat-radio-button>
+                    <mat-radio-button value="sign">Document Signing</mat-radio-button>
+                    <mat-radio-button value="phone">Phone Number (Enter any 10 digit phone number.)</mat-radio-button>
+                    <mat-radio-button value="photo">Photo Upload</mat-radio-button>
+                    <mat-radio-button value="number">Quantitative Field (Type a number into a box.)</mat-radio-button>
+                    <mat-radio-button value="qsingle-quant">Quantitative - Single Select</mat-radio-button>
+                    <mat-radio-button value="qmulti-quant">Quantitative - Multi-Select</mat-radio-button>
+                    <mat-radio-button value="qsingle-qual">Qualitative - Single Select</mat-radio-button>
+                    <mat-radio-button value="qmulti-qual">Qualitative - Multi-Select</mat-radio-button>
+                    <mat-radio-button value="text">Free Text (Enter up to 120 characters.)</mat-radio-button>
+                    <mat-radio-button value="encrypted">Encrypted Text (Enter up to 120 characters.)</mat-radio-button>
+                    <mat-radio-button value="longText">Text - Long</mat-radio-button>
+                    <mat-radio-button value="state">U.S. State or Territory</mat-radio-button>
+                </mat-radio-group>
 
-            <mat-checkbox [(ngModel)]="volunteerEnrollmentRequired" name="volunteerEnrollmentRequired">
-                Require this field to be completed when enrolling new volunteer accounts.
-            </mat-checkbox>
+                <!-- Conditional input for long text -->
+                <mat-form-field appearance="outline" *ngIf="fieldType === 'longText'" class="long-text-limit">
+                    <mat-label>Character Limit</mat-label>
+                    <input matInput type="number" [(ngModel)]="longTextLimit" min="1" max="1000">
+                </mat-form-field>
+            </div>
 
-            <mat-checkbox [(ngModel)]="volunteerEnrollmentVisible" name="volunteerEnrollmentVisible">
-                Make this field visible (but not required) when enrolling new volunteer accounts.
-            </mat-checkbox>
-        </div>
 
-         <!-- Editing & Archiving Options -->
-        <div class="checkbox-section">
-            <label class="checkbox-label">Volunteer Editing & Archiving Options:</label>
-            <br />
+            <!-- Column Width -->
+            <div class="dropdown-section">
+                <label class="dropdown-label"><span class="required">*</span> Column Width:</label>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-select [(ngModel)]="selectedColumnWidth" name="selectedColumnWidth" required>
+                        <mat-option value="">Select One</mat-option>
+                        <mat-option *ngFor="let width of columnWidths" [value]="width">{{ width }}%</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
-            <mat-checkbox [(ngModel)]="editByStaff" name="editByStaff">
-                Require this field to be completed by staffs when.
-            </mat-checkbox>
-            <div class="checkbox-subsection" *ngIf="editByStaff">
-                <mat-checkbox [(ngModel)]="editPanelImport" name="editPanelImport">
-                    Editing the field's panel or importing data with this field.
+            <!-- Add to Panel -->
+            <div class="dropdown-section">
+                <label class="dropdown-label"><span class="required">*</span> Add to Panel:</label>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-select [(ngModel)]="panelId" name="panelId" required>
+                        <mat-option value="">Select One</mat-option>
+                        <mat-option *ngFor="let panel of panels" [value]="panel._id">{{ panel.panelName }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Add to SubPanel -->
+            <ng-template  class="dropdown-section">
+                <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel" required>
+                        <mat-option value="">Select One</mat-option>
+                        <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-template>
+
+            <!-- Volunteer Access -->
+            <div class="checkbox-section">
+                <label class="checkbox-label">Volunteers Profile Access:</label>
+                <br />
+
+                <mat-checkbox [(ngModel)]="volunteerCanSee" name="volunteerCanSee">
+                    Allow volunteers to see this field.
                 </mat-checkbox>
 
-                <mat-checkbox [(ngModel)]="archivingAccount" name="archivingAccount">
-                    Archiving an account.
+                <mat-checkbox [(ngModel)]="volunteerCanEdit" name="volunteerCanEdit">
+                    Allow volunteers to populate and edit this field.
+                </mat-checkbox>
+
+                <div class="checkbox-subsection">
+                    <mat-checkbox [(ngModel)]="volunteerLockAfterEdit" name="volunteerLockAfterEdit"
+                        [disabled]="!volunteerCanEdit">
+                        Once this field is populated, lock the field for the volunteer. Do not allow them to edit unless
+                        required for review.
+                    </mat-checkbox>
+
+                    <mat-checkbox [(ngModel)]="volunteerQuickAccess" name="volunteerQuickAccess"
+                        [disabled]="!volunteerCanEdit">
+                        Add this field to volunteers' Quick Access To Do list.
+                    </mat-checkbox>
+
+                    <mat-checkbox [(ngModel)]="volunteerReviewRequired" name="volunteerReviewRequired"
+                        [disabled]="!volunteerCanEdit">
+                        Require this field to be reviewed by volunteers when assigned to a Type 1 Association item.
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <!-- Volunteer Enrollment Options -->
+            <div class="checkbox-section">
+                <label class="checkbox-label">Volunteer Enrollment Options:</label>
+                <br />
+
+                <mat-checkbox [(ngModel)]="volunteerEnrollmentRequired" name="volunteerEnrollmentRequired">
+                    Require this field to be completed when enrolling new volunteer accounts.
+                </mat-checkbox>
+
+                <mat-checkbox [(ngModel)]="volunteerEnrollmentVisible" name="volunteerEnrollmentVisible">
+                    Make this field visible (but not required) when enrolling new volunteer accounts.
                 </mat-checkbox>
             </div>
 
-            <mat-checkbox [(ngModel)]="requireSubmanagerReview" name="requireSubmanagerReview">
-                Require submanagers to review or complete the field when a volunteer is assigned to a Type 1 Association.
-            </mat-checkbox>
-        </div>
+            <!-- Editing & Archiving Options -->
+            <div class="checkbox-section">
+                <label class="checkbox-label">Volunteer Editing & Archiving Options:</label>
+                <br />
 
-         <!-- Volunteer Access -->
-        <div class="checkbox-section">
-            <label class="checkbox-label">Staff Access to Data in this Field:</label>
-            <br />
-            <mat-radio-group [(ngModel)]="staffAccess" name="staffAccess" required>
-                <mat-radio-button value="all">Grant access to all staffs whose roles give them access to volunteer profiles.</mat-radio-button>
-                <mat-radio-button value="limited">Limit access to staffs with the following roles:</mat-radio-button>
-            </mat-radio-group>
-        </div>
+                <mat-checkbox [(ngModel)]="editByStaff" name="editByStaff">
+                    Require this field to be completed by staffs when.
+                </mat-checkbox>
+                <div class="checkbox-subsection" *ngIf="editByStaff">
+                    <mat-checkbox [(ngModel)]="editPanelImport" name="editPanelImport">
+                        Editing the field's panel or importing data with this field.
+                    </mat-checkbox>
 
-        <!-- Buttons -->
-        <div class="btn-group">
-            <button mat-raised-button color="primary" (click)="onCreate()">Create</button>
-            <button mat-button (click)="onCancel()">Cancel</button>
-        </div>
+                    <mat-checkbox [(ngModel)]="archivingAccount" name="archivingAccount">
+                        Archiving an account.
+                    </mat-checkbox>
+                </div>
+
+                <mat-checkbox [(ngModel)]="requireSubmanagerReview" name="requireSubmanagerReview">
+                    Require submanagers to review or complete the field when a volunteer is assigned to a Type 1
+                    Association.
+                </mat-checkbox>
+            </div>
+
+            <!-- Volunteer Access -->
+            <div class="checkbox-section">
+                <label class="checkbox-label">Staff Access to Data in this Field:</label>
+                <br />
+                <mat-radio-group [(ngModel)]="staffAccess" name="staffAccess" required>
+                    <mat-radio-button value="all">Grant access to all staffs whose roles give them access to volunteer
+                        profiles.</mat-radio-button>
+                    <mat-radio-button value="limited">Limit access to staffs with the following
+                        roles:</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-group">
+                <button mat-raised-button type="submit" color="primary">Create</button>
+                <button mat-button (click)="onCancel()">Cancel</button>
+            </div>
+        </form>
     </div>
 </div>

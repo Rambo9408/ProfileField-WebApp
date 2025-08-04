@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/internal/Observable';
 import { Panelinterface } from '../interfaces/panelinterface';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Panelservice {
+  private refreshPanelsSubject = new BehaviorSubject<void>(undefined);
+  refreshPanels$ = this.refreshPanelsSubject.asObservable();
 
   private getUrl = "http://localhost:3000/api/panel";
   private addUrl = "http://localhost:3000/api/addPanel";
@@ -35,8 +37,12 @@ export class Panelservice {
   deletePanel(_id: string): Observable<Panelinterface> {
     return this.http.delete<Panelinterface>(`${this.deleteUrl}/${_id}`);
   }
-  
+
   updatePanelOrder(panels: Panelinterface[]): Observable<Panelinterface[]> {
     return this.http.put<Panelinterface[]>(this.updateOrderUrl, panels);
+  }
+
+  notifyPanelRefresh() {
+    this.refreshPanelsSubject.next();
   }
 }

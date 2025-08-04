@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { Panelservice } from '../../../services/panelservice';
+import { Panelinterface } from '../../../interfaces/panelinterface';
 
 @Component({
   selector: 'app-createsubpanel',
@@ -32,19 +34,27 @@ import { MatSelectModule } from '@angular/material/select';
 export class Createsubpanel {
   subPanelName: string = '';
   selectedPanel: string = '';
-  panels = ['Panel 1', 'Panel 2', 'Panel 3'];
+  panels: Panelinterface[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<Createsubpanel>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private panelService: Panelservice
   ) { }
 
+  ngOnInit(): void {
+    this.panelService.getPanels().subscribe((panels: Panelinterface[]) => {
+      this.panels = panels;
+      if (this.data && this.data.selectedPanel) {
+        this.selectedPanel = this.data.selectedPanel;
+      }
+    });
+  }
   onCancel(): void {
     this.dialogRef.close();
   }
 
   onCreate(): void {
-    console.log('Creating sub-panel with name:', this.subPanelName);  
     if (this.subPanelName && this.selectedPanel) {
       this.dialogRef.close({
         subPanelName: this.subPanelName,
