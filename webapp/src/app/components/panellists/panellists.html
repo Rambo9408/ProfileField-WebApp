@@ -15,7 +15,8 @@
             <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Panel" align="absmiddle" alt="&nbsp;"
               class="action-icon" (click)="editPanel(panel._id!)" />
           </div>
-          <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName) || panel.panelName === 'Name & Contact Details'">
+          <div class="panel-img"
+            *ngIf="!fixedPanels.includes(panel.panelName) || panel.panelName === 'Name & Contact Details'">
             <img src="attachment_link.gif" width="23" height="23" title="Create a Sub-panel" align="absmiddle"
               alt="&nbsp;" class="action-icon" (click)="createSubPanel(panel._id!)" />
           </div>
@@ -24,8 +25,8 @@
               class="action-icon" (click)="addField(panel._id!)" />
           </div>
           <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName)">
-            <img src="delete_large.png" width="23" height="23" title="Delete this Panel" align="absmiddle"
-              alt="&nbsp;" class="action-icon" (click)="deletePanel(panel._id!)" />
+            <img src="delete_large.png" width="23" height="23" title="Delete this Panel" align="absmiddle" alt="&nbsp;"
+              class="action-icon" (click)="deletePanel(panel._id!)" />
           </div>
         </div>
       </div>
@@ -39,6 +40,11 @@
           No Fields Added
         </span>
       </ng-template>
+      <div *ngIf="subPanels?.length">
+        <app-subpanelview *ngFor="let subpanel of getSubPanelsForPanel(panel._id!)"
+          [subpanel]="subpanel" [parentPanelId]="subpanel.panelId" (refreshSubpanels)="fetchSubPanels()">
+        </app-subpanelview>
+      </div>
     </div>
   </div>
 </div>

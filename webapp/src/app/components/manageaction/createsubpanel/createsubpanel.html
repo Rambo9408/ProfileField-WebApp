@@ -15,14 +15,14 @@
 
             <mat-form-field appearance="fill" class="full-width">
                 <mat-label>*Add to Panel</mat-label>
-                <mat-select name="selectedPanel" [(ngModel)]="selectedPanel" placeholder="Select Panel" required>
+                <mat-select name="selectedPanel" [(ngModel)]="panelId" placeholder="Select Panel" required>
                     <mat-option value="">Select One</mat-option>
-                    <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
+                    <mat-option *ngFor="let panel of panels" [value]="panel._id">{{ panel.panelName }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
             <div mat-dialog-actions align="center">
-                <button mat-raised-button color="primary" type="submit">Create</button>
+                <button mat-raised-button color="primary" type="submit">{{btnText}}</button>
                 <button mat-button (click)="onCancel()">Cancel</button>
             </div>
         </form>

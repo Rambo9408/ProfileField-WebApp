@@ -4,7 +4,6 @@ const PanelType = require('../models/paneltype');
 const addFieldType = async (req, res) => {
     try {
         const data = req.body;
-        console.log('Adding field with data:', data);
 
         if (!data.fieldName || data.fieldName.trim() === '') {
             return res.status(400).send({ message: "Field name is required." });

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Panelinterface } from '../interfaces/panelinterface';
+import { Subpanelinterface } from '../interfaces/subpanelinterface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,32 +10,32 @@ export class Subpanelservice {
   private getUrl = "http://localhost:3000/api/subPanel";
   private addUrl = "http://localhost:3000/api/addSubPanel";
   private updateUrl = "http://localhost:3000/api/updateSubPanel";
-  private updateOrderUrl = "http://localhost:3000/api/updateSubPanelOrder";
+  // private updateOrderUrl = "http://localhost:3000/api/updateSubPanelOrder";
   private deleteUrl = "http://localhost:3000/api/deleteSubPanel";
 
   constructor(private http: HttpClient) { }
 
-  getSubPanels(): Observable<Panelinterface[]> {
-    return this.http.get<Panelinterface[]>(this.getUrl);
+  getSubPanels(): Observable<Subpanelinterface[]> {
+    return this.http.get<Subpanelinterface[]>(this.getUrl);
   }
 
-  getSubPanelById(_id: string): Observable<Panelinterface> {
-    return this.http.get<Panelinterface>(`${this.getUrl}/${_id}`);
+  getSubPanelById(_id: string): Observable<{data: Subpanelinterface}> {
+    return this.http.get<{data: Subpanelinterface}>(`${this.getUrl}/${_id}`);
   }
 
-  addSubPanel(Panel: FormData): Observable<Panelinterface> {
-    return this.http.post<Panelinterface>(this.addUrl, Panel);
+  addSubPanel(Panel: FormData): Observable<Subpanelinterface> {
+    return this.http.post<Subpanelinterface>(this.addUrl, Panel);
   }
 
-  updateSubPanel(_id: string, data: Omit<Panelinterface, 'id'>): Observable<Panelinterface> {
-    return this.http.put<Panelinterface>(`${this.updateUrl}/${_id}`, data);
+  updateSubPanel(_id: string, data: Omit<Subpanelinterface, 'id'>): Observable<Subpanelinterface> {
+    return this.http.put<Subpanelinterface>(`${this.updateUrl}/${_id}`, data);
   }
 
-  deleteSubPanel(_id: string): Observable<Panelinterface> {
-    return this.http.delete<Panelinterface>(`${this.deleteUrl}/${_id}`);
+  deleteSubPanel(_id: string): Observable<Subpanelinterface> {
+    return this.http.delete<Subpanelinterface>(`${this.deleteUrl}/${_id}`);
   }
 
-  updateSubPanelOrder(panels: Panelinterface[]): Observable<Panelinterface[]> {
-    return this.http.put<Panelinterface[]>(this.updateOrderUrl, panels);
-  }
+  // updateSubPanelOrder(panels: Subpanelinterface[]): Observable<Subpanelinterface[]> {
+  //   return this.http.put<Subpanelinterface[]>(this.updateOrderUrl, panels);
+  // }
 }

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const subPanelSchema = new mongoose.Schema(
     {
-        subpanelName: {
+        subPanelName: {
             type: String,
             required: true,
             trim: true,
@@ -12,7 +12,7 @@ const subPanelSchema = new mongoose.Schema(
             ref: "FieldType",
             required: false,
         }],
-        panelTypeId: {
+        panelId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "PanelType",
             required: true,

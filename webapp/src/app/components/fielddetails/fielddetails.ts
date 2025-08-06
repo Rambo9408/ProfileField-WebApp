@@ -17,8 +17,12 @@ export class Fielddetails {
   leftFields: Fieldinterface[] = [];
   rightFields: Fieldinterface[] = [];
   fullWidthField: Fieldinterface[] = [];
-
+  maxRows: number = 0;
   constructor(private fieldService: Fieldservice) { }
+  
+  get rows(): number[] {
+    return Array.from({ length: this.maxRows }, (_, i) => i);
+  }
 
   ngOnChanges(): void {
     if (!this.fields) return;
@@ -31,7 +35,7 @@ export class Fielddetails {
     this.rightFields = fieldsCopy
       .filter(f => f.colId === 1)
       .sort((a, b) => a.orderId - b.orderId);
-
+    this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
     if (this.leftFields.length === 0 && this.rightFields.length === 0) {
       this.fullWidthField = fieldsCopy;
     } else {
