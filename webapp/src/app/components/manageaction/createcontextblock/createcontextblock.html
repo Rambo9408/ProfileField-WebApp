@@ -31,7 +31,9 @@
             <mat-form-field appearance="fill" class="full-width">
                 <mat-select [(ngModel)]="selectedPanel" name="selectedPanel" required>
                     <mat-option value="">Select One</mat-option>
-                    <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
+                    @for (panel of panels; track $index) {
+                        <mat-option [value]="panel">{{ panel }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
         </div>

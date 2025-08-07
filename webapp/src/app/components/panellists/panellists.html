@@ -1,5 +1,6 @@
 <div class="profile-panel-container" cdkDropList (cdkDropListDropped)="dropPanel($event)">
-  <div class="profile-panel" *ngFor="let panel of panelNames" cdkDrag>
+  @for (panel of panelNames; track $index) {
+  <div class="profile-panel" cdkDrag>
     <div class="panel-header">
       <!-- <span class="material-icons toggle-icon">
         {{ openPanels[panel._id!] ? 'expand_more' : 'chevron_right' }}
@@ -11,40 +12,49 @@
       <div class="panel-header-content">
         <span class="panel-title">{{ panel.panelName }}</span>
         <div class="panel-img-icon" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
+
           <div class="panel-img">
-            <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Panel" align="absmiddle" alt="&nbsp;"
-              class="action-icon" (click)="editPanel(panel._id!)" />
+            <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Panel" class="action-icon"
+              (click)="editPanel(panel._id!)" />
           </div>
-          <div class="panel-img"
-            *ngIf="!fixedPanels.includes(panel.panelName) || panel.panelName === 'Name & Contact Details'">
-            <img src="attachment_link.gif" width="23" height="23" title="Create a Sub-panel" align="absmiddle"
-              alt="&nbsp;" class="action-icon" (click)="createSubPanel(panel._id!)" />
+
+          @if (!fixedPanels.includes(panel.panelName) || panel.panelName === 'Name & Contact Details') {
+          <div class="panel-img">
+            <img src="attachment_link.gif" width="23" height="23" title="Create a Sub-panel" class="action-icon"
+              (click)="createSubPanel(panel._id!)" />
           </div>
-          <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName)">
-            <img src="clone question.png" width="23" height="23" title="Clone a Panel" align="absmiddle" alt="&nbsp;"
-              class="action-icon" (click)="addField(panel._id!)" />
+          }
+
+          @if (!fixedPanels.includes(panel.panelName)) {
+          <div class="panel-img">
+            <img src="clone question.png" width="23" height="23" title="Clone a Panel" class="action-icon"
+              (click)="addField(panel._id!)" />
           </div>
-          <div class="panel-img" *ngIf="!fixedPanels.includes(panel.panelName)">
-            <img src="delete_large.png" width="23" height="23" title="Delete this Panel" align="absmiddle" alt="&nbsp;"
-              class="action-icon" (click)="deletePanel(panel._id!)" />
+          <div class="panel-img">
+            <img src="delete_large.png" width="23" height="23" title="Delete this Panel" class="action-icon"
+              (click)="deletePanel(panel._id!)" />
           </div>
+          }
         </div>
       </div>
     </div>
+
     <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
-      <div *ngIf="panel.fieldId?.length; else nofieldAddedDisplay" class="panel-actions">
+      @if (panel.fieldId.length > 0) {
+      <div class="panel-actions">
         <app-fielddetails [fields]="panel.fieldId"></app-fielddetails>
       </div>
-      <ng-template #nofieldAddedDisplay>
-        <span>
-          No Fields Added
-        </span>
-      </ng-template>
-      <div *ngIf="subPanels?.length">
-        <app-subpanelview *ngFor="let subpanel of getSubPanelsForPanel(panel._id!)"
-          [subpanel]="subpanel" [parentPanelId]="subpanel.panelId" (refreshSubpanels)="fetchSubPanels()">
-        </app-subpanelview>
-      </div>
+      } @else {
+      <span>No Fields Added</span>
+      }
+
+      @if (getSubPanelsForPanel(panel._id!).length > 0) {
+      @for (subpanel of getSubPanelsForPanel(panel._id!); track $index) {
+      <app-subpanelview [subpanel]="subpanel" [parentPanelId]="subpanel.panelId" (refreshSubpanels)="fetchSubPanels()">
+      </app-subpanelview>
+      }
+      }
     </div>
   </div>
+  }
 </div>

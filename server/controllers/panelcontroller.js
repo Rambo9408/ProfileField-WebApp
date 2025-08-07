@@ -143,7 +143,8 @@ const find = async (req, res) => {
 
         const allPanels = await PanelTypes.find()
             .sort({ orderId: 1 })
-            .populate("fieldId", "-_id -createdAt -updatedAt -__v");
+            .populate("fieldId", "-_id -createdAt -updatedAt -__v")
+            .populate("subpanelId",  "-_id -createdAt -updatedAt -__v");
 
         res.status(200).json(allPanels);
     } catch (err) {

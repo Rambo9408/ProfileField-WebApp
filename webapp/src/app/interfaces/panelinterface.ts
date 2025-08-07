@@ -8,6 +8,6 @@ export interface Panelinterface {
   isPanelOpen?: boolean;
   isRemovable?: boolean;
   isShownOnExport?: boolean;
-  subpanelIds?: Subpanelinterface[];
+  subpanelId?: Subpanelinterface[];
   fieldId: Fieldinterface[];
 }

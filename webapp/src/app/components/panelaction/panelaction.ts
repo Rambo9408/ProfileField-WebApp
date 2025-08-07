@@ -50,7 +50,8 @@ export class Panelaction {
 
     const dialogRef = this.dialog.open(component, {
       width: '600px',
-      autoFocus: false
+      autoFocus: false,
+      data: ''
     });
 
     dialogRef.afterClosed().subscribe(result => {

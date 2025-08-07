@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Panelservice } from '../../../services/panelservice';
 import { Subpanelservice } from '../../../services/subpanelservice';
 import { Panelinterface } from '../../../interfaces/panelinterface';
+import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
 
 @Component({
   selector: 'app-createfield',
@@ -39,8 +40,8 @@ export class Createfield {
   longTextLimit !: any;
   editPanelImport = '';
   archivingAccount = '';
-  panelId = '';
-  selectedSubPanel = '';
+  selectedPanelId: Panelinterface | '' = '';
+  selectedSubPanel: Subpanelinterface | '' = '';
   selectedColumnWidth = '';
   staffAccess = 'all';
   volunteerCanSee = false;
@@ -55,7 +56,8 @@ export class Createfield {
   volunteerReviewRequired = false;
 
   panels: Panelinterface[] = [];
-  columnWidths = [50 , 100];
+  subPanels !: Subpanelinterface[];
+  columnWidths = [50, 100];
 
   constructor(
     public dialogRef: MatDialogRef<Createfield>,
@@ -65,12 +67,29 @@ export class Createfield {
   ) { }
 
   ngOnInit(): void {
-    this.panelService.getPanels().subscribe((panels : Panelinterface[]) => {
+    this.getPanels();
+  }
+
+  getPanels() {
+    this.panelService.getPanels().subscribe((panels: Panelinterface[]) => {
+      console.log("panels getting: ", panels);
       // this.panels = panels.filter(panel => panel.isRemovable).map(panel => panel.panelName);
+      this.subPanels = panels.filter(panel => panel.subpanelId?.length).flatMap(panel => panel.subpanelId ?? []);
       this.panels = panels.filter(panel => panel.isRemovable);
       this.cdRef.detectChanges();
     });
   }
+
+  get filteredSubPanels(): Subpanelinterface[] {
+    if (!this.selectedPanelId) return [];
+    return this.subPanels.filter(sub => {
+      if (Array.isArray(sub.panelId)) {
+        return sub.panelId.some(p => p._id === this.selectedPanelId);
+      }
+      return sub.panelId === this.selectedPanelId;
+    });
+  }
+
 
   onCreate(fieldForm: NgForm): void {
     console.log('Field created with panel:', fieldForm.value);

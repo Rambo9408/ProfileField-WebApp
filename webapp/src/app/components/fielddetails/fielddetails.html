@@ -1,18 +1,24 @@
-<div *ngIf="leftFields && rightFields" class="profile-field-container panel-grid">
+@if(leftFields && rightFields){
+<div class="profile-field-container panel-grid">
   <div class="panel-column" cdkDropList #leftColumn="cdkDropList" [cdkDropListData]="leftFields"
     [cdkDropListConnectedTo]="[rightColumn]" (cdkDropListDropped)="dropField($event)">
-    <div class="panel-cell" *ngFor="let field of leftFields" cdkDrag>
+    @for (field of leftFields; track $index) {
+    <div class="panel-cell" cdkDrag>
       {{ field.fieldName }}
     </div>
+    }
   </div>
 
   <div class="panel-column" cdkDropList #rightColumn="cdkDropList" [cdkDropListData]="rightFields"
     [cdkDropListConnectedTo]="[leftColumn]" (cdkDropListDropped)="dropField($event)">
-    <div class="panel-cell" *ngFor="let field of rightFields" cdkDrag>
+    @for (field of rightFields; track $index) {
+    <div class="panel-cell" cdkDrag>
       {{ field.fieldName }}
     </div>
+    }
   </div>
 </div>
+}
 <!-- <div *ngIf="leftFields || rightFields" class="profile-field-container">
   <div class="panel-row" *ngFor="let i of rows">
     <div class="panel-cells">
@@ -27,14 +33,17 @@
   </div>
 </div> -->
 
-
-<div *ngIf="fullWidthField?.length" class="profile-field-container panel-grid">
+@if(fullWidthField.length > 0){
+<div class="profile-field-container panel-grid">
   <div class="panel-column">
-    <div class="panel-cell" *ngFor="let field of fullWidthField">
+    @for (field of fullWidthField; track $index) {
+    <div class="panel-cell">
       {{ field.fieldName }}
     </div>
+    }
   </div>
 </div>
+}
 
 <!-- <div *ngIf="fullWidthField?.length" class="profile-field-container panel-grid">
   <div class="panel-row" *ngFor="let field of fullWidthField">

@@ -17,7 +17,9 @@
                 <mat-label>*Add to Panel</mat-label>
                 <mat-select name="selectedPanel" [(ngModel)]="panelId" placeholder="Select Panel" required>
                     <mat-option value="">Select One</mat-option>
-                    <mat-option *ngFor="let panel of panels" [value]="panel._id">{{ panel.panelName }}</mat-option>
+                    @for (panel of panels; track panel._id) {
+                    <mat-option [value]="panel._id">{{ panel.panelName }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
 

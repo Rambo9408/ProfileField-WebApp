@@ -1,4 +1,5 @@
 const SubPanel = require("../models/subpanel");
+const PanelType = require("../models/paneltype");
 
 const addSubPanel = async (req, res) => {
     try {
@@ -6,6 +7,11 @@ const addSubPanel = async (req, res) => {
 
         if (!data.subPanelName || data.subPanelName.trim() === '') {
             return res.status(400).send({ message: "SubPanel Name is required." });
+        }
+
+        const panel = await PanelType.findById(data.panelId);
+        if (!panel) {
+            return res.status(404).send({ message: "Panel not found." });
         }
 
         const subPanelCount = await SubPanel.countDocuments();
@@ -18,6 +24,9 @@ const addSubPanel = async (req, res) => {
         });
 
         const savedSubPanel = await subPanel.save();
+
+        panel.subpanelId.push(savedSubPanel._id);
+        await panel.save();
 
         res.status(201).json({
             message: "SubPanel added successfully.",

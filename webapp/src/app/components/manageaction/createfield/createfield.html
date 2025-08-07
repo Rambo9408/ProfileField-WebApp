@@ -54,10 +54,12 @@
                 </mat-radio-group>
 
                 <!-- Conditional input for long text -->
-                <mat-form-field appearance="outline" *ngIf="fieldType === 'longText'" class="long-text-limit">
+                @if (fieldType === 'longText') {
+                <mat-form-field appearance="outline" class="long-text-limit">
                     <mat-label>Character Limit</mat-label>
                     <input matInput type="number" [(ngModel)]="longTextLimit" min="1" max="1000">
                 </mat-form-field>
+                }
             </div>
 
 
@@ -67,7 +69,9 @@
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-select [(ngModel)]="selectedColumnWidth" name="selectedColumnWidth" required>
                         <mat-option value="">Select One</mat-option>
-                        <mat-option *ngFor="let width of columnWidths" [value]="width">{{ width }}%</mat-option>
+                        @for (width of columnWidths; track $index) {
+                        <mat-option [value]="width">{{ width }}%</mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -76,23 +80,29 @@
             <div class="dropdown-section">
                 <label class="dropdown-label"><span class="required">*</span> Add to Panel:</label>
                 <mat-form-field appearance="fill" class="full-width">
-                    <mat-select [(ngModel)]="panelId" name="panelId" required>
+                    <mat-select [(ngModel)]="selectedPanelId" name="selectedPanelId" required>
                         <mat-option value="">Select One</mat-option>
-                        <mat-option *ngFor="let panel of panels" [value]="panel._id">{{ panel.panelName }}</mat-option>
+                        @for (panel of panels; track panel._id) {
+                        <mat-option [value]="panel._id">{{ panel.panelName }}</mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
-
-            <!-- Add to SubPanel -->
-            <ng-template  class="dropdown-section">
+            
+            <!-- Add to SubPanel (only if subpanels exist for selected panel) -->
+            @if (filteredSubPanels.length > 0) {
+            <div class="dropdown-section">
                 <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel" required>
                         <mat-option value="">Select One</mat-option>
-                        <mat-option *ngFor="let panel of panels" [value]="panel">{{ panel }}</mat-option>
+                        @for (subPanel of filteredSubPanels; track subPanel._id) {
+                        <mat-option [value]="subPanel">{{ subPanel.subPanelName }}</mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
-            </ng-template>
+            </div>
+            }
 
             <!-- Volunteer Access -->
             <div class="checkbox-section">

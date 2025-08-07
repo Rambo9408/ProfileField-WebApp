@@ -1,53 +1,70 @@
 const FieldType = require('../models/fieldtype');
 const PanelType = require('../models/paneltype');
+const SubPanel = require('../models/subpanel');
 
 const addFieldType = async (req, res) => {
     try {
-        const data = req.body;
+        const {
+            fieldName,
+            fieldDescription,
+            fieldType,
+            selectedColumnWidth = 100,
+            selectedPanelId
+        } = req.body;
+        const panelId = req.body.selectedSubPanel.panelId
 
-        if (!data.fieldName || data.fieldName.trim() === '') {
-            return res.status(400).send({ message: "Field name is required." });
+        if (!fieldName || fieldName.trim() === '') {
+            return res.status(400).json({ message: "Field name is required." });
         }
 
-        // Check if the panel exists
-        const panel = await PanelType.findById(data.panelId);
+        // Fetch the panel and populate fieldId
+        const panel = await PanelType.findById(panelId).populate('fieldId');
         if (!panel) {
-            return res.status(404).send({ message: "Panel not found." });
+            return res.status(404).json({ message: "Panel not found." });
         }
 
-        // Get the number of existing fields in that panel to determine the orderId
-        const existingFieldCount = await FieldType.countDocuments({ panelId: data.panelId });
-
-        // Get the last colId in the panel
-        const existingFieldInPanel = await PanelType.findById(data.panelId).populate('fieldId');
-        const lastColId = existingFieldInPanel.fieldId.length > 0
-            ? existingFieldInPanel.fieldId[existingFieldInPanel.fieldId.length - 1].colId
+        const existingFieldCount = panel.fieldId.length;
+        const lastColId = existingFieldCount > 0
+            ? panel.fieldId[existingFieldCount - 1].colId
             : 0;
 
         // Create and save new field
         const newField = new FieldType({
-            fieldName: data.fieldName.trim(),
-            panelId: data.panelId,
-            fieldDescription: data.fieldDescription ? data.fieldDescription.trim() : '',
-            fieldType: data.fieldType,
-            colWidth: data.selectedColumnWidth || 100,
+            fieldName: fieldName.trim(),
+            fieldDescription: fieldDescription?.trim() || '',
+            fieldType,
+            panelId,
+            subpanelId: selectedPanelId || undefined,
+            orderId: existingFieldCount + 1,
             colId: lastColId === 0 ? 1 : 0,
-            orderId: existingFieldCount + 1
+            isDraggable: false,
+            colWidth: selectedColumnWidth || 100
         });
+
 
         const savedField = await newField.save();
 
-        // Update the panel to include the new field ID
+        // Add field to panel
         panel.fieldId.push(savedField._id);
         await panel.save();
 
-        res.status(201).json({
+        // Add field to subpanel(s) if applicable
+        if (selectedPanelId) {
+            const subPanels = await SubPanel.find({ panelId: selectedPanelId });
+            for (const subPanel of subPanels) {
+                subPanel.fieldId.push(savedField._id);
+                await subPanel.save();
+            }
+        }
+
+        return res.status(201).json({
             message: "Field added and linked to panel successfully.",
             data: savedField
         });
+
     } catch (err) {
         console.error('Error adding field:', err);
-        res.status(500).send({
+        return res.status(500).json({
             message: err.message || "Error adding field."
         });
     }
@@ -110,7 +127,7 @@ const findField = async (req, res) => {
         const id = req.params.id;
 
         if (id) {
-            const field = await FieldType.findById(id);
+            const field = await FieldType.findById(id).populate('fieldId').populate('subpanelId');
 
             if (!panel) {
                 return res.status(404).send({ message: `No panel found with ID ${id}` });
@@ -119,7 +136,7 @@ const findField = async (req, res) => {
             return res.status(200).json(field);
         }
 
-        const allFields = await FieldType.find();
+        const allFields = await FieldType.find().populate('fieldId').populate('subpanelId');
 
         res.status(200).json(allFields);
     } catch (err) {
