@@ -167,7 +167,7 @@ export class Panellists {
         this.subpanelService.addSubPanel(result).subscribe({
           next: (response) => {
             console.log('Sub-panel created successfully:', response);
-            this.panelService.notifyPanelRefresh(); // Notify other components to refresh
+            this.fetchSubPanels(); // Notify other components to refresh
           },
           error: (error) => {
             console.error('Error creating sub-panel:', error);

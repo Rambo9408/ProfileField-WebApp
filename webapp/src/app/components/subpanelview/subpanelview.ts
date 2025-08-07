@@ -46,7 +46,7 @@ export class Subpanelview {
     });
     dialogRef.afterClosed().subscribe(result => {
 
-      this.subPanelService.addSubPanel(result).subscribe({
+      this.subPanelService.updateSubPanel(pid,result).subscribe({
         next: (response) => {
           console.log('Subpanel Updated:', response);
           this.triggerRefresh();

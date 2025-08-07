@@ -32,7 +32,6 @@ const addSubPanel = async (req, res) => {
     }
 };
 
-
 const updateSubPanel = async (req, res) => {
     try {
         const id = req.params.id;
