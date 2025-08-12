@@ -53,3 +53,15 @@
     <div class="horizontal-line"></div>
   </div>
 </div> -->
+
+@if(fullWidthSubPanelField.length > 0){
+<div class="profile-field-container panel-grid">
+  <div class="panel-column">
+    @for (field of fullWidthSubPanelField; track field.panelId) {
+    <div class="panel-cell subpanel-field">
+      {{ field.fieldName }}
+    </div>
+    }
+  </div>
+</div>
+}

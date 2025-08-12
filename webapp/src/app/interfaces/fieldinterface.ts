@@ -1,4 +1,5 @@
 import { Panelinterface } from "./panelinterface";
+import { Subpanelinterface } from "./subpanelinterface";
 
 export interface Fieldinterface {
     _id?: string;
@@ -6,6 +7,7 @@ export interface Fieldinterface {
     fieldDescription?: string;
     fieldType: string;
     panelId: Panelinterface; 
+    subpanelId: Subpanelinterface;
     colId?: number;
     orderId: number;
     isDraggable?: boolean;

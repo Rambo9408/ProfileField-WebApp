@@ -67,7 +67,7 @@ export class Panellists {
   ngOnInit(): void {
     this.subpanelService.getSubPanels().subscribe({
       next: (subpanels: Subpanelinterface[]) => {
-        console.log("Subpanels fetched:", subpanels);
+        // console.log("Subpanels fetched:", subpanels);
         this.subPanels = subpanels;
         this.cdr.detectChanges();
       },
@@ -177,9 +177,7 @@ export class Panellists {
     });
   }
   addField(pid: string) {
-    // Logic to add a field to a panel
     console.log("Add field to panel with ID:", pid);
-    // You can implement the logic to open a dialog or navigate to a field creation page
   }
   deletePanel(pid: string) {
     // console.log("Delete panel with ID:", pid);

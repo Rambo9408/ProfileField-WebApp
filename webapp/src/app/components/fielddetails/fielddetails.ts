@@ -14,32 +14,50 @@ import { Fieldservice } from '../../services/fieldservice';
 })
 export class Fielddetails {
   @Input() fields !: Fieldinterface[];
+  @Input() fieldsOfSubPanel !: Fieldinterface[];
   leftFields: Fieldinterface[] = [];
   rightFields: Fieldinterface[] = [];
+  fullWidthSubPanelField: Fieldinterface[] = [];
   fullWidthField: Fieldinterface[] = [];
+  subPanelFieldsOrder: Fieldinterface[] = [];
   maxRows: number = 0;
   constructor(private fieldService: Fieldservice) { }
-  
+
   get rows(): number[] {
     return Array.from({ length: this.maxRows }, (_, i) => i);
   }
 
   ngOnChanges(): void {
-    if (!this.fields) return;
-    const fieldsCopy = [...this.fields];    
-    // Reset first
-    this.leftFields = fieldsCopy
-      .filter(f => f.colId === 0)
-      .sort((a, b) => a.orderId - b.orderId);
+    if (this.fields) {
+      const fieldsCopy = this.fields.filter(f => !f.subpanelId);
 
-    this.rightFields = fieldsCopy
-      .filter(f => f.colId === 1)
-      .sort((a, b) => a.orderId - b.orderId);
-    this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
-    if (this.leftFields.length === 0 && this.rightFields.length === 0) {
-      this.fullWidthField = fieldsCopy;
+      this.leftFields = fieldsCopy
+        .filter(f => f.colId === 0)
+        .sort((a, b) => a.orderId - b.orderId);
+
+      this.rightFields = fieldsCopy
+        .filter(f => f.colId === 1)
+        .sort((a, b) => a.orderId - b.orderId);
+      this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
+
+
+
+      if (this.leftFields.length === 0 && this.rightFields.length === 0) {
+        this.fullWidthField = fieldsCopy;
+      } else {
+        this.fullWidthField = [];
+      }
+
+
+    } else if (this.fieldsOfSubPanel) {
+      const subPanelFields = this.fieldsOfSubPanel;
+     
+      this.subPanelFieldsOrder = subPanelFields.sort((a,b) => a.orderId - b.orderId);
+      if (this.subPanelFieldsOrder.length > 0) {
+        this.fullWidthSubPanelField = subPanelFields
+      }
     } else {
-      this.fullWidthField = [];
+      return;
     }
   }
 

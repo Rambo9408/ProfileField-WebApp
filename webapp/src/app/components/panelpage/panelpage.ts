@@ -28,7 +28,11 @@ export class Panelpage {
   loadPanelNames(): void {
     this.panelService.getPanels().subscribe({
       next: (data: Panelinterface[]) => {
-        this.panelNames = data;
+        // this.panelNames = data;
+        this.panelNames = data.map(panel => ({
+          ...panel,
+          fieldId: panel.fieldId.filter(field => !field.subpanelId)
+        }));
         // console.log("Panel Names:", this.panelNames);
         this.cdr.detectChanges();
       },

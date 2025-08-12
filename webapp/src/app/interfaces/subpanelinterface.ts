@@ -6,6 +6,6 @@ export interface Subpanelinterface {
     subPanelName: string;
     panelId: Panelinterface;
     order: number;
-    fieldId?: Fieldinterface;
+    fieldId?: Fieldinterface[];
     fieldType?: string;
 }

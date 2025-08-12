@@ -1,19 +1,24 @@
-<div class="subpanel-card">
-    <div class="panel-header-content">
-        <h4 class="panel-title">{{ subpanel.subPanelName }}</h4>
-        <div class="panel-img-icon">
-            <div class="panel-img">
-                <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Sub-Panel" align="absmiddle"
+<div class="subPanel-Container">
+    <div class="subpanel-card">
+        <div class="panel-header-content">
+            <h4 class="panel-title">{{ subpanel.subPanelName }}</h4>
+            <div class="panel-img-icon">
+                <div class="panel-img">
+                    <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Sub-Panel" align="absmiddle"
                     alt="&nbsp;" class="action-icon" (click)="editSubPanel(subpanel._id!)" />
-            </div>
-            <div class="panel-img">
-                <img src="clone question.png" width="23" height="23" title="Clone a Sub-Panel" align="absmiddle"
+                </div>
+                <div class="panel-img">
+                    <img src="clone question.png" width="23" height="23" title="Clone a Sub-Panel" align="absmiddle"
                     alt="&nbsp;" class="action-icon" (click)="addSubPanel(subpanel._id!)" />
-            </div>
-            <div class="panel-img">
-                <img src="delete_large.png" width="23" height="23" title="Delete this Sub-Panel" align="absmiddle"
+                </div>
+                <div class="panel-img">
+                    <img src="delete_large.png" width="23" height="23" title="Delete this Sub-Panel" align="absmiddle"
                     alt="&nbsp;" class="action-icon" (click)="deleteSubPanel(subpanel._id!)" />
+                </div>
             </div>
         </div>
+    </div>
+    <div class="subPanel-body">
+        <app-fielddetails [fieldsOfSubPanel]="fields" ></app-fielddetails>
     </div>
 </div>
