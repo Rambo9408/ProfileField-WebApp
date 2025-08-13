@@ -13,41 +13,12 @@
   margin-bottom: 8px;
 }
 
-/*
-.profile-field-container {
-  width: 100%;
-  // padding: 1rem;
-
-  .panel-row {
-    width: 100%;
-
-    .panel-cells {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: nowrap;
-    }
-
-    .panel-cell {
-      flex-basis: 48%; 
-      word-break: break-word;
-
-      &.left {
-        text-align: left;
-      }
-      &.right {
-        text-align: left;
-      }
-    }
-
-    .horizontal-line {
-      width: 100%;
-      height: 1px;
-      background-color: #ccc;
-      margin: 0.5rem 0 0 0;
-    }
-  }
+.panel-cell a {
+  color: blue;          /* Default link color */
+  text-decoration: underline;
+  cursor: pointer;      /* Show pointer cursor */
 }
 
- */
+.panel-cell a:hover {
+  color: darkblue;      /* Optional hover effect */
+}

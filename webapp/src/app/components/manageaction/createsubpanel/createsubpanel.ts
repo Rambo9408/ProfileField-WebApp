@@ -49,7 +49,7 @@ export class Createsubpanel {
   ngOnInit(): void {
     // console.log("selected sub panel id: ", this.data);
     this.getPanels();
-    if(this.data.content === "Update" ){
+    if (this.data.content === "Update") {
       this.getSubPanelByID(this.data.panelId);
       this.btnText = this.data.content;
     }
@@ -87,13 +87,23 @@ export class Createsubpanel {
   }
 
   onCreate(): void {
-    if (this.subPanelName && this.panelId) {
-      console.log("subpanel and panelid: ", this.subPanelName + this.panelId);
-      
-      this.dialogRef.close({
+    if (!this.data) {
+      // Creating new subpanel
+      if (this.subPanelName && this.panelId) {
+        this.dialogRef.close({
+          subPanelName: this.subPanelName,
+          panelId: this.panelId
+        });
+      }
+    } else {
+      // Editing existing subpanel
+      const updatedData = {
         subPanelName: this.subPanelName,
-        panelId: this.panelId
-      });
+        panelId: this.panelId,
+        oldPanelId: this.data.panelId || ''
+      };
+      this.dialogRef.close(updatedData);
     }
   }
+
 }

@@ -15,7 +15,7 @@ router.delete('/deletePanel/:id', Panelcontroller.deletePanelType);
 
 //FieldType routes
 router.get('/fields', Fieldtypecontroller.findField);
-router.get('/field/:id', Fieldtypecontroller.findField);
+router.get('/fields/:id', Fieldtypecontroller.findField);
 router.post('/addFields', Fieldtypecontroller.addFieldType);
 router.post('/addMultipleFieldType', Fieldtypecontroller.addMultipleFieldTypes);
 router.put('/updateFieldOrder', Fieldtypecontroller.updateFieldOrder);

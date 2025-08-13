@@ -65,27 +65,19 @@ export class Panellists {
   ) { }
 
   ngOnInit(): void {
-    this.subpanelService.getSubPanels().subscribe({
-      next: (subpanels: Subpanelinterface[]) => {
-        // console.log("Subpanels fetched:", subpanels);
-        this.subPanels = subpanels;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error("Error fetching subpanels:", error);
-      }
-    });
+    this.fetchSubPanels();
   }
 
   getSubPanelsForPanel(panelId: string): Subpanelinterface[] {
-    return this.subPanels.filter(subpanel =>
+    const data = this.subPanels.filter(subpanel =>
       subpanel.panelId?._id === panelId
     );
+    return data;
   }
 
   fetchSubPanels(): void {
     this.subpanelService.getSubPanels().subscribe({
-      next: (subpanels: Subpanelinterface[]) => {
+      next: (subpanels: Subpanelinterface[]) => {        
         this.subPanels = subpanels;
         this.cdr.detectChanges();
       },
@@ -139,6 +131,7 @@ export class Panellists {
               next: (response) => {
                 // console.log('Panel updated successfully:', response);
                 this.panelService.notifyPanelRefresh(); // Notify other components to refresh
+                this.cdr.detectChanges();
               },
               error: (error) => {
                 console.error('Error updating panel:', error);
@@ -167,7 +160,9 @@ export class Panellists {
         this.subpanelService.addSubPanel(result).subscribe({
           next: (response) => {
             console.log('Sub-panel created successfully:', response);
-            this.fetchSubPanels(); // Notify other components to refresh
+            this.fetchSubPanels();
+            this.cdr.detectChanges();
+            this.panelService.notifyPanelRefresh();
           },
           error: (error) => {
             console.error('Error creating sub-panel:', error);
@@ -184,7 +179,8 @@ export class Panellists {
     this.panelService.deletePanel(pid).subscribe({
       next: (response) => {
         // console.log("Panel deleted successfully:", response);
-        this.panelService.notifyPanelRefresh(); 
+        this.panelService.notifyPanelRefresh();
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error("Error deleting panel:", error);

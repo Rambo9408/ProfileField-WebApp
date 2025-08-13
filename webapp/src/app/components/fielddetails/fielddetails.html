@@ -56,10 +56,11 @@
 
 @if(fullWidthSubPanelField.length > 0){
 <div class="profile-field-container panel-grid">
-  <div class="panel-column">
+  <div class="panel-column" cdkDropList #subPanelColumn="cdkDropList" [cdkDropListData]="fullWidthSubPanelField"
+    [cdkDropListConnectedTo]="['leftColumn', 'rightColumn']" (cdkDropListDropped)="dropField($event)">
     @for (field of fullWidthSubPanelField; track field.panelId) {
-    <div class="panel-cell subpanel-field">
-      {{ field.fieldName }}
+    <div class="panel-cell subpanel-field" cdkDrag>
+      <a cdkDragHandle [title]="field.fieldName" (click)="editField(field._id!)">{{ field.fieldName }}</a>
     </div>
     }
   </div>

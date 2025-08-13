@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Fieldinterface } from '../../interfaces/fieldinterface';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Fieldservice } from '../../services/fieldservice';
+import { Createfield } from '../manageaction/createfield/createfield';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-fielddetails',
@@ -21,7 +23,12 @@ export class Fielddetails {
   fullWidthField: Fieldinterface[] = [];
   subPanelFieldsOrder: Fieldinterface[] = [];
   maxRows: number = 0;
-  constructor(private fieldService: Fieldservice) { }
+
+  constructor(
+    private fieldService: Fieldservice,
+    private cdRef: ChangeDetectorRef,
+    private dialog: MatDialog,
+  ) { }
 
   get rows(): number[] {
     return Array.from({ length: this.maxRows }, (_, i) => i);
@@ -38,26 +45,23 @@ export class Fielddetails {
       this.rightFields = fieldsCopy
         .filter(f => f.colId === 1)
         .sort((a, b) => a.orderId - b.orderId);
+
       this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
 
+      this.fullWidthField =
+        this.leftFields.length === 0 && this.rightFields.length === 0
+          ? fieldsCopy
+          : [];
+    }
 
-
-      if (this.leftFields.length === 0 && this.rightFields.length === 0) {
-        this.fullWidthField = fieldsCopy;
-      } else {
-        this.fullWidthField = [];
-      }
-
-
-    } else if (this.fieldsOfSubPanel) {
-      const subPanelFields = this.fieldsOfSubPanel;
-     
-      this.subPanelFieldsOrder = subPanelFields.sort((a,b) => a.orderId - b.orderId);
-      if (this.subPanelFieldsOrder.length > 0) {
-        this.fullWidthSubPanelField = subPanelFields
-      }
-    } else {
-      return;
+    // Handle subpanel fields
+    if (this.fieldsOfSubPanel) {
+      this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort(
+        (a, b) => a.orderId - b.orderId
+      );
+      console.log(this.subPanelFieldsOrder);
+      this.fullWidthSubPanelField =
+        this.subPanelFieldsOrder.length > 0 ? this.subPanelFieldsOrder : [];
     }
   }
 
@@ -74,23 +78,48 @@ export class Fielddetails {
         event.currentIndex
       );
 
-      // Update colId when moved across
       const movedItem = event.container.data[event.currentIndex];
       movedItem.colId = event.container.id === 'leftColumn' ? 0 : 1;
 
     }
 
-    // Update orderId after reordering
-    this.leftFields.forEach((field, index) => field.orderId = index + 1);
-    this.rightFields.forEach((field, index) => field.orderId = index + 1);
+    if (this.subPanelFieldsOrder) {
+      this.subPanelFieldsOrder.forEach((field, index) => field.orderId = index + 1)
+      var updatedFields = [...this.subPanelFieldsOrder];
+    } else {
+      this.leftFields.forEach((field, index) => field.orderId = index + 1);
+      this.rightFields.forEach((field, index) => field.orderId = index + 1);
+      var updatedFields = [...this.leftFields, ...this.rightFields];
+    }
 
-    const updatedFields = [...this.leftFields, ...this.rightFields];
     this.fieldService.updateFieldOrder(updatedFields).subscribe({
       next: (res) => console.log("Fields reordered successfully.", res),
       error: (err) => console.error("Update failed", err)
     });
-
   }
 
+  editField(id: string) {
+    const dialogRef = this.dialog.open(Createfield, {
+      width: '600px',
+      data: {
+        fieldId: id,
+        content: 'Update'
+      },
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.fieldService.updateField(id, result).subscribe({
+        next: (response) => {
+          console.log('Subpanel Updated:', response);
+          // this.triggerRefresh();
+          // this.panelService.notifyPanelRefresh();
+          this.cdRef.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error Updating subpanel:', error);
+        }
+      });
+    });
+  }
 
 }

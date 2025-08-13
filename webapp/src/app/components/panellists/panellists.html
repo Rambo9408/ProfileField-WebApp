@@ -45,11 +45,11 @@
         <app-fielddetails [fields]="panel.fieldId"></app-fielddetails>
       </div>
       } @else {
-      <span>No Fields Added</span>
+      <span>(No Fields Added)</span>
       }
 
       @if (getSubPanelsForPanel(panel._id!).length > 0) {
-      @for (subpanel of getSubPanelsForPanel(panel._id!); track $index) {
+      @for (subpanel of getSubPanelsForPanel(panel._id!); track subpanel._id) {
       <app-subpanelview [subpanel]="subpanel" [parentPanelId]="subpanel.panelId" (refreshSubpanels)="fetchSubPanels()">
       </app-subpanelview>
       }

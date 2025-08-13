@@ -27,10 +27,12 @@ const addSubPanel = async (req, res) => {
 
         panel.subpanelId.push(savedSubPanel._id);
         await panel.save();
+        
+        const populatedSubPanel = await SubPanel.findById(savedSubPanel._id).populate('fieldId').populate('panelId')
 
         res.status(201).json({
             message: "SubPanel added successfully.",
-            data: savedSubPanel
+            data: populatedSubPanel
         });
 
     } catch (err) {
@@ -44,7 +46,7 @@ const addSubPanel = async (req, res) => {
 const updateSubPanel = async (req, res) => {
     try {
         const id = req.params.id;
-        const { subPanelName, fieldId, orderId } = req.body;
+        const { subPanelName, panelId, fieldId, orderId } = req.body;
 
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).send({ message: "Data to update cannot be empty." });
@@ -58,12 +60,14 @@ const updateSubPanel = async (req, res) => {
         existingSubPanel.subPanelName = subPanelName ?? existingSubPanel.subPanelName;
         existingSubPanel.fieldId = fieldId ?? existingSubPanel.fieldId;
         existingSubPanel.orderId = orderId ?? existingSubPanel.orderId;
+        existingSubPanel.panelId = panelId ?? existingSubPanel.panelId;
 
         const updatedSubPanel = await existingSubPanel.save();
+        const populatedSubPanel = await SubPanel.findById(updatedSubPanel._id).populate('fieldId').populate('panelId');
 
         res.status(200).json({
             message: "SubPanel updated successfully.",
-            data: updatedSubPanel
+            data: populatedSubPanel
         });
     } catch (err) {
         console.error("Update error:", err);

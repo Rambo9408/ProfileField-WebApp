@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subpanelinterface } from '../../interfaces/subpanelinterface';
 import { Panelinterface } from '../../interfaces/panelinterface';
 import { FormsModule } from '@angular/forms';
@@ -32,10 +32,11 @@ export class Subpanelview {
     private dialog: MatDialog,
     private subPanelService: Subpanelservice,
     private panelService: Panelservice,
-    private fieldService: Fieldservice
+    private fieldService: Fieldservice,
+    private cdr: ChangeDetectorRef,
   ) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.fields = this.subpanel.fieldId as Fieldinterface[];
   }
 
@@ -49,11 +50,12 @@ export class Subpanelview {
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
-
       this.subPanelService.updateSubPanel(pid, result).subscribe({
         next: (response) => {
           // console.log('Subpanel Updated:', response);
           this.triggerRefresh();
+          this.panelService.notifyPanelRefresh();
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error Updating subpanel:', error);
@@ -69,6 +71,7 @@ export class Subpanelview {
       next: res => {
         // console.log('Sub-panel deleted successfully:', res);
         this.triggerRefresh();
+        this.panelService.notifyPanelRefresh();
       },
       error: err => {
         console.error('Error deleting sub-panel:', err);

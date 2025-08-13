@@ -125,23 +125,23 @@ const addMultipleFieldTypes = async (req, res) => {
 const findField = async (req, res) => {
     try {
         const id = req.params.id;
-
+        
         if (id) {
-            const field = await FieldType.findById(id).populate('fieldId').populate('subpanelId');
-
-            if (!panel) {
-                return res.status(404).send({ message: `No panel found with ID ${id}` });
+            const field = await FieldType.findById(id).populate('panelId').populate('subpanelId');
+            console.log(field);
+            if (!field) {
+                return res.status(404).send({ message: `No field found with ID ${id}` });
             }
 
             return res.status(200).json(field);
         }
 
-        const allFields = await FieldType.find().populate('fieldId').populate('subpanelId');
+        const allFields = await FieldType.find().populate('panelId').populate('subpanelId');
 
         res.status(200).json(allFields);
     } catch (err) {
         console.error("Find error:", err);
-        res.status(500).send({ message: err.message || "Error retrieving panel(s)." });
+        res.status(500).send({ message: err.message || "Error retrieving field(s)." });
     }
 };
 
@@ -200,6 +200,7 @@ const deleteFieldType = async (req, res) => {
 const updateFieldOrder = async (req, res) => {
     try {
         const fields = req.body;
+console.log(fields);
 
         if (!Array.isArray(fields) || fields.length === 0) {
             return res.status(400).send({ message: "An array of fields with orderId is required." });
