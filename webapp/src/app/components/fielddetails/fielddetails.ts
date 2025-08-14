@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Fieldinterface } from '../../interfaces/fieldinterface';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './fielddetails.html',
   styleUrl: './fielddetails.scss'
 })
-export class Fielddetails {
+export class Fielddetails implements OnChanges {
   @Input() fields !: Fieldinterface[];
   @Input() fieldsOfSubPanel !: Fieldinterface[];
   leftFields: Fieldinterface[] = [];
@@ -34,7 +34,9 @@ export class Fielddetails {
     return Array.from({ length: this.maxRows }, (_, i) => i);
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes : SimpleChanges): void {
+    console.log(changes);
+    
     if (this.fields) {
       const fieldsCopy = this.fields.filter(f => !f.subpanelId);
 
@@ -59,7 +61,6 @@ export class Fielddetails {
       this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort(
         (a, b) => a.orderId - b.orderId
       );
-      console.log(this.subPanelFieldsOrder);
       this.fullWidthSubPanelField =
         this.subPanelFieldsOrder.length > 0 ? this.subPanelFieldsOrder : [];
     }

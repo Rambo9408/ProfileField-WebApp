@@ -128,7 +128,6 @@ const findField = async (req, res) => {
         
         if (id) {
             const field = await FieldType.findById(id).populate('panelId').populate('subpanelId');
-            console.log(field);
             if (!field) {
                 return res.status(404).send({ message: `No field found with ID ${id}` });
             }
@@ -200,7 +199,6 @@ const deleteFieldType = async (req, res) => {
 const updateFieldOrder = async (req, res) => {
     try {
         const fields = req.body;
-console.log(fields);
 
         if (!Array.isArray(fields) || fields.length === 0) {
             return res.status(400).send({ message: "An array of fields with orderId is required." });

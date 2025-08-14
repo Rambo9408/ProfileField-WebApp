@@ -37,8 +37,7 @@ const updatePanelType = async (req, res) => {
     try {
         const id = req.params.id;
         const updateData = req.body;
-        // const { panelName, fieldId, orderId } = req.body;
-        console.log("Add Panel Request Body:", req.body);
+        
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).send({ message: "Data to update cannot be empty." });
         }

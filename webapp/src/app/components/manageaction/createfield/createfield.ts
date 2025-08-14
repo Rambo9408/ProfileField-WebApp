@@ -74,7 +74,7 @@ export class Createfield {
 
   ngOnInit(): void {
     this.getPanels();
-    console.log("Field data received:", this.data);
+    // console.log("Field data received:", this.data);
     if (this.data?.content === 'Update') {
       this.getFieldData(this.data.fieldId);
     }
@@ -84,7 +84,7 @@ export class Createfield {
   getFieldData(id: string) {
     this.fieldService.getFieldById(id).subscribe({
       next: (data) => {
-        console.log("Field data received:", data);
+        // console.log("Field data received:", data);
         this.fieldName = data.fieldName || '';
         this.fieldDescription = data.fieldDescription || '';
         this.fieldType = data.fieldType || '';
@@ -117,7 +117,7 @@ export class Createfield {
 
   getPanels() {
     this.panelService.getPanels().subscribe((panels: Panelinterface[]) => {
-      console.log("panels getting: ", panels);
+      // console.log("panels getting: ", panels);
       // this.panels = panels.filter(panel => panel.isRemovable).map(panel => panel.panelName);
       this.subPanels = panels.filter(panel => panel.subpanelId?.length).flatMap(panel => panel.subpanelId ?? []);
       this.panels = panels.filter(panel => panel.isRemovable);
@@ -137,7 +137,7 @@ export class Createfield {
 
 
   onCreate(fieldForm: NgForm): void {
-    console.log('Field created with panel:', fieldForm.value);
+    // console.log('Field created with panel:', fieldForm.value);
     // Logic to handle field creation
     this.cdRef.detectChanges();
     this.dialogRef.close(fieldForm.value);
