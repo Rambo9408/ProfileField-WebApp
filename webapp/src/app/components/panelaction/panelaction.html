@@ -1,10 +1,10 @@
 <div class="profile-options">
-  <ul>
-    <li><a class="option-link" routerLink="/" >Back</a></li>
-    <li><a class="option-link" (click)="openDialogBox('createPanel')">Create a Panel</a></li>
-    <li><a class="option-link" (click)="openDialogBox('createSubPanel')">Create a Sub-panel</a></li>
-    <li><a class="option-link" (click)="openDialogBox('createContextBlock')">Create Context Block</a></li>
-    <li><a class="option-link" (click)="openDialogBox('createField')">Create a Field</a></li>
-    <li><a class="option-link" (click)="openDialogBox('manageCustomFields')">Manage Custom Fields</a></li>
-  </ul>
+  <a class="back-link" routerLink="/" >Back</a>
+  <div class="action-links">
+      <a class="option-link" (click)="openDialogBox('createPanel')">Create a Panel</a>
+      <a class="option-link" (click)="openDialogBox('createSubPanel')">Create a Sub-panel</a>
+      <a class="option-link" (click)="openDialogBox('createContextBlock')">Create Context Block</a>
+      <a class="option-link" (click)="openDialogBox('createField')">Create a Field</a>
+      <a class="option-link" (click)="openDialogBox('manageCustomFields')">Manage Custom Fields</a>
+  </div>
 </div>

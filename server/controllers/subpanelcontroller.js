@@ -27,7 +27,7 @@ const addSubPanel = async (req, res) => {
 
         panel.subpanelId.push(savedSubPanel._id);
         await panel.save();
-        
+
         const populatedSubPanel = await SubPanel.findById(savedSubPanel._id).populate('fieldId').populate('panelId')
 
         res.status(201).json({
@@ -118,9 +118,34 @@ const getSubPanel = async (req, res) => {
     }
 };
 
+const getSubPanelsByPanelId = async (req, res) => {
+    try {
+        const panelId  = req.params.id;
+        
+        const subPanels = await SubPanel.find({ panelId })
+            .populate('fieldId');
+
+        if (!subPanels.length) {
+            return res.status(404).json({
+                message: `No subpanels found for panel ID ${panelId}`
+            });
+        }
+
+        res.status(200).json({
+            message: "Subpanels retrieved successfully.",
+            data: subPanels
+        });
+    } catch (err) {
+        console.error("Error retrieving subpanels:", err);
+        res.status(500).json({ message: err.message || "Error retrieving subpanels." });
+    }
+};
+
+
 module.exports = {
     addSubPanel,
     updateSubPanel,
     deleteSubPanel,
-    getSubPanel
+    getSubPanel,
+    getSubPanelsByPanelId
 };

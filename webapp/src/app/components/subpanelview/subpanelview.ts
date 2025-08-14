@@ -50,6 +50,8 @@ export class Subpanelview {
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      
       this.subPanelService.updateSubPanel(pid, result).subscribe({
         next: (response) => {
           // console.log('Subpanel Updated:', response);

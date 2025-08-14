@@ -21,12 +21,12 @@
           </div>
           <div class="text-sec1">
             <label for="viewTargetPanel">View Panels Targeted to Type 1 Associations</label>
-
-            <div id="panelTargetTypeOneAssociation" class="panelTargetTypeOneAssociation full-sec"
-              [style.marginLeft.px]="25" *ngIf="selectedOption == 2">
-              <!-- You can place additional dynamic content here -->
-              <p>Targeted Panels Info Goes Here</p>
+            <!-- @if(selectedOption == 2){ -->
+            <div id="panelTargetTypeOneAssociation" class="panelTargetTypeOneAssociation full-sec dashed-box"
+              [@slideToggle]="selectedOption === 2 ? 'open' : 'closed'">
+              <p class="alert-text-color">Panels are not being targeted to any Type 1 Associations.</p>
             </div>
+            <!-- } -->
           </div>
         </td>
       </tr>

@@ -25,6 +25,7 @@ router.delete('/deleteField/:id', Fieldtypecontroller.deleteFieldType);
 //Sub-Panel routes
 router.get('/subPanel', SubPanelcontroller.getSubPanel);
 router.get('/subPanel/:id', SubPanelcontroller.getSubPanel);
+router.get('/subPanelbyPanelID/:id', SubPanelcontroller.getSubPanelsByPanelId);
 router.post('/addSubPanel', SubPanelcontroller.addSubPanel);
 // router.post('/addMultipleFieldType', SubPanelcontroller.);
 // router.put('/updateFieldOrder', SubPanelcontroller.updateSubPanel);

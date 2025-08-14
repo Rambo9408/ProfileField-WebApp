@@ -147,7 +147,8 @@ const findField = async (req, res) => {
 const updateFieldType = async (req, res) => {
     try {
         const { id } = req.params;
-        const { fieldName, colId, orderId } = req.body;
+        
+        const { fieldName,fieldDescription, colId, orderId } = req.body;
 
         const field = await FieldType.findById(id);
         if (!field) {
@@ -157,6 +158,7 @@ const updateFieldType = async (req, res) => {
         if (fieldName !== undefined) field.fieldName = fieldName.trim();
         if (colId !== undefined) field.colId = colId;
         if (orderId !== undefined) field.orderId = orderId;
+        if (fieldDescription !== undefined) field.fieldDescription = fieldDescription;
 
         const updated = await field.save();
 

@@ -37,7 +37,7 @@ const updatePanelType = async (req, res) => {
     try {
         const id = req.params.id;
         const updateData = req.body;
-        
+
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).send({ message: "Data to update cannot be empty." });
         }
@@ -131,7 +131,8 @@ const find = async (req, res) => {
 
         if (id) {
             const panel = await PanelTypes.findById(id)
-                .populate("fieldId", "-_id -createdAt -updatedAt -__v");
+                .populate("fieldId", " -createdAt -updatedAt -__v")
+                .populate("subpanelId", " -createdAt -updatedAt -__v");
 
             if (!panel) {
                 return res.status(404).send({ message: `No panel found with ID ${id}` });
@@ -142,8 +143,8 @@ const find = async (req, res) => {
 
         const allPanels = await PanelTypes.find()
             .sort({ orderId: 1 })
-            .populate("fieldId", "-_id -createdAt -updatedAt -__v")
-            .populate("subpanelId",  "-_id -createdAt -updatedAt -__v");
+            .populate("fieldId", " -createdAt -updatedAt -__v")
+            .populate("subpanelId", " -createdAt -updatedAt -__v");
 
         res.status(200).json(allPanels);
     } catch (err) {

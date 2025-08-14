@@ -34,9 +34,9 @@ export class Fielddetails implements OnChanges {
     return Array.from({ length: this.maxRows }, (_, i) => i);
   }
 
-  ngOnChanges(changes : SimpleChanges): void {
-    console.log(changes);
-    
+  ngOnChanges(changes: SimpleChanges): void {
+    // console.log(changes);
+
     if (this.fields) {
       const fieldsCopy = this.fields.filter(f => !f.subpanelId);
 
@@ -109,17 +109,19 @@ export class Fielddetails implements OnChanges {
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.fieldService.updateField(id, result).subscribe({
-        next: (response) => {
-          console.log('Subpanel Updated:', response);
-          // this.triggerRefresh();
-          // this.panelService.notifyPanelRefresh();
-          this.cdRef.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error Updating subpanel:', error);
-        }
-      });
+      if (result) {
+        this.fieldService.updateField(id, result).subscribe({
+          next: (response) => {
+            console.log('Subpanel Updated:', response);
+            // this.triggerRefresh();
+            // this.panelService.notifyPanelRefresh();
+            this.cdRef.detectChanges();
+          },
+          error: (error) => {
+            console.error('Error Updating subpanel:', error);
+          }
+        });
+      }
     });
   }
 

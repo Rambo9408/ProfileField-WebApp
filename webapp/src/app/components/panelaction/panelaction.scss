@@ -1,27 +1,19 @@
 .profile-options {
-  // padding: 10px;
-  // float: right;
-  // width: 200px;
-  // margin-top: 10px;
-  text-align: right;
+  font-family: Arial, sans-serif;
+  text-align: end;
 
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  .back-link {
+    display: block;
+    margin-bottom: 5px;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 
-    li {
-      // margin-bottom: 8px;
-
-      .option-link {
-        color: blue;
-        text-decoration: underline;
-        cursor: pointer;
-
-        &:hover {
-          color: darkblue;
-        }
-      }
-    }
+  .action-links .option-link {
+    display: block;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
   }
 }

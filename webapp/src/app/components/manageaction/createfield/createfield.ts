@@ -42,9 +42,10 @@ export class Createfield {
   longTextLimit !: any;
   editPanelImport = '';
   archivingAccount = '';
-  selectedPanelId: Panelinterface | '' = '';
-  selectedSubPanel: Subpanelinterface | '' = '';
-  selectedColumnWidth !: any;
+  // selectedPanelId: Panelinterface | string = '';
+  selectedPanelId : string = '';
+  selectedSubPanel: Subpanelinterface | string = '';
+  selectedColumnWidth : any = '';
   staffAccess = 'all';
   volunteerCanSee = false;
   radioGroup = false;
@@ -58,7 +59,7 @@ export class Createfield {
   volunteerReviewRequired = false;
 
   panels: Panelinterface[] = [];
-  subPanels !: Subpanelinterface[];
+  subPanels: Subpanelinterface[] = [];
   columnWidths = [50, 100];
 
 
@@ -81,16 +82,38 @@ export class Createfield {
     this.cdRef.detectChanges();
   }
 
+  onPanelChange(panelId: string, subPanelId: String | '') {
+    if (!panelId) {
+      return;
+    }
+
+    this.subPanelService.getSubPanelByPanelID(panelId).subscribe({
+      next: (res) => {
+        this.subPanels = res.data;
+        const match = this.subPanels.find(sp => sp._id === subPanelId);
+        if (match) {
+          this.selectedSubPanel = match;
+        }
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching subpanels:', err);
+      }
+    });
+  }
+
+
   getFieldData(id: string) {
     this.fieldService.getFieldById(id).subscribe({
       next: (data) => {
+        console.log(data);
         // console.log("Field data received:", data);
         this.fieldName = data.fieldName || '';
         this.fieldDescription = data.fieldDescription || '';
         this.fieldType = data.fieldType || '';
         // this.longTextLimit = data.longTextLimit || '';
-        this.selectedPanelId = data.panelId || '';
-        this.selectedSubPanel = data.subpanelId || '';
+        this.selectedPanelId = data.panelId?._id || '';
+        // this.selectedSubPanel = data.subpanelId?._id || '';
         this.selectedColumnWidth = data.colWidth || '';
         // this.staffAccess = data.staffAccess || 'all';
         // this.volunteerCanSee = !!data.volunteerCanSee;
@@ -104,7 +127,7 @@ export class Createfield {
         // this.editPanelImport = !!data.editPanelImport;
         // this.archivingAccount = !!data.archivingAccount;
         // this.requireSubmanagerReview = !!data.requireSubmanagerReview;
-
+        this.onPanelChange(data.panelId?._id!, data.subpanelId?._id!);
         this.cdRef.detectChanges();
       },
       error: (err) => {
@@ -117,24 +140,23 @@ export class Createfield {
 
   getPanels() {
     this.panelService.getPanels().subscribe((panels: Panelinterface[]) => {
-      // console.log("panels getting: ", panels);
+      console.log("panels getting: ", panels);
       // this.panels = panels.filter(panel => panel.isRemovable).map(panel => panel.panelName);
-      this.subPanels = panels.filter(panel => panel.subpanelId?.length).flatMap(panel => panel.subpanelId ?? []);
+      // this.subPanels = panels.filter(panel => panel.subpanelId?.length).flatMap(panel => panel.subpanelId ?? []);
       this.panels = panels.filter(panel => panel.isRemovable);
       this.cdRef.detectChanges();
     });
   }
 
-  get filteredSubPanels(): Subpanelinterface[] {
-    if (!this.selectedPanelId) return [];
-    return this.subPanels.filter(sub => {
-      if (Array.isArray(sub.panelId)) {
-        return sub.panelId.some(p => p._id === this.selectedPanelId);
-      }
-      return sub.panelId === this.selectedPanelId;
-    });
-  }
-
+  // get filteredSubPanels(): Subpanelinterface[] {
+  //   if (!this.selectedPanelId) return [];
+  //   return this.subPanels.filter(sub => {
+  //     if (Array.isArray(sub.panelId)) {
+  //       return sub.panelId.some(p => p._id === this.selectedPanelId);
+  //     }
+  //     return sub.panelId === this.selectedPanelId;
+  //   });
+  // }
 
   onCreate(fieldForm: NgForm): void {
     // console.log('Field created with panel:', fieldForm.value);

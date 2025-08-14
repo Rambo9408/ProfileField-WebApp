@@ -80,7 +80,8 @@
             <div class="dropdown-section">
                 <label class="dropdown-label"><span class="required">*</span> Add to Panel:</label>
                 <mat-form-field appearance="fill" class="full-width">
-                    <mat-select [(ngModel)]="selectedPanelId" name="selectedPanelId" required>
+                    <mat-select [(ngModel)]="selectedPanelId" name="selectedPanelId"
+                        (selectionChange)="onPanelChange($event.value, '')" required>
                         <mat-option value="">Select One</mat-option>
                         @for (panel of panels; track panel._id) {
                         <mat-option [value]="panel._id">{{ panel.panelName }}</mat-option>
@@ -88,15 +89,17 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            
+
             <!-- Add to SubPanel (only if subpanels exist for selected panel) -->
-            @if (filteredSubPanels.length > 0) {
+            <!-- @if (filteredSubPanels.length > 0) { -->
+            @if (subPanels.length > 0) {
             <div class="dropdown-section">
                 <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel" required>
                         <mat-option value="">Select One</mat-option>
-                        @for (subPanel of filteredSubPanels; track subPanel._id) {
+                        <!-- @for (subPanel of filteredSubPanels; track subPanel._id) { -->
+                        @for (subPanel of subPanels; track subPanel._id) {
                         <mat-option [value]="subPanel">{{ subPanel.subPanelName }}</mat-option>
                         }
                     </mat-select>
