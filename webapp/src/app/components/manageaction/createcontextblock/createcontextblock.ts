@@ -11,7 +11,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
 @Component({
   selector: 'app-createcontextblock',
   standalone: true,
@@ -28,9 +27,8 @@ import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
     CommonModule,
     MatSelectModule,
     MatIconModule,
-    CKEditorModule,
-    CdkDragPlaceholder
-],
+    CKEditorModule
+  ],
   templateUrl: './createcontextblock.html',
   styleUrls: ['./createcontextblock.scss'],
 })
