@@ -9,9 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
 @Component({
   selector: 'app-createcontextblock',
+  standalone: true,
   imports: [
     MatDialogModule,
     MatFormFieldModule,
@@ -24,27 +27,65 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     CommonModule,
     MatSelectModule,
-    MatIconModule
-  ],
+    MatIconModule,
+    CKEditorModule,
+    CdkDragPlaceholder
+],
   templateUrl: './createcontextblock.html',
-  styleUrl: './createcontextblock.scss'
+  styleUrls: ['./createcontextblock.scss'],
 })
 export class Createcontextblock {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
-  volunteerAccess: string = '';
-  selectedPanel: string = '';
-  panels = ['Panel 1', 'Panel 2', 'Panel 3'];
+  public Editor = ClassicEditor;
 
+  selectedPanel: string = '';
+  panels: string[] = ['Panel 1', 'Panel 2', 'Panel 3'];
+  contentBlockInfo: string = '';
+  volunteerAccess: boolean = false;
+  // editorConfig = {
+  //   toolbar: [
+  //     ['Bold', 'Italic', 'Underline', 'TextColor', 'Outdent', 'Indent',
+  //       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+  //       'NumberedList', 'BulletedList', 'Table'],
+  //     ['Link']
+  //   ],
+  //   removePlugins: 'elementspath',
+  //   resize_enabled: false,
+  //   forcePasteAsPlainText: true
+  // };
+
+  public editorConfig = {
+    toolbar: [
+      'bold', 'italic', 'underline', '|',
+      'fontColor', 'fontBackgroundColor', '|',
+      'outdent', 'indent', '|',
+      'alignment', '|',
+      'bulletedList', 'numberedList', '|',
+      'link', 'insertTable', '|',
+      'undo', 'redo'
+    ],
+    removePlugins: ['Resize'],
+    forcePasteAsPlainText: true
+  };
 
   constructor(public dialogRef: MatDialogRef<Createcontextblock>) { }
-  
+
   onCancel(): void {
-      this.dialogRef.close();
+    this.dialogRef.close();
   }
 
   onCreate(): void {
     console.log('Form submitted');
   }
+
+  onReady(editor: any) {
+    const stickyPanel = editor.ui.view.stickyPanel.element;// this will select the first element in the editor
+    // const editableElement = editor.ui.view.editable.element;
+    // editableElement.style.minHeight = '200px';
+    // editableElement.style.maxHeight = '200px';
+    stickyPanel.style.borderBottom = "1px solid #000";
+  }
+
 
   formatText(command: string) {
     if (command === 'createLink') {

@@ -7,7 +7,8 @@
     "types": []
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/typings.d.ts"/*used for editor used in the context-block*/
   ],
   "exclude": [
     "src/**/*.spec.ts"

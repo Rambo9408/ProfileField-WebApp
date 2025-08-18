@@ -29,6 +29,11 @@
     "@angular/material": "^20.1.4",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@ckeditor/ckeditor5-angular": "^10.0.0",
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "ckeditor4": "^4.25.1",
+    "ckeditor4-angular": "^5.2.1",
+    "ckeditor5-build-classic-plus": "^13.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

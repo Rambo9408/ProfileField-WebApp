@@ -8,22 +8,30 @@
     <div mat-dialog-content class="form-container">
 
         <!-- Toolbar -->
-        <div class="editor-toolbar">
+        <!-- <div class="editor-toolbar">
             <button type="button" class="toolbar-button" (click)="formatText('bold')">B</button>
             <button type="button" class="toolbar-button" (click)="formatText('italic')">I</button>
             <button type="button" class="toolbar-button" (click)="formatText('underline')">U</button>
             <button type="button" class="toolbar-button" (click)="formatText('insertUnorderedList')">•</button>
             <button type="button" class="toolbar-button" (click)="formatText('insertOrderedList')">≡</button>
             <button type="button" class="toolbar-button" (click)="formatText('createLink')">🔗</button>
-        </div>
+        </div> -->
 
         <!-- Contenteditable div instead of textarea -->
-        <div class="editor-content" contenteditable="true" #editor placeholder="Type your content here..."></div>
+        <!-- <div class="editor-content" contenteditable="true" #editor placeholder="Type your content here..."></div> -->
+
+        <!-- <ckeditor [(ngModel)]="contentBlockInfo" [config]="editorConfig" name="contentBlockInfo"></ckeditor> -->
+        <ckeditor [editor]="Editor" class="ckeditor" [(ngModel)]="contentBlockInfo" [config]="editorConfig" (ready)="onReady($event)">
+
+        </ckeditor>
 
         <!-- Attachment checkbox -->
         <mat-checkbox class="checkbox">
             Include up to 10 attachments at the bottom of this Context Block.
         </mat-checkbox>
+        <div class="">
+            <p>Please name this file:</p>
+        </div>
 
         <!-- Add to Panel dropdown -->
         <div class="dropdown-section">
@@ -32,7 +40,7 @@
                 <mat-select [(ngModel)]="selectedPanel" name="selectedPanel" required>
                     <mat-option value="">Select One</mat-option>
                     @for (panel of panels; track $index) {
-                        <mat-option [value]="panel">{{ panel }}</mat-option>
+                    <mat-option [value]="panel">{{ panel }}</mat-option>
                     }
                 </mat-select>
             </mat-form-field>

@@ -23,4 +23,4 @@ ngOnChanges lifeCycle hook gets executed at start, when new components are creat
 the ngOnInit hook is called only once i.e during the first change detection after that if the input property changes the hook dosen't gets called.
 ngOnInit is called after the ngOnChanges.
 the native element(ViewChild/ContentChild) property is not defiened when ngOnInit is called because the view is not created, the child compoenent is not created and the projected component is not available inside the component.
- 
+npm install @ckeditor/ckeditor5-build-classic-super is used to add the contents of the toolbar int he text editor
