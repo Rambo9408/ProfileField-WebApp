@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Insert Link</h2>
+<mat-dialog-content class="link-form">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Link Type</mat-label>
+        <mat-select [(ngModel)]="data.linkType">
+            <mat-option value="url">URL</mat-option>
+            <mat-option value="anchorText">Link to Anchor in the Text</mat-option>
+            <mat-option value="email">Email</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div [ngClass]="{ 'body-container': data.linkType === 'url' }">
+        @if(data.linkType === 'url'){
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Protocol</mat-label>
+            <mat-select [(ngModel)]="data.protocol">
+                <mat-option value="http://">http://</mat-option>
+                <mat-option value="https://">https://</mat-option>
+                <mat-option value="https://">ftp://</mat-option>
+                <mat-option value="https://">news://</mat-option>
+            </mat-select>
+        </mat-form-field>
+        }
+    
+        @if(data.linkType === 'url' || data.linkType === 'email'){
+            <mat-form-field appearance="fill" class="full-width" [ngClass]="{ 'emailFormField': data.linkType === 'email' }">
+                <mat-label>{{ data.linkType === 'url' ? 'URL' : 'E-Mail Address' }}</mat-label>
+                <input matInput [(ngModel)]="data.href" />
+            </mat-form-field>
+        
+            @if(data.linkType === 'email'){
+            <mat-form-field appearance="fill" class="full-width emailFormField">
+                <mat-label>Message Subject</mat-label>
+                <input matInput [(ngModel)]="data.subject" />
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill" class="full-width emailFormField">
+                <mat-label>Message Body</mat-label>
+                <textarea matInput [(ngModel)]="data.body"></textarea>
+            </mat-form-field>
+            }
+        }
+        @else {
+            <div class="anchorLink-class">
+                <p>(No anchors available in the document)</p>
+            </div>
+        }
+    </div>
+    
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onOk()">OK</button>
+</mat-dialog-actions>

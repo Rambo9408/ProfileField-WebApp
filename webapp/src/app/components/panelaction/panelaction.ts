@@ -87,6 +87,8 @@ export class Panelaction {
               console.error('Error creating subpanel:', error);
             }
           });
+        } else if (this.flag === 3) {
+          console.log("Context Block content: ", result);
         }
       }
     });

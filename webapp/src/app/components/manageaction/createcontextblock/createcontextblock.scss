@@ -13,7 +13,7 @@
             }
         }
 
-        .ckeditor{
+        .ckeditor {
             border: 1px solid black;
             // height: 250px;
         }
@@ -24,46 +24,77 @@
         justify-content: space-between;
     }
 
-    .editor-toolbar {
-        display: flex;
-        gap: 8px;
-        background-color: #f0f0f0;
-        padding: 6px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+    .file-attachement-box {
+        border: 1px dashed blue;
+        margin-left: 40px;
+        padding: 10px 30px 20px 30px;
 
-        .toolbar-button {
-            border: none;
-            background-color: #e2e2e2;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
+        .inputClass {
+            height: 18px;
+            padding: 5px;
+        }
 
-            &:hover {
-                background-color: #d1d1d1;
+        .input-form-fileds {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+
+            .deleteLink{
+                margin-left: 10px;
+                cursor: pointer;
+            }
+
+            .file-attachment-link {
+                padding-left: 45px;
+                cursor: pointer;
+                text-decoration: underline;
+                color: blue;
+                font-size: 13px;
             }
         }
+
     }
 
-    .editor-content {
-        min-height: 150px;
-        max-height: 250px;
-        /* Limit height to avoid overflow */
-        padding: 10px;
-        border: 1px solid #1976d2;
-        border-radius: 4px;
-        background-color: #fff;
-        font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-        ;
-        outline: none;
-        white-space: pre-wrap;
-        overflow-y: auto;
-        /* Enables scroll if content is long */
-        word-break: break-word;
-        /* Break long words if needed */
-    }
+    // .editor-toolbar {
+    //     display: flex;
+    //     gap: 8px;
+    //     background-color: #f0f0f0;
+    //     padding: 6px;
+    //     border: 1px solid #ccc;
+    //     border-radius: 6px;
+
+    //     .toolbar-button {
+    //         border: none;
+    //         background-color: #e2e2e2;
+    //         border-radius: 4px;
+    //         padding: 4px 8px;
+    //         font-weight: bold;
+    //         cursor: pointer;
+    //         transition: background 0.2s;
+
+    //         &:hover {
+    //             background-color: #d1d1d1;
+    //         }
+    //     }
+    // }
+
+    // .editor-content {
+    //     min-height: 150px;
+    //     max-height: 250px;
+    //     /* Limit height to avoid overflow */
+    //     padding: 10px;
+    //     border: 1px solid #1976d2;
+    //     border-radius: 4px;
+    //     background-color: #fff;
+    //     font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    //     ;
+    //     outline: none;
+    //     white-space: pre-wrap;
+    //     overflow-y: auto;
+    //     /* Enables scroll if content is long */
+    //     word-break: break-word;
+    //     /* Break long words if needed */
+    // }
 
 
     .btn-group {
@@ -83,12 +114,12 @@
 }
 
 ::ng-deep .ck-editor__editable_inline {
-  min-height: 200px !important;
-  max-height: 200px !important;
-  overflow-y: auto !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
 }
 
 .context-dialog-wrapper .ckeditor {
-  width: 100%;
-  display: block;
+    width: 100%;
+    display: block;
 }

@@ -21,17 +21,45 @@
         <!-- <div class="editor-content" contenteditable="true" #editor placeholder="Type your content here..."></div> -->
 
         <!-- <ckeditor [(ngModel)]="contentBlockInfo" [config]="editorConfig" name="contentBlockInfo"></ckeditor> -->
-        <ckeditor [editor]="Editor" class="ckeditor" [(ngModel)]="contentBlockInfo" [config]="editorConfig" (ready)="onReady($event)">
+        <ckeditor [editor]="Editor" class="ckeditor" [(ngModel)]="contentBlockInfo" [config]="editorConfig"
+            (ready)="onReady($event)">
 
         </ckeditor>
 
         <!-- Attachment checkbox -->
-        <mat-checkbox class="checkbox">
+        <mat-checkbox class="checkbox" [(ngModel)]="showAtachedFileOptions">
             Include up to 10 attachments at the bottom of this Context Block.
         </mat-checkbox>
-        <div class="">
+        @if(showAtachedFileOptions){
+        <div class="file-attachement-box">
             <p>Please name this file:</p>
+
+            @for (attachment of attachments; track $index) {
+            <div class="attachment-item">
+                <div class="input-form-fileds">
+                    <!-- <mat-form-field appearance="fill" class="full-width">
+                        <input matInput class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
+                    </mat-form-field> -->
+                    <input class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
+                    
+                    <!-- If file already chosen, show its original name -->
+                    @if(attachment.file){
+                        <label class="file-attachment-link">{{ attachment.originalFileName }}</label>
+                        <a class="deleteLink" (click)="removeAttachment($index)">
+                            <img src="delete_large.png" height="17">
+                        </a>
+                    }
+                    <!-- Else show the attach link -->
+                    @else {
+                        <span class="file-attachment-link" (click)="fileInput.click()">Attach File Here</span>
+                        <input type="file" #fileInput style="display:none" (change)="onFileSelected($event, $index)"
+                        accept="image/*" />
+                    }
+                </div>
+            </div>
+            }
         </div>
+        }
 
         <!-- Add to Panel dropdown -->
         <div class="dropdown-section">
@@ -39,8 +67,8 @@
             <mat-form-field appearance="fill" class="full-width">
                 <mat-select [(ngModel)]="selectedPanel" name="selectedPanel" required>
                     <mat-option value="">Select One</mat-option>
-                    @for (panel of panels; track $index) {
-                    <mat-option [value]="panel">{{ panel }}</mat-option>
+                    @for (panel of panels; track panel._id) {
+                    <mat-option [value]="panel._id">{{ panel.panelName }}</mat-option>
                     }
                 </mat-select>
             </mat-form-field>
