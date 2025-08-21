@@ -30,37 +30,39 @@
             <!-- Field Type -->
             <div class="field-type-label">
                 <label><span class="required">*</span> Field Type</label>
-                <a class="field-type-toggle" (click)="radioGroupEnable()">[Select]</a>
+                @if(selectedFieldType){
+                    <div class="selected-fieldType">
+                        <span [(ngModel)]="fieldType" name="fieldType" [innerHTML]="selectedFieldType"></span>
+                    </div>
+                }
+                <a class="field-type-toggle" (click)="radioGroupEnable()">{{selectedFieldType ? 'Edit' : 'Assign'}}</a>
             </div>
 
             @if(radioGroup){
             <div class="field-type-options">
-                <mat-radio-group [(ngModel)]="fieldType" name="fieldType" required>
-                    <mat-radio-button value="age">Current Age (Converts birthdate to age in years)</mat-radio-button>
-                    <mat-radio-button value="date">Date (Select a date from a calendar.)</mat-radio-button>
-                    <mat-radio-button value="email">E-mail Address</mat-radio-button>
-                    <mat-radio-button value="file">File Attachment(s)</mat-radio-button>
-                    <mat-radio-button value="sign">Document Signing</mat-radio-button>
-                    <mat-radio-button value="phone">Phone Number (Enter any 10 digit phone number.)</mat-radio-button>
-                    <mat-radio-button value="photo">Photo Upload</mat-radio-button>
-                    <mat-radio-button value="number">Quantitative Field (Type a number into a box.)</mat-radio-button>
-                    <mat-radio-button value="qsingle-quant">Quantitative - Single Select</mat-radio-button>
-                    <mat-radio-button value="qmulti-quant">Quantitative - Multi-Select</mat-radio-button>
-                    <mat-radio-button value="qsingle-qual">Qualitative - Single Select</mat-radio-button>
-                    <mat-radio-button value="qmulti-qual">Qualitative - Multi-Select</mat-radio-button>
-                    <mat-radio-button value="text">Free Text (Enter up to 120 characters.)</mat-radio-button>
-                    <mat-radio-button value="encrypted">Encrypted Text (Enter up to 120 characters.)</mat-radio-button>
-                    <mat-radio-button value="longText">Text - Long</mat-radio-button>
-                    <mat-radio-button value="state">U.S. State or Territory</mat-radio-button>
+                <mat-radio-group class="radioAllignment" [(ngModel)]="fieldType" name="fieldType" #fieldTypeSelected="ngModel" required>
+                    <mat-radio-button #radioBtn value="age">Current Age (Converts birthdate to age in years)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="date">Date (Select a date from a calendar.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="email">E-mail Address</mat-radio-button>
+                    <mat-radio-button #radioBtn value="file">File Attachment(s)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="sign">Document Signing</mat-radio-button>
+                    <mat-radio-button #radioBtn value="phone">Phone Number (Enter any 10 digit phone number.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="photo">Photo Upload</mat-radio-button>
+                    <mat-radio-button #radioBtn value="number">Quantitative Field (Type a number into a box.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="qsingle-quant">Quantitative - Single Select (Select a single number.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="qmulti-quant">Quantitative - Multi-Select (Select one or more numbers.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="qsingle-qual">Qualitative - Single Select (Select one value.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="qmulti-qual">Qualitative - Multi-Select (Select one or more values.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="text">Free Text (Enter up to 120 characters.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="encrypted">Encrypted Text (Enter up to 120 characters.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="longText">Text - Long (Enter up to <input matInput type="number" [(ngModel)]="longTextLimit" name="longTextLimit" min="1" max="1000"> characters.)</mat-radio-button>
+                    <mat-radio-button #radioBtn value="state">U.S. State or Territory</mat-radio-button>
                 </mat-radio-group>
 
-                <!-- Conditional input for long text -->
-                @if (fieldType === 'longText') {
-                <mat-form-field appearance="outline" class="long-text-limit">
-                    <mat-label>Character Limit</mat-label>
-                    <input matInput type="number" [(ngModel)]="longTextLimit" min="1" max="1000">
-                </mat-form-field>
-                }
+                <div class="radio-action-btn">
+                    <a class="radiobtn" (click)="applyFieldType()">Apply</a>
+                    <a class="radiobtn" (click)="radioGroupEnable()">Cancel</a>
+                </div>
             </div>
             }
 

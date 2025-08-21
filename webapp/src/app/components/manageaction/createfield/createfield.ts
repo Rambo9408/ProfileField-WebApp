@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Output } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Output, QueryList, ViewChildren } from '@angular/core';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -35,12 +35,15 @@ import { Fieldservice } from '../../../services/fieldservice';
   styleUrl: './createfield.scss'
 })
 export class Createfield {
+  @ViewChildren('radioBtn', { read: ElementRef }) radioButtons!: QueryList<ElementRef>;
+
   fieldName = '';
   fieldDescription = '';
   fieldType !: any;
+  selectedFieldType: string = '';
   longTextLimit !: any;
-  editPanelImport = '';
-  archivingAccount = '';
+  editPanelImport !: boolean;
+  archivingAccount !: boolean;
   selectedPanelId: string = '';
   selectedSubPanel: Subpanelinterface | string = '';
   selectedColumnWidth: any = '';
@@ -112,22 +115,22 @@ export class Createfield {
         this.fieldName = data.fieldName || '';
         this.fieldDescription = data.fieldDescription || '';
         this.fieldType = data.fieldType || '';
-        // this.longTextLimit = data.longTextLimit || '';
+        this.longTextLimit = data.longTextLimit || '';
         this.selectedPanelId = data.panelId?._id || '';
         // this.selectedSubPanel = data.subpanelId?._id || '';
         this.selectedColumnWidth = data.colWidth || '';
-        // this.staffAccess = data.staffAccess || 'all';
-        // this.volunteerCanSee = !!data.volunteerCanSee;
-        // this.volunteerCanEdit = !!data.volunteerCanEdit;
-        // this.volunteerLockAfterEdit = !!data.volunteerLockAfterEdit;
-        // this.volunteerEnrollmentRequired = !!data.volunteerEnrollmentRequired;
-        // this.volunteerEnrollmentVisible = !!data.volunteerEnrollmentVisible;
-        // this.volunteerQuickAccess = !!data.volunteerQuickAccess;
-        // this.volunteerReviewRequired = !!data.volunteerReviewRequired;
-        // this.editByStaff = !!data.editByStaff;
-        // this.editPanelImport = !!data.editPanelImport;
-        // this.archivingAccount = !!data.archivingAccount;
-        // this.requireSubmanagerReview = !!data.requireSubmanagerReview;
+        this.staffAccess = data.staffAccess || 'all';
+        this.volunteerCanSee = !!data.volunteerCanSee;
+        this.volunteerCanEdit = !!data.volunteerCanEdit;
+        this.volunteerLockAfterEdit = !!data.volunteerLockAfterEdit;
+        this.volunteerEnrollmentRequired = !!data.volunteerEnrollmentRequired;
+        this.volunteerEnrollmentVisible = !!data.volunteerEnrollmentVisible;
+        this.volunteerQuickAccess = !!data.volunteerQuickAccess;
+        this.volunteerReviewRequired = !!data.volunteerReviewRequired;
+        this.editByStaff = !!data.editByStaff;
+        this.editPanelImport = !!data.editPanelImport;
+        this.archivingAccount = !!data.archivingAccount;
+        this.requireSubmanagerReview = !!data.requireSubmanagerReview;
         this.onPanelChange(data.panelId?._id!, data.subpanelId?._id!);
         this.cdRef.detectChanges();
       },
@@ -161,9 +164,9 @@ export class Createfield {
 
   onCreate(fieldForm: NgForm): void {
     // console.log('Field created with panel:', fieldForm.value);
-    if(this.data?.fieldId){
+    if (this.data?.fieldId) {
       this.dialogRef.close({ action: 'update', field: fieldForm.value });
-    }else{
+    } else {
       this.dialogRef.close(fieldForm.value);
     }
   }
@@ -200,5 +203,20 @@ export class Createfield {
     this.confirmationAction = null;
   }
 
+  onFieldTypeChange(event: any) {
+    const selectedElement = event.source._elementRef.nativeElement;
+    this.selectedFieldType = selectedElement.innerHTML.trim();
+  }
+
+  applyFieldType() {
+    const selectedRadio = this.radioButtons.find(
+      (radio) => radio.nativeElement.querySelector('input').value === this.fieldType
+    );
+
+    if (selectedRadio) {
+      this.selectedFieldType = selectedRadio.nativeElement.innerText.trim();
+    }
+    this.radioGroup = false;
+  }
 
 }

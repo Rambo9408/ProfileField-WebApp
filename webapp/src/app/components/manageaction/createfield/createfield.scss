@@ -151,34 +151,50 @@
         margin: 10px 0;
         font-weight: bold;
         flex-direction: column;
+
+        .selected-fieldType {
+            font-weight: normal;
+            margin: 10px;
+            font-size: 14px;
+        }
     }
 
     .field-type-toggle {
         cursor: pointer;
         color: #3f51b5;
         font-size: 14px;
-        padding: 10px;
+        text-decoration: underline;
+        padding: 0px 10px;
     }
 
-    .field-type-options {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
+    .radioAllignment {
+        display: grid;
+        margin: 10px;
     }
 
     .long-text-limit {
-        width: 200px;
+        width: 100%;
         margin-top: 10px;
     }
 
     .field-type-options {
         display: flex;
         flex-direction: column;
+        gap: 10px;
+        margin-left: 10px;
         border: 1px dotted #3f51b5;
 
-        mat-radio-button {
-            margin-bottom: 8px; // spacing between radios
+        .radio-action-btn {
+            text-align: center;
+            margin-bottom: 10px;
+
+            .radiobtn {
+                color: blue;
+                margin: 10px;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 15px;
+            }
         }
     }
 
