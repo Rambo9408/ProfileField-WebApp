@@ -3,6 +3,8 @@ const router = express.Router();
 const Fieldtypecontroller = require('../controllers/fieldtypecontroller');
 const Panelcontroller = require('../controllers/panelcontroller');
 const SubPanelcontroller = require('../controllers/subpanelcontroller');
+const ContextBlockController = require('../controllers/contextblockcontroller');
+const upload = require('../middleware/uploads');
 
 //Panel routes
 router.get('/panel', Panelcontroller.find);
@@ -31,5 +33,9 @@ router.post('/addSubPanel', SubPanelcontroller.addSubPanel);
 // router.put('/updateFieldOrder', SubPanelcontroller.updateSubPanel);
 router.put('/updateSubPanel/:id', SubPanelcontroller.updateSubPanel);
 router.delete('/deleteSubPanel/:id', SubPanelcontroller.deleteSubPanel);
+
+//contextBlock routes
+router.post('/addContextBlock', upload.array("attachments", 5), ContextBlockController.saveContextBlock);
+router.delete('/deleteContextBlock/:id', ContextBlockController.deleteContextBlock);
 
 module.exports = router;

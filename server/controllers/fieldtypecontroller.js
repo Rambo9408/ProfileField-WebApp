@@ -9,16 +9,22 @@ const addFieldType = async (req, res) => {
             fieldDescription,
             fieldType,
             selectedColumnWidth = 100,
-            selectedPanelId
+            selectedPanelId,
+            selectedSubPanel
         } = req.body;
-        const panelId = req.body.selectedSubPanel.panelId
 
         if (!fieldName || fieldName.trim() === '') {
             return res.status(400).json({ message: "Field name is required." });
         }
+        if (!fieldType) {
+            return res.status(400).json({ message: "Field type is required." });
+        }
+        if (!selectedPanelId) {
+            return res.status(400).json({ message: "Panel ID is required." });
+        }
 
         // Fetch the panel and populate fieldId
-        const panel = await PanelType.findById(panelId).populate('fieldId');
+        const panel = await PanelType.findById(selectedPanelId).populate('fieldId');
         if (!panel) {
             return res.status(404).json({ message: "Panel not found." });
         }
@@ -28,13 +34,18 @@ const addFieldType = async (req, res) => {
             ? panel.fieldId[existingFieldCount - 1].colId
             : 0;
 
+        let subPanelId = undefined;
+        if (selectedSubPanel && selectedSubPanel._id) {
+            subPanelId = selectedSubPanel._id;
+        }
+
         // Create and save new field
         const newField = new FieldType({
             fieldName: fieldName.trim(),
             fieldDescription: fieldDescription?.trim() || '',
             fieldType,
-            panelId,
-            subpanelId: selectedPanelId || undefined,
+            panelId: selectedPanelId,
+            subpanelId: subPanelId,
             orderId: existingFieldCount + 1,
             colId: lastColId === 0 ? 1 : 0,
             isDraggable: false,
@@ -125,7 +136,7 @@ const addMultipleFieldTypes = async (req, res) => {
 const findField = async (req, res) => {
     try {
         const id = req.params.id;
-        
+
         if (id) {
             const field = await FieldType.findById(id).populate('panelId').populate('subpanelId');
             if (!field) {
@@ -147,8 +158,8 @@ const findField = async (req, res) => {
 const updateFieldType = async (req, res) => {
     try {
         const { id } = req.params;
-        
-        const { fieldName,fieldDescription, colId, orderId } = req.body;
+
+        const { fieldName, fieldDescription, colId, orderId } = req.body;
 
         const field = await FieldType.findById(id);
         if (!field) {
@@ -183,6 +194,11 @@ const deleteFieldType = async (req, res) => {
 
         // Remove reference from Panel
         await PanelType.findByIdAndUpdate(field.panelId, {
+            $pull: { fieldId: field._id }
+        });
+
+        // Delete reference from subpanel
+        await SubPanel.findByIdAndUpdate(field.panelId, {
             $pull: { fieldId: field._id }
         });
 

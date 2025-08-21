@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class Fielddetails implements OnChanges {
   @Input() fields !: Fieldinterface[];
   @Input() fieldsOfSubPanel !: Fieldinterface[];
+
   leftFields: Fieldinterface[] = [];
   rightFields: Fieldinterface[] = [];
   fullWidthSubPanelField: Fieldinterface[] = [];
@@ -36,7 +37,10 @@ export class Fielddetails implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(changes);
+    this.processFields();
+  }
 
+  processFields() {
     if (this.fields) {
       const fieldsCopy = this.fields.filter(f => !f.subpanelId);
 
@@ -65,6 +69,20 @@ export class Fielddetails implements OnChanges {
         this.subPanelFieldsOrder.length > 0 ? this.subPanelFieldsOrder : [];
     }
   }
+
+  // refreshFields() {
+  //   this.fieldService.getFields().subscribe({
+  //     next: (res) => {
+  //       // this.fields = res.filter(f => !f.subpanelId);
+  //       // this.fieldsOfSubPanel = res.filter(f => f.subpanelId);
+  //       this.processFields();
+  //       this.cdRef.detectChanges();
+  //     },
+  //     error: (err) => {
+  //       console.error("Error refreshing fields:", err);
+  //     }
+  //   });
+  // }
 
   dropField(event: CdkDragDrop<Fieldinterface[]>) {
 
@@ -108,21 +126,34 @@ export class Fielddetails implements OnChanges {
       },
       autoFocus: false
     });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.fieldService.updateField(id, result).subscribe({
+    //       next: (response) => {
+    //         console.log('Subpanel Updated:', response);
+    //         // this.cdRef.detectChanges();
+    //         this.refreshFields(); 
+    //       },
+    //       error: (error) => {
+    //         console.error('Error Updating subpanel:', error);
+    //       }
+    //     });
+    //   }
+    // });
+
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (!result) return;
+
+      if (result.action === 'delete') {
+        this.fieldService.refreshFields();
+      } else {
         this.fieldService.updateField(id, result).subscribe({
-          next: (response) => {
-            console.log('Subpanel Updated:', response);
-            // this.triggerRefresh();
-            // this.panelService.notifyPanelRefresh();
-            this.cdRef.detectChanges();
-          },
-          error: (error) => {
-            console.error('Error Updating subpanel:', error);
-          }
+          next: () => this.fieldService.refreshFields(),
+          error: (error) => console.error('Error updating field:', error)
         });
       }
     });
+
   }
 
 }

@@ -103,15 +103,26 @@ export class Createcontextblock {
       return;
     }
 
-    const formData = {
-      panel: this.selectedPanel,
-      content: this.contentBlockInfo,
-      volunteerAccess: this.volunteerAccess,
-      includeAttachments: this.showAtachedFileOptions,
-      attachments: this.attachments.filter(att => att.file && att.fileName?.trim())
-    };
+    // const formData = {
+    //   panel: this.selectedPanel,
+    //   content: this.contentBlockInfo,
+    //   volunteerAccess: this.volunteerAccess,
+    //   includeAttachments: this.showAtachedFileOptions,
+    //   attachments: this.attachments.filter(att => att.file && att.fileName?.trim())
+    // };
 
-    console.log('Form submitted:', formData);
+    const formData = new FormData();
+    formData.append('panel', this.selectedPanel);
+    formData.append('content', this.contentBlockInfo);
+    formData.append('volunteerAccess', this.volunteerAccess.toString());
+    formData.append('includeAttachments', this.showAtachedFileOptions.toString());
+
+    // Add attachments one by one
+    this.attachments.forEach(att => {
+      if (att.file) {
+        formData.append('attachments', att.file);
+      }
+    });
 
     this.dialogRef.close(formData);
   }

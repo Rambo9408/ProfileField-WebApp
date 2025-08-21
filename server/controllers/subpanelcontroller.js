@@ -1,5 +1,6 @@
 const SubPanel = require("../models/subpanel");
 const PanelType = require("../models/paneltype");
+const FieldType = require("../models/fieldtype");
 
 const addSubPanel = async (req, res) => {
     try {
@@ -78,19 +79,32 @@ const updateSubPanel = async (req, res) => {
 const deleteSubPanel = async (req, res) => {
     try {
         const id = req.params.id;
-        const deletedSubPanel = await SubPanel.findByIdAndDelete(id);
+        const subPanel = await SubPanel.findById(id);
 
-        if (!deletedSubPanel) {
+        if (!subPanel) {
             return res.status(404).send({ message: `SubPanel with ID ${id} not found.` });
         }
 
-        res.status(200).json({
-            message: "SubPanel deleted successfully.",
-            data: deletedSubPanel
+        await PanelType.findByIdAndUpdate(subPanel.panelId, {
+            $pull: { subpanelId: subPanel._id }
         });
+
+        if (subPanel.fieldId && subPanel.fieldId.length > 0) {
+            await FieldType.deleteMany({ _id: { $in: subPanel.fieldId } });
+        }
+
+        await SubPanel.findByIdAndDelete(id);
+
+        res.status(200).json({
+            message: "SubPanel and its associated fields deleted successfully.",
+            data: subPanel
+        });
+
     } catch (err) {
         console.error("Delete error:", err);
-        res.status(500).send({ message: err.message || "Error deleting subpanel." });
+        res.status(500).send({
+            message: err.message || "Error deleting subpanel."
+        });
     }
 };
 
@@ -120,26 +134,29 @@ const getSubPanel = async (req, res) => {
 
 const getSubPanelsByPanelId = async (req, res) => {
     try {
-        const panelId  = req.params.id;
-        
-        const subPanels = await SubPanel.find({ panelId })
-            .populate('fieldId');
+        const panelId = req.params.id;
+
+        const subPanels = await SubPanel.find({ panelId }).populate('fieldId');
 
         if (!subPanels.length) {
-            return res.status(404).json({
-                message: `No subpanels found for panel ID ${panelId}`
+            return res.status(200).json({
+                message: "No subpanels found for this panel.",
+                data: []
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Subpanels retrieved successfully.",
             data: subPanels
         });
     } catch (err) {
         console.error("Error retrieving subpanels:", err);
-        res.status(500).json({ message: err.message || "Error retrieving subpanels." });
+        return res.status(500).json({
+            message: err.message || "Error retrieving subpanels."
+        });
     }
 };
+
 
 
 module.exports = {

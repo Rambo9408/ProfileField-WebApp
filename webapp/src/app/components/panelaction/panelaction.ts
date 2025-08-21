@@ -7,6 +7,7 @@ import { Createfield } from '../manageaction/createfield/createfield';
 import { Panelservice } from '../../services/panelservice';
 import { Fieldservice } from '../../services/fieldservice';
 import { Subpanelservice } from '../../services/subpanelservice';
+import { Contextblockservice } from '../../services/contextblockservice';
 
 @Component({
   selector: 'app-panelaction',
@@ -21,7 +22,9 @@ export class Panelaction {
     private dialog: MatDialog,
     private panelService: Panelservice,
     private fieldService: Fieldservice,
-    private subPanelService: Subpanelservice
+    private subPanelService: Subpanelservice,
+    private contextBlockService: Contextblockservice
+
   ) { }
 
   openDialogBox(type: string): void {
@@ -69,7 +72,7 @@ export class Panelaction {
         } else if (this.flag === 4) {
           this.fieldService.addField(result).subscribe({
             next: (response) => {
-              console.log('Field created:', response);
+              // console.log('Field created:', response);
               this.panelService.notifyPanelRefresh();
             },
             error: (error) => {
@@ -88,7 +91,14 @@ export class Panelaction {
             }
           });
         } else if (this.flag === 3) {
-          console.log("Context Block content: ", result);
+          this.contextBlockService.addContextBlock(result).subscribe({
+            next: (res) => {
+              console.log('ContextBlock Created: ', res);
+            },
+            error: (err) => {
+              console.error('Error creating subpanel:', err);
+            }
+          })
         }
       }
     });

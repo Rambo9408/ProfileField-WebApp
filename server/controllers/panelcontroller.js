@@ -1,4 +1,6 @@
 const PanelTypes = require('../models/paneltype');
+const SubPanel = require('../models/subpanel');
+const FieldType = require('../models/fieldtype');
 
 // Add a single panel with auto-incremented orderId
 const addPanelType = async (req, res) => {
@@ -71,6 +73,23 @@ const updatePanelType = async (req, res) => {
 const deletePanelType = async (req, res) => {
     try {
         const id = req.params.id;
+        const findPanel = await PanelTypes.findById(id);
+
+        if (findPanel) {
+            const findSubPanels = await SubPanel.find({ panelId: findPanel._id });
+            const findFieldsInPanel = await FieldType.find({ panelId: findPanel._id });
+
+            if (findSubPanels.length > 0) {
+                const subPanelIds = findSubPanels.map(sp => sp._id);
+                await SubPanel.deleteMany({ _id: { $in: subPanelIds } });
+            }
+
+            if (findFieldsInPanel.length > 0) {
+                const fieldIds = findFieldsInPanel.map(f => f._id);
+                await FieldType.deleteMany({ _id: { $in: fieldIds } });
+            }
+        }
+
         const deletedPanel = await PanelTypes.findByIdAndDelete(id);
 
         if (!deletedPanel) {

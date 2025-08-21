@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,7 +14,6 @@ import { Subpanelservice } from '../../../services/subpanelservice';
 import { Panelinterface } from '../../../interfaces/panelinterface';
 import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
 import { Fieldservice } from '../../../services/fieldservice';
-import { Fieldinterface } from '../../../interfaces/fieldinterface';
 
 @Component({
   selector: 'app-createfield',
@@ -42,10 +41,9 @@ export class Createfield {
   longTextLimit !: any;
   editPanelImport = '';
   archivingAccount = '';
-  // selectedPanelId: Panelinterface | string = '';
-  selectedPanelId : string = '';
+  selectedPanelId: string = '';
   selectedSubPanel: Subpanelinterface | string = '';
-  selectedColumnWidth : any = '';
+  selectedColumnWidth: any = '';
   staffAccess = 'all';
   volunteerCanSee = false;
   radioGroup = false;
@@ -57,11 +55,13 @@ export class Createfield {
   volunteerEnrollmentVisible = false;
   volunteerQuickAccess = false;
   volunteerReviewRequired = false;
+  isEditable = false;
 
   panels: Panelinterface[] = [];
   subPanels: Subpanelinterface[] = [];
   columnWidths = [50, 100];
 
+  confirmationAction: string | null = null;
 
 
   constructor(
@@ -78,6 +78,7 @@ export class Createfield {
     // console.log("Field data received:", this.data);
     if (this.data?.content === 'Update') {
       this.getFieldData(this.data.fieldId);
+      this.isEditable = true;
     }
     this.cdRef.detectChanges();
   }
@@ -160,9 +161,11 @@ export class Createfield {
 
   onCreate(fieldForm: NgForm): void {
     // console.log('Field created with panel:', fieldForm.value);
-    // Logic to handle field creation
-    this.cdRef.detectChanges();
-    this.dialogRef.close(fieldForm.value);
+    if(this.data?.fieldId){
+      this.dialogRef.close({ action: 'update', field: fieldForm.value });
+    }else{
+      this.dialogRef.close(fieldForm.value);
+    }
   }
   onCancel(): void {
     this.dialogRef.close();
@@ -170,4 +173,32 @@ export class Createfield {
   radioGroupEnable(): void {
     this.radioGroup = !this.radioGroup;
   }
+
+  confirmationBtn(action: string) {
+    if (this.confirmationAction === action) {
+      this.confirmationAction = null;
+    } else {
+      this.confirmationAction = action;
+    }
+  }
+
+  onConfirmAction() {
+    if (this.confirmationAction === 'delete') {
+      this.fieldService.deleteField(this.data.fieldId).subscribe({
+        next: (res) => {
+          console.log("Field deleted successfully:", res);
+          this.dialogRef.close({ action: 'delete', fieldId: this.data.fieldId });
+        },
+        error: (err) => {
+          console.error('Error deleting field:', err);
+        }
+      });
+    } else if (this.confirmationAction === 'archive') {
+      console.log("Archiving field...");
+    }
+
+    this.confirmationAction = null;
+  }
+
+
 }
