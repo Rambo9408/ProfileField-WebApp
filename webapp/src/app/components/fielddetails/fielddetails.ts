@@ -7,6 +7,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Fieldservice } from '../../services/fieldservice';
 import { Createfield } from '../manageaction/createfield/createfield';
 import { MatDialog } from '@angular/material/dialog';
+import { Subpanelservice } from '../../services/subpanelservice';
 
 @Component({
   selector: 'app-fielddetails',
@@ -27,6 +28,7 @@ export class Fielddetails implements OnChanges {
 
   constructor(
     private fieldService: Fieldservice,
+    private subPanelService: Subpanelservice,
     private cdRef: ChangeDetectorRef,
     private dialog: MatDialog,
   ) { }
@@ -70,19 +72,19 @@ export class Fielddetails implements OnChanges {
     }
   }
 
-  // refreshFields() {
-  //   this.fieldService.getFields().subscribe({
-  //     next: (res) => {
-  //       // this.fields = res.filter(f => !f.subpanelId);
-  //       // this.fieldsOfSubPanel = res.filter(f => f.subpanelId);
-  //       this.processFields();
-  //       this.cdRef.detectChanges();
-  //     },
-  //     error: (err) => {
-  //       console.error("Error refreshing fields:", err);
-  //     }
-  //   });
-  // }
+  refreshFields() {
+    this.fieldService.getFields().subscribe({
+      next: (res) => {
+        // this.fields = res.filter(f => !f.subpanelId);
+        // this.fieldsOfSubPanel = res.filter(f => f.subpanelId);
+        this.processFields();
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error("Error refreshing fields:", err);
+      }
+    });
+  }
 
   dropField(event: CdkDragDrop<Fieldinterface[]>) {
 
@@ -145,10 +147,10 @@ export class Fielddetails implements OnChanges {
       if (!result) return;
 
       if (result.action === 'delete') {
-        this.fieldService.refreshFields();
+        this.subPanelService.notifySubPanelRefresh();
       } else {
         this.fieldService.updateField(id, result).subscribe({
-          next: () => this.fieldService.refreshFields(),
+          next: () => this.subPanelService.notifySubPanelRefresh(),
           error: (error) => console.error('Error updating field:', error)
         });
       }

@@ -98,7 +98,7 @@
             <div class="dropdown-section">
                 <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
                 <mat-form-field appearance="fill" class="full-width">
-                    <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel" required>
+                    <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel">
                         <mat-option value="">Select One</mat-option>
                         <!-- @for (subPanel of filteredSubPanels; track subPanel._id) { -->
                         @for (subPanel of subPanels; track subPanel._id) {

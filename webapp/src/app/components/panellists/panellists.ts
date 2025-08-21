@@ -15,6 +15,9 @@ import { Createsubpanel } from '../manageaction/createsubpanel/createsubpanel';
 import { Subpanelservice } from '../../services/subpanelservice';
 import { Subpanelinterface } from '../../interfaces/subpanelinterface';
 import { Subpanelview } from '../subpanelview/subpanelview';
+import { Contextblockservice } from '../../services/contextblockservice';
+import { Contextblockinterface } from '../../interfaces/contextblockinterface';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-panellists',
@@ -42,9 +45,14 @@ import { Subpanelview } from '../subpanelview/subpanelview';
   ]
 })
 export class Panellists {
+  safeContent: SafeHtml[] = [];
+
   isOpen = false;
   fields: Fieldinterface[] = [];
   subPanels: Subpanelinterface[] = [];
+  selectedContextBlocks: Contextblockinterface[] = [];
+  // panelContextBlocks: { [panelId: string]: Contextblockinterface[] } = {};
+  panelContextBlocks !: Contextblockinterface[];
   openPanels: { [panelId: string]: boolean } = {};
   fixedPanels: string[] = [
     'Name & Contact Details',
@@ -61,11 +69,40 @@ export class Panellists {
     private dialog: MatDialog,
     private panelService: Panelservice,
     private subpanelService: Subpanelservice,
-    private cdr: ChangeDetectorRef
+    private contextBlockService: Contextblockservice,
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.fetchSubPanels();
+    this.subpanelService.refreshSubPanels$.subscribe(() => {
+      this.loadPanelFields();
+      this.fetchSubPanels();
+    });
+  }
+
+  getContextBlockContent(panelId: string, subPanelId?: string) {
+    // Avoid duplicate API calls if we already fetched the data
+    if (this.panelContextBlocks) {
+      return;
+    }
+
+    this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
+      next: (res) => {
+        // this.panelContextBlocks[panelId] = res.data;
+        this.panelContextBlocks = res.data;
+        this.safeContent = this.panelContextBlocks.map(block =>
+          this.sanitizer.bypassSecurityTrustHtml(block.content)
+        );
+        // console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(`Error fetching context blocks for ${panelId}:`, err);
+        this.panelContextBlocks = [];
+      }
+    });
   }
 
   getSubPanelsForPanel(panelId: string): Subpanelinterface[] {
@@ -77,7 +114,7 @@ export class Panellists {
 
   fetchSubPanels(): void {
     this.subpanelService.getSubPanels().subscribe({
-      next: (subpanels: Subpanelinterface[]) => {        
+      next: (subpanels: Subpanelinterface[]) => {
         this.subPanels = subpanels;
         this.cdr.detectChanges();
       },
@@ -95,6 +132,9 @@ export class Panellists {
 
   togglePanel(panelId: string): void {
     this.openPanels[panelId] = !this.openPanels[panelId];
+    // if (this.openPanels[panelId]) {
+    this.getContextBlockContent(panelId);
+    // }
   }
 
   dropPanel(event: CdkDragDrop<any[]>) {
@@ -187,5 +227,11 @@ export class Panellists {
       }
     });
   }
+
+  getAttachmentUrl(path: string): string {
+    const baseUrl = 'http://localhost:3000';
+    return `${baseUrl}${path}`;
+  }
+
 
 }

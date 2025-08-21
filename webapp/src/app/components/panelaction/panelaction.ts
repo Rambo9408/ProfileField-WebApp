@@ -73,6 +73,7 @@ export class Panelaction {
           this.fieldService.addField(result).subscribe({
             next: (response) => {
               // console.log('Field created:', response);
+              this.fieldService.refreshFields();
               this.panelService.notifyPanelRefresh();
             },
             error: (error) => {

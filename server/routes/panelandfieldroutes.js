@@ -35,6 +35,7 @@ router.put('/updateSubPanel/:id', SubPanelcontroller.updateSubPanel);
 router.delete('/deleteSubPanel/:id', SubPanelcontroller.deleteSubPanel);
 
 //contextBlock routes
+router.get('/getContextBlock', ContextBlockController.getContextBlock);
 router.post('/addContextBlock', upload.array("attachments", 5), ContextBlockController.saveContextBlock);
 router.delete('/deleteContextBlock/:id', ContextBlockController.deleteContextBlock);
 

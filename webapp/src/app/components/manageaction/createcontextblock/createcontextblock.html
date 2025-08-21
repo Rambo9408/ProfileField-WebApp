@@ -27,10 +27,10 @@
         </ckeditor>
 
         <!-- Attachment checkbox -->
-        <mat-checkbox class="checkbox" [(ngModel)]="showAtachedFileOptions">
+        <mat-checkbox class="checkbox" [(ngModel)]="showAttachedFileOptions">
             Include up to 10 attachments at the bottom of this Context Block.
         </mat-checkbox>
-        @if(showAtachedFileOptions){
+        @if(showAttachedFileOptions){
         <div class="file-attachement-box">
             <p>Please name this file:</p>
 
@@ -41,18 +41,18 @@
                         <input matInput class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
                     </mat-form-field> -->
                     <input class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
-                    
+
                     <!-- If file already chosen, show its original name -->
                     @if(attachment.file){
-                        <label class="file-attachment-link">{{ attachment.originalFileName }}</label>
-                        <a class="deleteLink" (click)="removeAttachment($index)">
-                            <img src="delete_large.png" height="17">
-                        </a>
+                    <label class="file-attachment-link">{{ attachment.originalFileName }}</label>
+                    <a class="deleteLink" (click)="removeAttachment($index)">
+                        <img src="delete_large.png" height="17">
+                    </a>
                     }
                     <!-- Else show the attach link -->
                     @else {
-                        <span class="file-attachment-link" (click)="fileInput.click()">Attach File Here</span>
-                        <input type="file" #fileInput style="display:none" (change)="onFileSelected($event, $index)"
+                    <span class="file-attachment-link" (click)="fileInput.click()">Attach File Here</span>
+                    <input type="file" #fileInput style="display:none" (change)="onFileSelected($event, $index)"
                         accept="image/*" />
                     }
                 </div>
@@ -65,7 +65,8 @@
         <div class="dropdown-section">
             <label class="dropdown-label"><span class="required">*</span> Add to Panel:</label>
             <mat-form-field appearance="fill" class="full-width">
-                <mat-select [(ngModel)]="selectedPanel" name="selectedPanel" required>
+                <mat-select [(ngModel)]="selectedPanel" name="selectedPanel"
+                    (selectionChange)="onPanelChange($event.value, '')" required>
                     <mat-option value="">Select One</mat-option>
                     @for (panel of panels; track panel._id) {
                     <mat-option [value]="panel._id">{{ panel.panelName }}</mat-option>
@@ -73,6 +74,20 @@
                 </mat-select>
             </mat-form-field>
         </div>
+
+        @if (subPanels.length > 0) {
+        <div class="dropdown-section">
+            <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel">
+                    <mat-option value="">Select One</mat-option>
+                    @for (subPanel of subPanels; track subPanel._id) {
+                    <mat-option [value]="subPanel._id">{{ subPanel.subPanelName }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+        }
 
         <!-- Volunteers checkbox -->
         <div class="checkbox-section">

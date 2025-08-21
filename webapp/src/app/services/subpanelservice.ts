@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subpanelinterface } from '../interfaces/subpanelinterface';
-import { catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Subpanelservice {
+  private refreshSubPanelSubject = new BehaviorSubject<void>(undefined);
+  refreshSubPanels$ = this.refreshSubPanelSubject.asObservable();
+
   private getUrl = "http://localhost:3000/api/subPanel";
   private getByPaneelIDUrl = "http://localhost:3000/api/subPanelbyPanelID";
   private addUrl = "http://localhost:3000/api/addSubPanel";
@@ -30,7 +33,7 @@ export class Subpanelservice {
     console.error(errorMsg);
     return throwError(() => new Error(errorMsg));
   }
-  
+
   getSubPanels(): Observable<Subpanelinterface[]> {
     return this.http.get<Subpanelinterface[]>(this.getUrl).pipe(catchError(this.handleError));
   }
@@ -51,11 +54,15 @@ export class Subpanelservice {
     return this.http.delete<Subpanelinterface>(`${this.deleteUrl}/${_id}`).pipe(catchError(this.handleError));
   }
 
-  getSubPanelByPanelID(id: string): Observable<{ data: Subpanelinterface[]}>{
+  getSubPanelByPanelID(id: string): Observable<{ data: Subpanelinterface[] }> {
     return this.http.get<{ data: Subpanelinterface[] }>(`${this.getByPaneelIDUrl}/${id}`).pipe(catchError(this.handleError));
   }
 
   // updateSubPanelOrder(panels: Subpanelinterface[]): Observable<Subpanelinterface[]> {
   //   return this.http.put<Subpanelinterface[]>(this.updateOrderUrl, panels);
   // }
+
+  notifySubPanelRefresh() {
+    this.refreshSubPanelSubject.next();
+  }
 }

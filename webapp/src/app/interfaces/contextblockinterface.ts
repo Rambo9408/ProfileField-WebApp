@@ -1,5 +1,7 @@
 export interface Attachment {
-    fileName: string;        
+    fileName: string;   
+    fileType?: string;     
+    filePath?: string;     
     originalFileName: string;
 }
 export interface Contextblockinterface {
@@ -9,5 +11,5 @@ export interface Contextblockinterface {
     content: string;            
     volunteerAccess: boolean;   
     includeAttachments?: boolean;
-    attachments?: Attachment[]; 
+    attachments: Attachment[]; 
 }

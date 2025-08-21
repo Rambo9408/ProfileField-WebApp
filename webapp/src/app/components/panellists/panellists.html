@@ -1,5 +1,5 @@
 <div class="profile-panel-container" cdkDropList (cdkDropListDropped)="dropPanel($event)">
-  @for (panel of panelNames; track $index) {
+  @for (panel of panelNames; track panel._id) {
   <div class="profile-panel" cdkDrag>
     <div class="panel-header">
       <!-- <span class="material-icons toggle-icon">
@@ -39,7 +39,49 @@
       </div>
     </div>
 
-    <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
+    <div class="panel-body" (click)="getContextBlockContent(panel._id!)"
+      [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
+      @if (panelContextBlocks) {
+      <div class="context-blocks">
+        @for (block of panelContextBlocks; track $index) {
+        <div class="context-block">
+          <!-- Render HTML content -->
+          <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+
+          <!-- Show attachments if available -->
+          @if (block.attachments) {
+          <div class="context-attachments">
+            <b>Attachments:</b>
+            <div class="attachments-preview">
+              @for (file of block.attachments; track $index) {
+              <div class="attachment-item">
+                <!-- Show image directly -->
+                @if (file.fileType?.startsWith('image/')) {
+                <img [src]="getAttachmentUrl(file.filePath!)" [alt]="file.fileName" class="attachment-image" />
+                }
+
+                <!-- Show PDF inline -->
+                @else if (file.fileType === 'application/pdf') {
+                <embed [src]="getAttachmentUrl(file.filePath!)" type="application/pdf" class="attachment-pdf" />
+                }
+
+                <!-- For other file types, show download link -->
+                @else {
+                <a [href]="file.filePath" target="_blank" class="attachment-link">
+                  {{ file.originalFileName }}
+                </a>
+                }
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      }
+
+
       @if (panel.fieldId.length > 0) {
       <div class="panel-actions">
         <app-fielddetails [fields]="panel.fieldId"></app-fielddetails>

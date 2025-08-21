@@ -9,7 +9,7 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class Contextblockservice {
-  // private getUrl = "http://localhost:3000/api/fields";
+  private getUrl = "http://localhost:3000/api/getContextBlock";
   private addUrl = "http://localhost:3000/api/addContextBlock";
   // private updateUrl = "http://localhost:3000/api/updateField";
   // private updateOrderUrl = "http://localhost:3000/api/updateFieldOrder";
@@ -31,6 +31,18 @@ export class Contextblockservice {
     console.error(errorMsg);
     return throwError(() => new Error(errorMsg));
   }
+
+  getContextBlock(panelId: string, subPanelId?: string): Observable<{ data: Contextblockinterface[] }> {
+    let url = `${this.getUrl}?panelId=${panelId}`;
+    if (subPanelId) {
+      url += `&subPanelId=${subPanelId}`;
+    }
+
+    return this.http.get<{ data: Contextblockinterface[] }>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   addContextBlock(Field: FormData): Observable<Contextblockinterface> {
     return this.http.post<Contextblockinterface>(this.addUrl, Field)

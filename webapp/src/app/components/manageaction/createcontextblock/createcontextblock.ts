@@ -14,21 +14,27 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Editortoolbarlink } from '../editortoolbarlink/editortoolbarlink';
 import { Panelservice } from '../../../services/panelservice';
 import { Panelinterface } from '../../../interfaces/panelinterface';
-// console.log(ClassicEditor.builtinPlugins.map((p: any) => p.pluginName));
+import { Subpanelservice } from '../../../services/subpanelservice';
+import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
+
+type Attachment = {
+  file?: File;
+  fileName: string;
+  originalFileName: string;
+};
+
 @Component({
   selector: 'app-createcontextblock',
   standalone: true,
   imports: [
+    CommonModule,
+    FormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
     MatCheckboxModule,
     MatButtonModule,
-    FormsModule,
-    MatButtonModule,
-    MatInputModule,
-    CommonModule,
     MatSelectModule,
     MatIconModule,
     CKEditorModule
@@ -41,16 +47,20 @@ export class Createcontextblock {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   public Editor = ClassicEditor;
-  showAtachedFileOptions: boolean = false;
+
+  // UI state
+  showAttachedFileOptions = false; // fixed spelling (“Attached”)
   selectedPanel: string = '';
-  originalFileName: string = '';
-  fileName: string = '';
+  selectedSubPanel: string = '';   // store just the _id consistently
+
   panels: Panelinterface[] = [];
+  subPanels: Subpanelinterface[] = [];
+
   contentBlockInfo: string = '';
   linkText: string = 'Attach File Here';
   volunteerAccess: boolean = false;
-  selectedFileName: string = '';
-  attachments: { file?: File; fileName?: string; originalFileName?: string }[] = [
+
+  attachments: Attachment[] = [
     { file: undefined, fileName: '', originalFileName: '' }
   ];
 
@@ -62,11 +72,11 @@ export class Createcontextblock {
       'alignment', '|',
       'bulletedList', 'numberedList', '|',
       'insertTable', '|',
-      'undo', 'redo', '|',
-      // 'customLink'
+      'undo', 'redo'
     ],
     removePlugins: ['Resize'],
-    forcePasteAsPlainText: true
+    // Classic build already pastes styled content; to keep it simple:
+    // (not all builds honor forcePasteAsPlainText)
   };
 
   constructor(
@@ -74,21 +84,23 @@ export class Createcontextblock {
     private dialog: MatDialog,
     private panelService: Panelservice,
     private cdr: ChangeDetectorRef,
-  ) { }
+    private subPanelService: Subpanelservice
+  ) {}
 
   ngOnInit() {
-    // this.editorConfig.toolbar.splice(20, 0, 'link'); 
     this.getPanels();
   }
 
   getPanels() {
     this.panelService.getPanels().subscribe({
       next: (panels) => {
-        this.panels = panels.filter((p: any) => p.isRemovable === true || p.panelName === "Name & Contact Details");
+        this.panels = panels.filter(
+          (p: any) => p.isRemovable === true || p.panelName === 'Name & Contact Details'
+        );
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Error fetching panels:", err);
+        console.error('Error fetching panels:', err);
       }
     });
   }
@@ -98,29 +110,29 @@ export class Createcontextblock {
   }
 
   onCreate(): void {
-    if (this.showAtachedFileOptions && this.attachments.length === 0) {
-      alert('Please enter a file name.');
-      return;
+    // If file section is enabled, ensure at least one valid attachment is present
+    if (this.showAttachedFileOptions) {
+      const hasAtLeastOneFile = this.attachments.some(att => !!att.file);
+      if (!hasAtLeastOneFile) {
+        alert('Please attach at least one file or turn off “Attach file” option.');
+        return;
+      }
     }
-
-    // const formData = {
-    //   panel: this.selectedPanel,
-    //   content: this.contentBlockInfo,
-    //   volunteerAccess: this.volunteerAccess,
-    //   includeAttachments: this.showAtachedFileOptions,
-    //   attachments: this.attachments.filter(att => att.file && att.fileName?.trim())
-    // };
 
     const formData = new FormData();
     formData.append('panel', this.selectedPanel);
+    formData.append('subPanel', this.selectedSubPanel || '');
     formData.append('content', this.contentBlockInfo);
-    formData.append('volunteerAccess', this.volunteerAccess.toString());
-    formData.append('includeAttachments', this.showAtachedFileOptions.toString());
+    formData.append('volunteerAccess', String(this.volunteerAccess));
+    formData.append('includeAttachments', String(this.showAttachedFileOptions));
 
-    // Add attachments one by one
-    this.attachments.forEach(att => {
+    // Append file + an optional display name (fileName) if you support it on backend
+    this.attachments.forEach((att, idx) => {
       if (att.file) {
         formData.append('attachments', att.file);
+        // Optional: send names in parallel arrays if your API expects them
+        formData.append('attachmentFileNames', att.fileName || att.originalFileName || `file-${idx + 1}`);
+        formData.append('attachmentOriginalNames', att.originalFileName || att.file.name);
       }
     });
 
@@ -128,13 +140,11 @@ export class Createcontextblock {
   }
 
   onReady(editor: any) {
-    const stickyPanel = editor.ui.view.stickyPanel.element;// this will select the first element in the editor
-    stickyPanel.style.borderBottom = "1px solid #000";
-    // const linkButton = editor.ui.componentFactory.create('customLink');
-
-    // linkButton.on('execute', () => {
-    //   this.openLinkDialog(editor);
-    // });
+    // Visual tweak for sticky panel
+    const stickyPanel = editor?.ui?.view?.stickyPanel?.element;
+    if (stickyPanel) {
+      stickyPanel.style.borderBottom = '1px solid #000';
+    }
   }
 
   openLinkDialog(editor: any): void {
@@ -144,50 +154,79 @@ export class Createcontextblock {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        let url = result.linkType === 'url'
+      if (!result) return;
+
+      const url =
+        result.linkType === 'url'
           ? `${result.protocol}${result.href}`
           : `mailto:${result.href}`;
 
-        editor.model.change((writer: any) => {
-          const selection = editor.model.document.selection;
-          if (selection && !selection.isCollapsed) {
-            writer.setAttribute('linkHref', url, selection.getFirstRange());
-          } else {
-            const textNode = writer.createText(result.href, { linkHref: url });
-            editor.model.insertContent(textNode, selection);
-          }
-        });
-      }
+      editor.model.change((writer: any) => {
+        const selection = editor.model.document.selection;
+        if (selection && !selection.isCollapsed) {
+          writer.setAttribute('linkHref', url, selection.getFirstRange());
+        } else {
+          const textNode = writer.createText(result.href, { linkHref: url });
+          editor.model.insertContent(textNode, selection);
+        }
+      });
     });
   }
 
-
   attachFile(): void {
-    this.fileInput.nativeElement.click();
+    this.fileInput?.nativeElement?.click();
   }
 
   onFileSelected(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.attachments[index] = {
-        ...this.attachments[index],   // keep existing fileName
-        file,
-        originalFileName: file.name
-      };
+    const file = input.files?.[0];
+    if (!file) return;
 
-      if (index === this.attachments.length - 1) {
-        this.attachments.push({ file: undefined, fileName: '', originalFileName: '' });
-      }
-      input.value = '';
+    const current = this.attachments[index] ?? { fileName: '', originalFileName: '' };
+    this.attachments[index] = {
+      ...current,
+      file,
+      originalFileName: file.name,
+      fileName: current.fileName || '' // preserve typed name if any
+    };
+
+    // Always keep an empty row at the bottom
+    const last = this.attachments[this.attachments.length - 1];
+    if (last.file) {
+      this.attachments.push({ file: undefined, fileName: '', originalFileName: '' });
     }
+
+    // reset input so selecting the same filename again works
+    input.value = '';
   }
 
   removeAttachment(index: number): void {
     this.attachments.splice(index, 1);
-    if (this.attachments.length === 0) {
-      this.attachments.push({ file: undefined, fileName: '' });
+    // Always keep at least one empty row
+    if (this.attachments.length === 0 || this.attachments.every(att => !!att.file)) {
+      this.attachments.push({ file: undefined, fileName: '', originalFileName: '' });
     }
+  }
+
+  onPanelChange(panelId: string, subPanelId: string | '') {
+    if (!panelId) {
+      this.subPanels = [];
+      this.selectedSubPanel = '';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.subPanelService.getSubPanelByPanelID(panelId).subscribe({
+      next: (res) => {
+        this.subPanels = res.data;
+        // auto-select if subPanelId provided
+        const match = this.subPanels.find(sp => sp._id === subPanelId);
+        this.selectedSubPanel = match?._id ?? '';
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching subpanels:', err);
+      }
+    });
   }
 }

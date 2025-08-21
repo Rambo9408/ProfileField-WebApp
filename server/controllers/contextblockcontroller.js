@@ -4,18 +4,45 @@ const fs = require("fs");
 const path = require("path");
 const ContextBlock = require("../models/contextblock");
 
-// Save a new context block
+const getContextBlock = async (req, res) => {
+    try {
+        const { panelId, subPanelId } = req.query;
+
+        if (!panelId) {
+            return res.status(400).json({ message: "Panel ID is required" });
+        }
+
+        // Build query dynamically based on available params
+        const query = { panel: panelId };
+
+        if (subPanelId) query.subPanel = subPanelId;
+
+        const contextBlocks = await ContextBlock.find(query).sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            message: "Context blocks fetched successfully",
+            data: contextBlocks,
+        });
+    } catch (error) {
+        console.error("Error fetching context blocks:", error);
+
+        return res.status(500).json({
+            message: "Error fetching context blocks",
+            error: error.message,
+        });
+    }
+};
+
+
 const saveContextBlock = async (req, res) => {
     try {
         const { panel, subPanel, content, volunteerAccess, includeAttachments } = req.body;
 
-        // ✅ Check if panel exists
         const panelExists = await PanelType.findById(panel);
         if (!panelExists) {
             return res.status(404).json({ message: "Panel not found" });
         }
 
-        // ✅ Check if subpanel exists (if provided)
         if (subPanel) {
             const subPanelExists = await SubPanel.findById(subPanel);
             if (!subPanelExists) {
@@ -23,7 +50,6 @@ const saveContextBlock = async (req, res) => {
             }
         }
 
-        // ✅ Handle uploaded attachments from multer (req.files)
         let attachments = [];
         if (req.files && req.files.length > 0) {
             attachments = req.files.map((file, index) => ({
@@ -35,7 +61,6 @@ const saveContextBlock = async (req, res) => {
             }));
         }
 
-        // ✅ Create new ContextBlock
         const newBlock = new ContextBlock({
             panel,
             subPanel: subPanel || null,
@@ -108,6 +133,7 @@ const deleteContextBlock = async (req, res) => {
 
 
 module.exports = {
+    getContextBlock,
     saveContextBlock,
     deleteContextBlock,
 };
