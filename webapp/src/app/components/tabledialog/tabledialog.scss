@@ -1,0 +1,19 @@
+.table-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: 48%;
+}
+
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}

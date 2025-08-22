@@ -1,9 +1,12 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+// import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { importProvidersFrom } from '@angular/core';
+import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { QuillModule } from 'ngx-quill';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,6 +14,11 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideAnimations(),
-    provideHttpClient()
+    provideHttpClient(),
+    importProvidersFrom(
+      FormsModule,
+      ReactiveFormsModule,
+      QuillModule.forRoot()
+    )
   ]
 };

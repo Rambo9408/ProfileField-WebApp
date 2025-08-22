@@ -9,13 +9,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { QuillEditorComponent, QuillModule } from 'ngx-quill';
 import { Editortoolbarlink } from '../editortoolbarlink/editortoolbarlink';
 import { Panelservice } from '../../../services/panelservice';
 import { Panelinterface } from '../../../interfaces/panelinterface';
 import { Subpanelservice } from '../../../services/subpanelservice';
 import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
+import { Tabledialog } from '../../tabledialog/tabledialog';
 
 type Attachment = {
   file?: File;
@@ -37,21 +37,20 @@ type Attachment = {
     MatButtonModule,
     MatSelectModule,
     MatIconModule,
-    CKEditorModule
+    QuillModule
+    // CKEditorModule
   ],
   templateUrl: './createcontextblock.html',
   styleUrls: ['./createcontextblock.scss'],
 })
 export class Createcontextblock {
-  @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
+  // @ViewChild(QuillEditorComponent) editorRef!: QuillEditorComponent;
+  @ViewChild(QuillEditorComponent, { static: true }) editorRef!: QuillEditorComponent;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  public Editor = ClassicEditor;
-
-  // UI state
-  showAttachedFileOptions = false; // fixed spelling (“Attached”)
+  showAttachedFileOptions = false;
   selectedPanel: string = '';
-  selectedSubPanel: string = '';   // store just the _id consistently
+  selectedSubPanel: string = '';
 
   panels: Panelinterface[] = [];
   subPanels: Subpanelinterface[] = [];
@@ -64,20 +63,36 @@ export class Createcontextblock {
     { file: undefined, fileName: '', originalFileName: '' }
   ];
 
-  public editorConfig = {
-    toolbar: [
-      'bold', 'italic', 'underline', '|',
-      'fontColor', 'fontBackgroundColor', '|',
-      'outdent', 'indent', '|',
-      'alignment', '|',
-      'bulletedList', 'numberedList', '|',
-      'insertTable', '|',
-      'undo', 'redo'
-    ],
-    removePlugins: ['Resize'],
-    // Classic build already pastes styled content; to keep it simple:
-    // (not all builds honor forcePasteAsPlainText)
+  public quillModules = {
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'align': [] }],
+        ['link'],
+        ['table'],
+      ],
+      handlers: {
+        link: (value: string) => {
+          if (value) {
+            // const url = prompt('Enter the link URL:');
+            // if (url) {
+            //   const range = this.editorRef.quillEditor.getSelection();
+            //   this.editorRef.quillEditor.format('link', url);
+            // }
+            this.openLinkDialog();
+          } else {
+            this.editorRef.quillEditor.format('link', false);
+          }
+        },
+        // table: () => this.insertCustomTable()
+        table: () => this.openTableDialog()
+      }
+    }
   };
+
+
 
   constructor(
     public dialogRef: MatDialogRef<Createcontextblock>,
@@ -85,10 +100,67 @@ export class Createcontextblock {
     private panelService: Panelservice,
     private cdr: ChangeDetectorRef,
     private subPanelService: Subpanelservice
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getPanels();
+    this.cdr.detectChanges();
+  }
+
+  // insertCustomTable() {
+  //   const rows = parseInt(prompt('Enter number of rows:') || '0', 10);
+  //   const cols = parseInt(prompt('Enter number of columns:') || '0', 10);
+
+  //   if (!rows || !cols || rows < 1 || cols < 1) {
+  //     alert('Invalid input. Please enter valid numbers.');
+  //     return;
+  //   }
+
+  //   let table = '<table style="border-collapse: collapse; width: 100%;">';
+
+  //   for (let r = 0; r < rows; r++) {
+  //     table += '<tr>';
+  //     for (let c = 0; c < cols; c++) {
+  //       table += `<td style="border: 1px solid #ccc; padding: 6px;">&nbsp;</td>`;
+  //     }
+  //     table += '</tr>';
+  //   }
+
+  //   table += '</table>';
+
+  //   const quillEditor = this.editorRef.quillEditor;
+  //   const range = quillEditor.getSelection();
+  //   quillEditor.clipboard.dangerouslyPasteHTML(range?.index || 0, table);
+  // }
+
+  openTableDialog() {
+    const dialogRef = this.dialog.open(Tabledialog, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.rows && result.cols) {
+        this.insertCustomTable(result.rows, result.cols);
+      }
+    });
+  }
+
+  insertCustomTable(rows: number, cols: number) {
+    let table = '<table style="border-collapse: collapse; width: 100%;">';
+
+    for (let r = 0; r < rows; r++) {
+      table += '<tr>';
+      for (let c = 0; c < cols; c++) {
+        table += `<td style="border: 1px solid #ccc; padding: 6px;">&nbsp;</td>`;
+      }
+      table += '</tr>';
+    }
+
+    table += '</table>';
+
+    const quillEditor = this.editorRef.quillEditor;
+    const range = quillEditor.getSelection();
+    quillEditor.clipboard.dangerouslyPasteHTML(range?.index || 0, table);
   }
 
   getPanels() {
@@ -140,17 +212,17 @@ export class Createcontextblock {
   }
 
   onReady(editor: any) {
-    // Visual tweak for sticky panel
     const stickyPanel = editor?.ui?.view?.stickyPanel?.element;
     if (stickyPanel) {
       stickyPanel.style.borderBottom = '1px solid #000';
     }
   }
 
-  openLinkDialog(editor: any): void {
+  openLinkDialog(): void {
     const dialogRef = this.dialog.open(Editortoolbarlink, {
       width: '400px',
-      data: { linkType: 'url', protocol: 'http://', href: '' }
+      data: { linkType: 'url', protocol: 'http://', href: '' },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -161,15 +233,14 @@ export class Createcontextblock {
           ? `${result.protocol}${result.href}`
           : `mailto:${result.href}`;
 
-      editor.model.change((writer: any) => {
-        const selection = editor.model.document.selection;
-        if (selection && !selection.isCollapsed) {
-          writer.setAttribute('linkHref', url, selection.getFirstRange());
-        } else {
-          const textNode = writer.createText(result.href, { linkHref: url });
-          editor.model.insertContent(textNode, selection);
+      const quillEditor = this.editorRef?.quillEditor;
+      if (quillEditor) {
+        const range = quillEditor.getSelection();
+        if (range) {
+          quillEditor.insertText(range.index, result.href, 'link', url);
+          quillEditor.setSelection(range.index + result.href.length, 0);
         }
-      });
+      }
     });
   }
 
@@ -190,19 +261,16 @@ export class Createcontextblock {
       fileName: current.fileName || '' // preserve typed name if any
     };
 
-    // Always keep an empty row at the bottom
     const last = this.attachments[this.attachments.length - 1];
     if (last.file) {
       this.attachments.push({ file: undefined, fileName: '', originalFileName: '' });
     }
 
-    // reset input so selecting the same filename again works
     input.value = '';
   }
 
   removeAttachment(index: number): void {
     this.attachments.splice(index, 1);
-    // Always keep at least one empty row
     if (this.attachments.length === 0 || this.attachments.every(att => !!att.file)) {
       this.attachments.push({ file: undefined, fileName: '', originalFileName: '' });
     }

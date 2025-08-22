@@ -1,0 +1,112 @@
+<!-- <h2 mat-dialog-title>Insert Table</h2>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Rows</mat-label>
+    <input matInput type="number" [(ngModel)]="rows" min="1">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Columns</mat-label>
+    <input matInput type="number" [(ngModel)]="cols" min="1">
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="insertTable()">Insert</button>
+</div> -->
+
+
+<h2 mat-dialog-title>Table Properties</h2>
+<div mat-dialog-content class="table-dialog">
+
+  <!-- Rows -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Rows</mat-label>
+    <input matInput type="number" [(ngModel)]="tableData.rows" min="1">
+  </mat-form-field>
+
+  <!-- Columns -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Columns</mat-label>
+    <input matInput type="number" [(ngModel)]="tableData.cols" min="1">
+  </mat-form-field>
+
+  <!-- Width -->
+  <div class="flex-row">
+    <mat-form-field appearance="outline" class="half-width">
+      <mat-label>Width</mat-label>
+      <input matInput type="number" [(ngModel)]="tableData.width">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half-width">
+      <mat-label>Unit</mat-label>
+      <mat-select [(ngModel)]="tableData.widthUnit">
+        <mat-option value="px">Pixels</mat-option>
+        <mat-option value="%">Percentage</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Height -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Height (optional)</mat-label>
+    <input matInput type="number" [(ngModel)]="tableData.height">
+  </mat-form-field>
+
+  <!-- Headers -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Headers</mat-label>
+    <mat-select [(ngModel)]="tableData.headers">
+      <mat-option value="none">None</mat-option>
+      <mat-option value="firstRow">First Row</mat-option>
+      <mat-option value="firstCol">First Column</mat-option>
+      <mat-option value="both">Both</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Border Size -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Border Size</mat-label>
+    <input matInput type="number" [(ngModel)]="tableData.border" min="0">
+  </mat-form-field>
+
+  <!-- Alignment -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Alignment</mat-label>
+    <mat-select [(ngModel)]="tableData.align">
+      <mat-option value="left">Left</mat-option>
+      <mat-option value="center">Center</mat-option>
+      <mat-option value="right">Right</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Cell Spacing -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Cell Spacing</mat-label>
+    <input matInput type="number" [(ngModel)]="tableData.cellSpacing" min="0">
+  </mat-form-field>
+
+  <!-- Cell Padding -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Cell Padding</mat-label>
+    <input matInput type="number" [(ngModel)]="tableData.cellPadding" min="0">
+  </mat-form-field>
+
+  <!-- Caption -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Caption</mat-label>
+    <input matInput [(ngModel)]="tableData.caption">
+  </mat-form-field>
+
+  <!-- Summary -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Summary</mat-label>
+    <input matInput [(ngModel)]="tableData.summary">
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="insertTable()">Insert</button>
+</div>

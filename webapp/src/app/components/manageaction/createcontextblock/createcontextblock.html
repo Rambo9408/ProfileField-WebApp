@@ -21,10 +21,18 @@
         <!-- <div class="editor-content" contenteditable="true" #editor placeholder="Type your content here..."></div> -->
 
         <!-- <ckeditor [(ngModel)]="contentBlockInfo" [config]="editorConfig" name="contentBlockInfo"></ckeditor> -->
-        <ckeditor [editor]="Editor" class="ckeditor" [(ngModel)]="contentBlockInfo" [config]="editorConfig"
-            (ready)="onReady($event)">
+        <!-- <div class="ckeditor-container">
+             <ckeditor [editor]="Editor" [(ngModel)]="contentBlockInfo" [config]="editorConfig"
+                 (ready)="onReady($event)"
+                 style="min-height: 300px; display: block; border: 1px solid #ccc;">
+             </ckeditor>
+         </div> -->
 
-        </ckeditor>
+        <div class="ckeditor-container">
+            <quill-editor [(ngModel)]="contentBlockInfo" [modules]="quillModules" theme="snow" style="height: 300px;"
+                placeholder="Type your content here">
+            </quill-editor>
+        </div>
 
         <!-- Attachment checkbox -->
         <mat-checkbox class="checkbox" [(ngModel)]="showAttachedFileOptions">
