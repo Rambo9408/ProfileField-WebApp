@@ -45,9 +45,6 @@
             @for (attachment of attachments; track $index) {
             <div class="attachment-item">
                 <div class="input-form-fileds">
-                    <!-- <mat-form-field appearance="fill" class="full-width">
-                        <input matInput class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
-                    </mat-form-field> -->
                     <input class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
 
                     @if(attachment.originalFileName){

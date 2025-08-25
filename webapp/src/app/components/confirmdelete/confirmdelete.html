@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Delete Context Block</h2>
+<div class="delete-context-block">
+    <mat-dialog-content>
+        <p><strong>Click the Delete button to permanently delete this Context Block.</strong></p>
+    </mat-dialog-content>
+    <mat-dialog-actions class="delete-btn-action">
+        <button mat-raised-button color="warn" (click)="onConfirm()">Delete</button>
+        <button mat-button (click)="onCancel()">Cancel</button>
+    </mat-dialog-actions>
+</div>

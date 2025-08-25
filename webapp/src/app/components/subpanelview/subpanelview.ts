@@ -14,6 +14,7 @@ import { Contextblockinterface } from '../../interfaces/contextblockinterface';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Contextblockservice } from '../../services/contextblockservice';
 import { Createcontextblock } from '../manageaction/createcontextblock/createcontextblock';
+import { Confirmdelete } from '../confirmdelete/confirmdelete';
 
 @Component({
   selector: 'app-subpanelview',
@@ -46,7 +47,32 @@ export class Subpanelview {
 
   ngOnInit(): void {
     this.fields = this.subpanel.fieldId as Fieldinterface[];
+    if (this.parentPanelId['_id'] && this.subpanel._id) {
+      this.getContextBlockContent(this.parentPanelId['_id']!, this.subpanel._id);
+    }
   }
+
+  deleteContextBlock(id: string) {
+      console.log("contextBlock id: ", id);
+      const dialogRef = this.dialog.open(Confirmdelete, {
+        width: '600px',
+        data: { id }
+      });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.contextBlockService.deleteContextBlock(id).subscribe({
+            next: (res) => {
+              console.log("Context Block deleted successfully:", res);
+              
+            },
+            error: (err) => {
+              console.error("Error deleting Context Block:", err);
+            }
+          });
+        }
+      });
+    }
 
   editSubPanel(pid: string) {
     const dialogRef = this.dialog.open(Createsubpanel, {
@@ -94,11 +120,13 @@ export class Subpanelview {
     if (this.panelContextBlocks) {
       return;
     }
+    console.log(`Fetching context blocks for panel ${panelId}, sub-panel ${subPanelId}`);
 
     this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
       next: (res) => {
-        // this.panelContextBlocks[panelId] = res.data;
-        this.panelContextBlocks = res.data;
+        this.panelContextBlocks = res.data.filter(
+          (block: any) => block.subPanel === subPanelId
+        );
         this.safeContent = this.panelContextBlocks.map(block =>
           this.sanitizer.bypassSecurityTrustHtml(block.content)
         );

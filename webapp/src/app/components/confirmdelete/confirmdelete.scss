@@ -1,0 +1,9 @@
+.delete-context-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .delete-btn-action {
+        margin-top: 16px;
+    }
+}

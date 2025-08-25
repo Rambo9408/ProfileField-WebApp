@@ -88,7 +88,6 @@ export class Createcontextblock {
             this.editorRef.quillEditor.format('link', false);
           }
         },
-        // table: () => this.insertCustomTable()
         table: () => this.openTableDialog()
       }
     }
@@ -173,13 +172,14 @@ export class Createcontextblock {
 
   onCreate(): void {
     if (this.showAttachedFileOptions) {
-      const hasAtLeastOneFile = this.attachments.some(att => !!att.file);
+      // const hasAtLeastOneFile = this.attachments.some(att => !!att.file);
+      const hasAtLeastOneFile = this.attachments.some(att => att.originalFileName || att.file);
       if (!hasAtLeastOneFile) {
         alert('Please attach at least one file or turn off “Attach file” option.');
         return;
       }
     }
-    console.log(this.attachments);
+    console.log(this.contentBlockInfo);
 
     const formData = new FormData();
     formData.append('panel', this.selectedPanel);

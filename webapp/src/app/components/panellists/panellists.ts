@@ -19,6 +19,7 @@ import { Contextblockservice } from '../../services/contextblockservice';
 import { Contextblockinterface } from '../../interfaces/contextblockinterface';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Createcontextblock } from '../manageaction/createcontextblock/createcontextblock';
+import { Confirmdelete } from '../confirmdelete/confirmdelete';
 
 @Component({
   selector: 'app-panellists',
@@ -84,21 +85,18 @@ export class Panellists {
   }
 
   getContextBlockContent(panelId: string, subPanelId?: string) {
-    // Avoid duplicate API calls if we already fetched the data
     if (this.panelContextBlocks) {
       return;
     }
 
     this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
       next: (res) => {
-        // this.panelContextBlocks[panelId] = res.data;
-        this.panelContextBlocks = res.data;
-        console.log(this.panelContextBlocks);
-        
+        this.panelContextBlocks = res.data.filter(
+          (block: any) => !block.subPanel || block.subPanel === ''
+        );
         this.safeContent = this.panelContextBlocks.map(block =>
           this.sanitizer.bypassSecurityTrustHtml(block.content)
         );
-        console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -227,6 +225,28 @@ export class Panellists {
       },
       error: (error) => {
         console.error("Error deleting panel:", error);
+      }
+    });
+  }
+
+  deleteContextBlock(id: string) {
+    console.log("contextBlock id: ", id);
+    const dialogRef = this.dialog.open(Confirmdelete, {
+      width: '600px',
+      data: { id }
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.contextBlockService.deleteContextBlock(id).subscribe({
+          next: (res) => {
+            console.log("Context Block deleted successfully:", res);
+            
+          },
+          error: (err) => {
+            console.error("Error deleting Context Block:", err);
+          }
+        });
       }
     });
   }

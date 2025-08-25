@@ -19,52 +19,39 @@
         </div>
     </div>
     <div class="subPanel-body">
-        @if (panelContextBlocks) {
-        <div class="context-blocks">
-            @for (block of panelContextBlocks; track $index) {
-            <div class="context-block">
-                <!-- Render HTML content -->
-                <div class="context-block-content">
-                    <div class="context-content" [innerHTML]="safeContent[$index]"></div>
-                    <div class="context-actions">
-                        <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
-                        <span class="editanddellink">Delete Context Block</span>
+        <div class="subPanel-body">
+            @if (panelContextBlocks) {
+            <div class="context-blocks">
+                @for (block of panelContextBlocks; track $index) {
+                <div class="context-block">
+                    <!-- Render HTML content -->
+                    <div class="context-block-content">
+                        <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+                        <div class="context-actions">
+                            <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
+                            <span (click)="deleteContextBlock(block._id!)" class="editanddellink">Delete Context Block</span>
+                        </div>
                     </div>
-                </div>
-                <!-- Show attachments if available -->
-                @if (block.attachments) {
-                <div class="context-attachments">
-                    <b>Key Files</b>
-                    <div class="attachments-preview">
-                        @for (file of block.attachments; track $index) {
-                        <div class="attachment-item">
-                            <!-- Show image directly -->
-                            @if (file.fileType?.startsWith('image/')) {
-                            <img [src]="getAttachmentUrl(file.filePath!)" [alt]="file.fileName"
-                                class="attachment-image" />
-                            }
-
-                            <!-- Show PDF inline -->
-                            @else if (file.fileType === 'application/pdf') {
-                            <embed [src]="getAttachmentUrl(file.filePath!)" type="application/pdf"
-                                class="attachment-pdf" />
-                            }
-
-                            <!-- For other file types, show download link -->
-                            @else {
-                            <a [href]="file.filePath" target="_blank" class="attachment-link">
-                                {{ file.originalFileName }}
-                            </a>
+                    <!-- Show attachments if available -->
+                    @if (block.attachments) {
+                    <div class="context-attachments">
+                        <b>Key Files</b>
+                        <div class="attachments-preview">
+                            @for (file of block.attachments; track $index) {
+                            <div class="attachment-item">
+                                <a [href]="file.filePath" target="_blank" class="attachment-link">
+                                    {{ file.fileName }}
+                                </a>
+                            </div>
                             }
                         </div>
-                        }
                     </div>
+                    }
                 </div>
                 }
             </div>
             }
         </div>
-        }
         <app-fielddetails [fieldsOfSubPanel]="fields"></app-fielddetails>
     </div>
 </div>
