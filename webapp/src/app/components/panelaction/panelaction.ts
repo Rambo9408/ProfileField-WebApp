@@ -92,7 +92,8 @@ export class Panelaction {
             }
           });
         } else if (this.flag === 3) {
-          this.contextBlockService.addContextBlock(result).subscribe({
+          
+          this.contextBlockService.addContextBlock(result.formData).subscribe({
             next: (res) => {
               console.log('ContextBlock Created: ', res);
             },

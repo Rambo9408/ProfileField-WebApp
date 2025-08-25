@@ -50,14 +50,12 @@
                     </mat-form-field> -->
                     <input class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
 
-                    <!-- If file already chosen, show its original name -->
-                    @if(attachment.file){
+                    @if(attachment.originalFileName){
                     <label class="file-attachment-link">{{ attachment.originalFileName }}</label>
                     <a class="deleteLink" (click)="removeAttachment($index)">
                         <img src="delete_large.png" height="17">
                     </a>
                     }
-                    <!-- Else show the attach link -->
                     @else {
                     <span class="file-attachment-link" (click)="fileInput.click()">Attach File Here</span>
                     <input type="file" #fileInput style="display:none" (change)="onFileSelected($event, $index)"
@@ -107,7 +105,9 @@
 
         <!-- Buttons -->
         <div class="btn-group">
-            <button mat-raised-button color="primary" (click)="onCreate()">Create</button>
+            <button mat-raised-button color="primary" (click)="onCreate()">
+                {{ isEditMode ? 'Update' : 'Create' }}
+            </button>
             <button mat-button (click)="onCancel()">Cancel</button>
         </div>
     </div>

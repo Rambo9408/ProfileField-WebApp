@@ -10,6 +10,10 @@ import { Createsubpanel } from '../manageaction/createsubpanel/createsubpanel';
 import { Fieldinterface } from '../../interfaces/fieldinterface';
 import { Fielddetails } from '../fielddetails/fielddetails';
 import { Fieldservice } from '../../services/fieldservice';
+import { Contextblockinterface } from '../../interfaces/contextblockinterface';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Contextblockservice } from '../../services/contextblockservice';
+import { Createcontextblock } from '../manageaction/createcontextblock/createcontextblock';
 
 @Component({
   selector: 'app-subpanelview',
@@ -27,12 +31,16 @@ export class Subpanelview {
 
   @Output() refreshSubpanels = new EventEmitter<void>();
   fields: Fieldinterface[] = [];
+  panelContextBlocks !: Contextblockinterface[];
+  safeContent: SafeHtml[] = [];
 
   constructor(
     private dialog: MatDialog,
     private subPanelService: Subpanelservice,
     private panelService: Panelservice,
     private fieldService: Fieldservice,
+    private contextBlockService: Contextblockservice,
+    private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -51,7 +59,7 @@ export class Subpanelview {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      
+
       this.subPanelService.updateSubPanel(pid, result).subscribe({
         next: (response) => {
           // console.log('Subpanel Updated:', response);
@@ -81,6 +89,52 @@ export class Subpanelview {
     });
   }
 
+  getContextBlockContent(panelId: string, subPanelId?: string) {
+    // Avoid duplicate API calls if we already fetched the data
+    if (this.panelContextBlocks) {
+      return;
+    }
+
+    this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
+      next: (res) => {
+        // this.panelContextBlocks[panelId] = res.data;
+        this.panelContextBlocks = res.data;
+        this.safeContent = this.panelContextBlocks.map(block =>
+          this.sanitizer.bypassSecurityTrustHtml(block.content)
+        );
+        console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(`Error fetching context blocks for ${panelId}:`, err);
+        this.panelContextBlocks = [];
+      }
+    });
+  }
+
+  getAttachmentUrl(path: string): string {
+    const baseUrl = 'http://localhost:3000';
+    return `${baseUrl}${path}`;
+  }
+
+  openContextBlock() {
+    const dialogRef = this.dialog.open(Createcontextblock, {
+      width: '800px',
+      data: {
+        content: 'edit',
+        contextBlocks: this.panelContextBlocks
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // console.log("Context block created/updated:", result);
+        // this.contextBlockService.notifyContextBlockRefresh();
+        // this.getContextBlockContent(this.panelContextBlocks[0]?.panelId?._id || '');
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   triggerRefresh() {
     this.refreshSubpanels.emit();

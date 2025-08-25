@@ -7,7 +7,7 @@ export interface Attachment {
 export interface Contextblockinterface {
     _id?: string;               
     panel: string;              
-    subPanel?: string | null;   
+    subPanel?: string;   
     content: string;            
     volunteerAccess: boolean;   
     includeAttachments?: boolean;

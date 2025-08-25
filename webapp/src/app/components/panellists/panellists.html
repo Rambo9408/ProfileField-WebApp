@@ -46,12 +46,17 @@
         @for (block of panelContextBlocks; track $index) {
         <div class="context-block">
           <!-- Render HTML content -->
-          <div class="context-content" [innerHTML]="safeContent[$index]"></div>
-
+          <div class="context-block-content">
+            <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+            <div class="context-actions">
+              <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
+              <span class="editanddellink">Delete Context Block</span>
+            </div>
+          </div>
           <!-- Show attachments if available -->
           @if (block.attachments) {
           <div class="context-attachments">
-            <b>Attachments:</b>
+            <b>Key Files</b>
             <div class="attachments-preview">
               @for (file of block.attachments; track $index) {
               <div class="attachment-item">

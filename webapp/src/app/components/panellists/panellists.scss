@@ -118,11 +118,29 @@
     // }
   }
 }
+
+.context-block-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.editanddellink {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  color: blue;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
 ::ng-deep .context-content figure.table {
   display: block;
   margin: 10px 0;
   width: 100%;
-  overflow-x: auto; /* Allow horizontal scroll for big tables */
+  overflow-x: auto;
+  /* Allow horizontal scroll for big tables */
 }
 
 ::ng-deep .context-content figure.table table {

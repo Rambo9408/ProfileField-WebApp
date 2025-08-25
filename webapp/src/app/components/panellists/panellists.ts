@@ -18,6 +18,7 @@ import { Subpanelview } from '../subpanelview/subpanelview';
 import { Contextblockservice } from '../../services/contextblockservice';
 import { Contextblockinterface } from '../../interfaces/contextblockinterface';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Createcontextblock } from '../manageaction/createcontextblock/createcontextblock';
 
 @Component({
   selector: 'app-panellists',
@@ -92,10 +93,12 @@ export class Panellists {
       next: (res) => {
         // this.panelContextBlocks[panelId] = res.data;
         this.panelContextBlocks = res.data;
+        console.log(this.panelContextBlocks);
+        
         this.safeContent = this.panelContextBlocks.map(block =>
           this.sanitizer.bypassSecurityTrustHtml(block.content)
         );
-        // console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
+        console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -233,5 +236,23 @@ export class Panellists {
     return `${baseUrl}${path}`;
   }
 
+  openContextBlock() {
+    const dialogRef = this.dialog.open(Createcontextblock, {
+      width: '800px',
+      data: {
+        content: 'edit',
+        contextBlocks: this.panelContextBlocks
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // console.log("Context block created/updated:", result);
+        // this.contextBlockService.notifyContextBlockRefresh();
+        // this.getContextBlockContent(this.panelContextBlocks[0]?.panelId?._id || '');
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
 }

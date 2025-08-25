@@ -36,8 +36,10 @@ const getContextBlock = async (req, res) => {
 
 const saveContextBlock = async (req, res) => {
     try {
-        const { panel, subPanel, content, volunteerAccess, includeAttachments } = req.body;
-
+        const { panel, subPanel, content, volunteerAccess, attachmentFileNames, includeAttachments } = req.body;
+        console.log(req.body);
+        console.log(req.files);
+        
         const panelExists = await PanelType.findById(panel);
         if (!panelExists) {
             return res.status(404).json({ message: "Panel not found" });
@@ -53,7 +55,7 @@ const saveContextBlock = async (req, res) => {
         let attachments = [];
         if (req.files && req.files.length > 0) {
             attachments = req.files.map((file, index) => ({
-                fileName: req.body.fileNames ? req.body.fileNames.split(',')[index] : file.originalname,
+                fileName: req.body.attachmentFileNames ? req.body.attachmentFileNames[index] : file.originalname,
                 originalFileName: file.originalname,
                 fileType: file.mimetype,
                 fileSize: file.size,

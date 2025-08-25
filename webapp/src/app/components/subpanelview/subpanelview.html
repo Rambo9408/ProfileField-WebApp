@@ -5,20 +5,66 @@
             <div class="panel-img-icon">
                 <div class="panel-img">
                     <img src="pen_on_paper40x.gif" width="23" height="23" title="Edit a Sub-Panel" align="absmiddle"
-                    alt="&nbsp;" class="action-icon" (click)="editSubPanel(subpanel._id!)" />
+                        alt="&nbsp;" class="action-icon" (click)="editSubPanel(subpanel._id!)" />
                 </div>
                 <div class="panel-img">
                     <img src="clone question.png" width="23" height="23" title="Clone a Sub-Panel" align="absmiddle"
-                    alt="&nbsp;" class="action-icon" (click)="addSubPanel(subpanel._id!)" />
+                        alt="&nbsp;" class="action-icon" (click)="addSubPanel(subpanel._id!)" />
                 </div>
                 <div class="panel-img">
                     <img src="delete_large.png" width="23" height="23" title="Delete this Sub-Panel" align="absmiddle"
-                    alt="&nbsp;" class="action-icon" (click)="deleteSubPanel(subpanel._id!)" />
+                        alt="&nbsp;" class="action-icon" (click)="deleteSubPanel(subpanel._id!)" />
                 </div>
             </div>
         </div>
     </div>
     <div class="subPanel-body">
-        <app-fielddetails [fieldsOfSubPanel]="fields" ></app-fielddetails>
+        @if (panelContextBlocks) {
+        <div class="context-blocks">
+            @for (block of panelContextBlocks; track $index) {
+            <div class="context-block">
+                <!-- Render HTML content -->
+                <div class="context-block-content">
+                    <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+                    <div class="context-actions">
+                        <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
+                        <span class="editanddellink">Delete Context Block</span>
+                    </div>
+                </div>
+                <!-- Show attachments if available -->
+                @if (block.attachments) {
+                <div class="context-attachments">
+                    <b>Key Files</b>
+                    <div class="attachments-preview">
+                        @for (file of block.attachments; track $index) {
+                        <div class="attachment-item">
+                            <!-- Show image directly -->
+                            @if (file.fileType?.startsWith('image/')) {
+                            <img [src]="getAttachmentUrl(file.filePath!)" [alt]="file.fileName"
+                                class="attachment-image" />
+                            }
+
+                            <!-- Show PDF inline -->
+                            @else if (file.fileType === 'application/pdf') {
+                            <embed [src]="getAttachmentUrl(file.filePath!)" type="application/pdf"
+                                class="attachment-pdf" />
+                            }
+
+                            <!-- For other file types, show download link -->
+                            @else {
+                            <a [href]="file.filePath" target="_blank" class="attachment-link">
+                                {{ file.originalFileName }}
+                            </a>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+        <app-fielddetails [fieldsOfSubPanel]="fields"></app-fielddetails>
     </div>
 </div>

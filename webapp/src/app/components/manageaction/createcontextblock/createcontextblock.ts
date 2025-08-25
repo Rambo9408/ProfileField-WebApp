@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -21,6 +21,7 @@ type Attachment = {
   file?: File;
   fileName: string;
   originalFileName: string;
+  filePath?: string;
 };
 
 @Component({
@@ -54,7 +55,8 @@ export class Createcontextblock {
 
   panels: Panelinterface[] = [];
   subPanels: Subpanelinterface[] = [];
-
+  isEditMode = false;
+  contextBlockId: string = '';
   contentBlockInfo: string = '';
   linkText: string = 'Attach File Here';
   volunteerAccess: boolean = false;
@@ -92,46 +94,34 @@ export class Createcontextblock {
     }
   };
 
-
-
   constructor(
     public dialogRef: MatDialogRef<Createcontextblock>,
     private dialog: MatDialog,
     private panelService: Panelservice,
     private cdr: ChangeDetectorRef,
-    private subPanelService: Subpanelservice
+    private subPanelService: Subpanelservice,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
     this.getPanels();
     this.cdr.detectChanges();
+    if (this.data && this.data.contextBlocks && this.data.contextBlocks.length > 0) {
+      const block = this.data.contextBlocks[0];
+
+      this.selectedPanel = block.panel || '';
+      this.selectedSubPanel = block.subPanel || '';
+      this.contentBlockInfo = block.content || '';
+      this.volunteerAccess = block.volunteerAccess || false;
+      this.showAttachedFileOptions = block.includeAttachments || false;
+      this.attachments = block.attachments || [];
+      this.contextBlockId = block._id;  // <-- capture ID for editing
+
+      this.isEditMode = this.data.content === 'edit';
+
+      this.onPanelChange(this.selectedPanel, this.selectedSubPanel);
+    }
   }
-
-  // insertCustomTable() {
-  //   const rows = parseInt(prompt('Enter number of rows:') || '0', 10);
-  //   const cols = parseInt(prompt('Enter number of columns:') || '0', 10);
-
-  //   if (!rows || !cols || rows < 1 || cols < 1) {
-  //     alert('Invalid input. Please enter valid numbers.');
-  //     return;
-  //   }
-
-  //   let table = '<table style="border-collapse: collapse; width: 100%;">';
-
-  //   for (let r = 0; r < rows; r++) {
-  //     table += '<tr>';
-  //     for (let c = 0; c < cols; c++) {
-  //       table += `<td style="border: 1px solid #ccc; padding: 6px;">&nbsp;</td>`;
-  //     }
-  //     table += '</tr>';
-  //   }
-
-  //   table += '</table>';
-
-  //   const quillEditor = this.editorRef.quillEditor;
-  //   const range = quillEditor.getSelection();
-  //   quillEditor.clipboard.dangerouslyPasteHTML(range?.index || 0, table);
-  // }
 
   openTableDialog() {
     const dialogRef = this.dialog.open(Tabledialog, {
@@ -146,12 +136,12 @@ export class Createcontextblock {
   }
 
   insertCustomTable(rows: number, cols: number) {
-    let table = '<table style="border-collapse: collapse; width: 100%;">';
+    let table = '<table style="border-collapse: collapse; width: 100%;border: 1px solid #000;">';
 
     for (let r = 0; r < rows; r++) {
       table += '<tr>';
       for (let c = 0; c < cols; c++) {
-        table += `<td style="border: 1px solid #ccc; padding: 6px;">&nbsp;</td>`;
+        table += `<td style="border: 1px solid #000; padding: 6px;">&nbsp;</td>`;
       }
       table += '</tr>';
     }
@@ -182,7 +172,6 @@ export class Createcontextblock {
   }
 
   onCreate(): void {
-    // If file section is enabled, ensure at least one valid attachment is present
     if (this.showAttachedFileOptions) {
       const hasAtLeastOneFile = this.attachments.some(att => !!att.file);
       if (!hasAtLeastOneFile) {
@@ -190,6 +179,7 @@ export class Createcontextblock {
         return;
       }
     }
+    console.log(this.attachments);
 
     const formData = new FormData();
     formData.append('panel', this.selectedPanel);
@@ -198,17 +188,29 @@ export class Createcontextblock {
     formData.append('volunteerAccess', String(this.volunteerAccess));
     formData.append('includeAttachments', String(this.showAttachedFileOptions));
 
-    // Append file + an optional display name (fileName) if you support it on backend
+    // If editing, include ID
+    if (this.isEditMode) {
+      formData.append('_id', this.contextBlockId);
+    }
+
     this.attachments.forEach((att, idx) => {
       if (att.file) {
         formData.append('attachments', att.file);
-        // Optional: send names in parallel arrays if your API expects them
-        formData.append('attachmentFileNames', att.fileName || att.originalFileName || `file-${idx + 1}`);
+        formData.append('attachmentFileNames', att.fileName || `file-${idx + 1}`);
         formData.append('attachmentOriginalNames', att.originalFileName || att.file.name);
+      } else if (att.filePath) {
+        // If already uploaded, preserve path
+        formData.append('existingAttachments', JSON.stringify({
+          filePath: att.filePath,
+          fileName: att.fileName,
+          originalFileName: att.originalFileName
+        }));
       }
+
     });
 
-    this.dialogRef.close(formData);
+    // this.dialogRef.close(formData);
+    this.dialogRef.close({ isEdit: this.isEditMode, formData });
   }
 
   onReady(editor: any) {
