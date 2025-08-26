@@ -1,22 +1,34 @@
 <div class="dialog-container">
-    <div class="hedder-content">
-        <h2 mat-dialog-title class="section-label">Create a Panel</h2>
-        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close">
+    <div class="checkbox-header">
+        <span>clone "{{subPanelName}}"</span>
+        <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
     </div>
     <div mat-dialog-content class="form-container">
-        <p class="required-note">*Required Items</p>
-
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>*Panel Name</mat-label>
-            <input matInput [(ngModel)]="panelName" required>
-        </mat-form-field>
+        <div class="hedder-content">
+            @if(data.content === 'clone'){
+            <h2 mat-dialog-title class="section-label">Clone The {{panelName}} Panel.</h2>
+            }
+            @else {
+            <h2 mat-dialog-title class="section-label">Create a Panel</h2>
+            }
+        </div>
 
         <div class="form-section">
-            <label class="section-label">*Volunteer Visibility Settings:</label>
+            <label class="section-label" style=" margin-bottom: 16px;"><span class="required">*</span>Required Items</label>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>*Panel Name</mat-label>
+                <input matInput [(ngModel)]="panelName" required>
+            </mat-form-field>
+        </div>
+
+        <div class="form-section">
+            <label class="section-label"><span class="required">*</span>Volunteer Visibility Settings:</label>
             <mat-checkbox [(ngModel)]="hideFromVolunteers">Temporarily hide this panel from
-                volunteers.</mat-checkbox><br>
+                volunteers.
+            </mat-checkbox>
+            <br>
             <mat-radio-group [(ngModel)]="visibility">
                 <mat-radio-button value="all">Grant access to all volunteers.</mat-radio-button><br>
                 <mat-radio-button value="type1">Limit access to volunteers by Type 1 Association.</mat-radio-button>
@@ -24,7 +36,7 @@
         </div>
 
         <div class="form-section">
-            <label class="section-label">*Show on Import Page?</label>
+            <label class="section-label"><span class="required">*</span>Show on Import Page?</label>
             <mat-radio-group [(ngModel)]="showOnImport">
                 <mat-radio-button value="yes">Yes</mat-radio-button>
                 <mat-radio-button value="no">No</mat-radio-button>
@@ -32,12 +44,26 @@
         </div>
 
         <div class="form-section">
-            <label class="section-label">*Open Panel on Page Load?</label>
+            <label class="section-label"><span class="required">*</span>Open Panel on Page Load?</label>
             <mat-radio-group [(ngModel)]="openOnLoad">
                 <mat-radio-button value="yes">Yes</mat-radio-button>
                 <mat-radio-button value="no">No</mat-radio-button>
             </mat-radio-group>
         </div>
+        @if(subpanelId.length > 0){
+        <div class="form-section">
+            <label class="section-label"><span class="required">*</span>Sub-panel Name?</label>
+            <mat-checkbox [(ngModel)]="includeSubPanel">
+                Include this Sub-panel?
+            </mat-checkbox>
+
+            <mat-form-field appearance="outline" class="subpanel-input">
+                <mat-label>Sub-Panel Name</mat-label>
+                <input matInput [(ngModel)]="subPanelName" [disabled]="!includeSubPanel">
+            </mat-form-field>
+        </div>
+        }
+
     </div>
 
     <div mat-dialog-actions align="center">

@@ -212,8 +212,36 @@ export class Panellists {
       }
     });
   }
-  addField(pid: string) {
+  clonePanel(pid: string) {
     console.log("Add field to panel with ID:", pid);
+    this.panelService.getPanelById(pid).subscribe({
+      next: (panel) => {
+        const dialogRef = this.dialog.open(Createpanel, {
+          width: '600px',
+          data: { ...panel, content: 'clone' }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // console.log("Panel cloned:", result);
+            this.panelService.addPanel(result).subscribe({
+              next: (response) => {
+                console.log('Panel cloned successfully:', response);
+                this.panelService.notifyPanelRefresh(); // Notify other components to refresh
+                this.cdr.detectChanges();
+              },
+              error: (error) => {
+                console.error('Error cloning panel:', error);
+              }
+            });
+          }
+        });
+      },
+      error: (error) => {
+        console.error("Error fetching panel details:", error);
+      }
+
+    });
   }
   deletePanel(pid: string) {
     // console.log("Delete panel with ID:", pid);

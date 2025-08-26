@@ -2,14 +2,34 @@
   width: 100%;
 }
 
-.required-note {
+.subpanel-input {
+  width: 60%;
+  margin-left: 44px;
+}
+
+.checkbox-header {
+  height: 25px;
+  align-items: center;
+  display: flex;
+  padding: 0px 0px 5px 10px;
+  background: #3266cc;
+  font-size: 15px;
+  color: white;
+  justify-content: space-between;
+  font-family: sans-serif;
+}
+
+.required {
   color: red;
 }
 
 .section-label {
   font-weight: bold;
   display: block;
-  margin-top: 1rem;
+}
+
+.form-container {
+  padding-left: 50px;
 }
 
 .form-section {
@@ -19,7 +39,7 @@
 .dialog-container {
   border: 5px solid #1976d2; // Material blue 700
   //   border-radius: 8px;
-  padding: 16px;
+  // padding: 16px;
 }
 
 .hedder-content {

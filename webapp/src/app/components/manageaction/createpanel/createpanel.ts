@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
 
 @Component({
   selector: 'app-createpanel',
@@ -29,7 +30,10 @@ export class Createpanel {
   showOnImport: string = 'yes';
   openOnLoad: string = 'yes';
   hideFromVolunteers = false;
+  includeSubPanel = false;
+  subpanelId : Subpanelinterface[] = [];
   btnValue: string = 'Create';
+  subPanelName : string = '';
 
   constructor(
     public dialogRef: MatDialogRef<Createpanel>,
@@ -37,6 +41,15 @@ export class Createpanel {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
+    if(this.data.content === "clone"){
+      this.panelName = this.data.panelName;
+      this.hideFromVolunteers = true;
+      this.subpanelId = this.data.subpanelId;
+      this.data.subpanelId.forEach((subpanel: Subpanelinterface)=>{
+        this.subPanelName = subpanel.subPanelName;
+      });
+    }
     if (this.data) {
       this.panelName = this.data.panelName;
       this.visibility = this.data.visibility || 'all';

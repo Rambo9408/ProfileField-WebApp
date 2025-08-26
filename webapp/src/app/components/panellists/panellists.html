@@ -28,7 +28,7 @@
           @if (!fixedPanels.includes(panel.panelName)) {
           <div class="panel-img">
             <img src="clone question.png" width="23" height="23" title="Clone a Panel" class="action-icon"
-              (click)="addField(panel._id!)" />
+              (click)="clonePanel(panel._id!)" />
           </div>
           <div class="panel-img">
             <img src="delete_large.png" width="23" height="23" title="Delete this Panel" class="action-icon"
