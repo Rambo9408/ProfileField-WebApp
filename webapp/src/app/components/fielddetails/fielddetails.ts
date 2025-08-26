@@ -8,6 +8,8 @@ import { Fieldservice } from '../../services/fieldservice';
 import { Createfield } from '../manageaction/createfield/createfield';
 import { MatDialog } from '@angular/material/dialog';
 import { Subpanelservice } from '../../services/subpanelservice';
+import { Loacationfieldoptions } from '../loacationfieldoptions/loacationfieldoptions';
+import { Timesheettemplateoptions } from '../timesheettemplateoptions/timesheettemplateoptions';
 
 @Component({
   selector: 'app-fielddetails',
@@ -20,9 +22,13 @@ export class Fielddetails implements OnChanges {
   @Input() fieldsOfSubPanel !: Fieldinterface[];
 
   leftFields: Fieldinterface[] = [];
+  rightColumn: string = 'rightColumn';
+  leftColumn: string = 'leftColumn';
+  fullWidthColumn: string = 'fullWidthColumn';
   rightFields: Fieldinterface[] = [];
   fullWidthSubPanelField: Fieldinterface[] = [];
   fullWidthField: Fieldinterface[] = [];
+  fieldOrder: Fieldinterface[] = [];
   subPanelFieldsOrder: Fieldinterface[] = [];
   maxRows: number = 0;
 
@@ -37,40 +43,98 @@ export class Fielddetails implements OnChanges {
     return Array.from({ length: this.maxRows }, (_, i) => i);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes);
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   console.log("changes: ", changes);
+  // }
+
+  ngOnChanges(): void {
     this.processFields();
   }
 
+  // processFields() {
+  //   if (this.fields) {
+  //     const fieldsCopy = this.fields.filter(f => !f.subpanelId);
+
+  //     this.leftFields = fieldsCopy
+  //       .filter(f => f.colId === 0)
+  //       .sort((a, b) => a.orderId - b.orderId);
+
+  //     this.rightFields = fieldsCopy
+  //       .filter(f => f.colId === 1)
+  //       .sort((a, b) => a.orderId - b.orderId);
+
+  //     this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
+
+  //     this.fullWidthField =
+  //       this.leftFields.length === 0 && this.rightFields.length === 0
+  //         ? fieldsCopy
+  //         : [];
+  //   }
+
+  //   // Handle subpanel fields
+  //   if (this.fieldsOfSubPanel) {
+  //     this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort(
+  //       (a, b) => a.orderId - b.orderId
+  //     );
+  //     this.fullWidthSubPanelField =
+  //       this.subPanelFieldsOrder.length > 0 ? this.subPanelFieldsOrder : [];
+  //   }
+  // }
+
   processFields() {
     if (this.fields) {
-      const fieldsCopy = this.fields.filter(f => !f.subpanelId);
+      const sortedFields = [...this.fields].sort((a, b) => a.orderId - b.orderId);
 
-      this.leftFields = fieldsCopy
-        .filter(f => f.colId === 0)
+      // Separate full-width fields
+      this.fullWidthField = sortedFields.filter(f => f.colWidth === 100);
+
+      // Left & right fields based on colId
+      this.leftFields = sortedFields
+        .filter(f => f.colWidth === 50 && f.colId === 0)
         .sort((a, b) => a.orderId - b.orderId);
 
-      this.rightFields = fieldsCopy
-        .filter(f => f.colId === 1)
+      this.rightFields = sortedFields
+        .filter(f => f.colWidth === 50 && f.colId === 1)
         .sort((a, b) => a.orderId - b.orderId);
 
       this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
-
-      this.fullWidthField =
-        this.leftFields.length === 0 && this.rightFields.length === 0
-          ? fieldsCopy
-          : [];
     }
 
-    // Handle subpanel fields
+    // Handle subpanel fields separately
     if (this.fieldsOfSubPanel) {
-      this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort(
-        (a, b) => a.orderId - b.orderId
-      );
-      this.fullWidthSubPanelField =
-        this.subPanelFieldsOrder.length > 0 ? this.subPanelFieldsOrder : [];
+      this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort((a, b) => a.orderId - b.orderId);
+      this.fullWidthSubPanelField = this.subPanelFieldsOrder.filter(f => f.colWidth === 100);
     }
   }
+
+
+  // processFields() {
+  //   if (this.fields) {
+  //     const sortedFields = [...this.fields].sort((a, b) => a.orderId - b.orderId);
+
+  //     const halfWidthFields = sortedFields.filter(f => f.colWidth === 50);
+  //     this.fullWidthField = sortedFields.filter(f => f.colWidth === 100);
+
+  //     this.leftFields = [];
+  //     this.rightFields = [];
+
+  //     halfWidthFields.forEach((field, index) => {
+  //       if (index % 2 === 0) {
+  //         this.leftFields.push(field);
+  //       } else {
+  //         this.rightFields.push(field);
+  //       }
+  //     });
+
+  //     this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
+  //   }
+
+  //   // Handle subpanel fields separately
+  //   if (this.fieldsOfSubPanel) {
+  //     this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort((a, b) => a.orderId - b.orderId);
+  //     this.fullWidthSubPanelField = this.subPanelFieldsOrder.filter(f => f.colWidth === 100);
+  //   }
+  // }
 
   refreshFields() {
     this.fieldService.getFields().subscribe({
@@ -100,21 +164,34 @@ export class Fielddetails implements OnChanges {
       );
 
       const movedItem = event.container.data[event.currentIndex];
-      movedItem.colId = event.container.id === 'leftColumn' ? 0 : 1;
-
+      // movedItem.colId = event.container.id === this.leftColumn ? 0 : 1;
+      if (event.container.id === 'leftColumn') {
+        movedItem.colId = 0;
+      } else if (event.container.id === 'rightColumn') {
+        movedItem.colId = 1;
+      } else {
+        movedItem.colId = 2; // Full-width column
+      }
     }
 
-    if (this.subPanelFieldsOrder) {
+    if (this.subPanelFieldsOrder.length > 0) {
       this.subPanelFieldsOrder.forEach((field, index) => field.orderId = index + 1)
       var updatedFields = [...this.subPanelFieldsOrder];
     } else {
       this.leftFields.forEach((field, index) => field.orderId = index + 1);
       this.rightFields.forEach((field, index) => field.orderId = index + 1);
-      var updatedFields = [...this.leftFields, ...this.rightFields];
+      // var updatedFields = [...this.leftFields, ...this.rightFields];
+      var updatedFields = [...this.leftFields, ...this.rightFields, ...this.fullWidthField];
     }
 
+    console.log("Updated Field Orders: ", updatedFields.map(f => f.colId));
+
     this.fieldService.updateFieldOrder(updatedFields).subscribe({
-      next: (res) => console.log("Fields reordered successfully.", res),
+      next: (res) => {
+        console.log("Fields reordered successfully.", res)
+        this.processFields();
+        this.cdRef.detectChanges();
+      },
       error: (err) => console.error("Update failed", err)
     });
   }
@@ -158,4 +235,32 @@ export class Fielddetails implements OnChanges {
 
   }
 
+  openLocationFieldOptions(id: string) {
+    const dialogRef = this.dialog.open(Loacationfieldoptions, {
+      width: '600px',
+      data: { fieldId: id },
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the result from the dialog
+      }
+    });
+  }
+
+  openTimesheetTemplateOption(id: string) {
+    const dialogRef = this.dialog.open(Timesheettemplateoptions, {
+      width: '700px',
+      data: { fieldId: id },
+      autoFocus: false,
+      panelClass: 'timesheet-template-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the result from the dialog
+      }
+    });
+  }
 }

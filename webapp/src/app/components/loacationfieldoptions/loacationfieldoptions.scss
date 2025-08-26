@@ -1,0 +1,46 @@
+.checkbox-section {
+    // padding: 0px 20px 20px;
+    border: 5px solid #1976d2; // Material blue 700
+
+    .Content-width {
+        padding-top: 24px;
+        padding-left: 35px;
+        width: 90%;
+    }
+
+    .checkbox-label {
+        // font-weight: bold;
+        // font-size: 10px;
+        padding-left: 20px;
+    }
+
+    .checkbox-header {
+        height: 25px;
+        align-items: center;
+        display: flex;
+        padding: 0px 0px 5px 10px;
+        background: #1976d2;
+        font-size: 15px;
+        color: white;
+        justify-content: space-between;
+        font-family: sans-serif;
+    }
+
+    .checkbox-group {
+        padding: 0px 30px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .action-button {
+        padding: 25px;
+        gap: 12px;
+        display: flex;
+        justify-content: center;
+
+        button {
+            padding: 7px;
+        }
+    }
+}

@@ -120,7 +120,6 @@ export class Subpanelview {
     if (this.panelContextBlocks) {
       return;
     }
-    console.log(`Fetching context blocks for panel ${panelId}, sub-panel ${subPanelId}`);
 
     this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
       next: (res) => {
@@ -130,7 +129,7 @@ export class Subpanelview {
         this.safeContent = this.panelContextBlocks.map(block =>
           this.sanitizer.bypassSecurityTrustHtml(block.content)
         );
-        console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
+        // console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
         this.cdr.detectChanges();
       },
       error: (err) => {

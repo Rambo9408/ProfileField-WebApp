@@ -1,0 +1,39 @@
+<div class="checkbox-section">
+    <div class="checkbox-header">
+        <span>Edit a Field:</span>
+        <button mat-icon-button style="color: white;" (click)="onNoClick()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="Content-width">
+        <div class="checkbox-label">
+            <h2>Edit a Field:</h2>
+        </div>
+        <div class="checkbox-group">
+            <mat-checkbox [(ngModel)]="requireLocationOnEnroll" name="requireLocationOnEnroll">
+                Require a location to be assigned by staffs when enrolling new volunteer accounts.
+            </mat-checkbox>
+    
+            <mat-checkbox [(ngModel)]="locationVisibleToStaff" name="locationVisibleToStaff">
+                Make the location field visible (but not required) to staffs when enrolling new volunteer accounts.
+            </mat-checkbox>
+    
+            <mat-checkbox [(ngModel)]="requireLocationOnEditOrImport" name="requireLocationOnEditOrImport">
+                Always require a location assignment when editing this field or importing data from Excel with the location
+                field.
+            </mat-checkbox>
+    
+            <mat-checkbox [(ngModel)]="requireReviewForSubmanagers" name="requireReviewForSubmanagers">
+                Require submanagers to review or complete the field when a volunteer is assigned to a Type 1 Association:
+            </mat-checkbox>
+    
+            <mat-checkbox [(ngModel)]="requireLocationOnArchive" name="requireLocationOnArchive">
+                Require a location to be assigned when archiving an account
+            </mat-checkbox>
+        </div>
+    </div>
+    <div class="action-button">
+        <button mat-button-raised color="primary" (click)="saveSettings()">Update</button>
+        <button mat-button-raised (click)="onNoClick()">Cancel</button>
+    </div>
+</div>

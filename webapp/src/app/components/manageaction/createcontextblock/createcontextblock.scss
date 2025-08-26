@@ -113,11 +113,11 @@
     }
 }
 
-::ng-deep .ck-editor__editable_inline {
-    min-height: 200px !important;
-    max-height: 200px !important;
-    overflow-y: auto !important;
-}
+// ::ng-deep .ck-editor__editable_inline {
+//     min-height: 200px !important;
+//     max-height: 200px !important;
+//     overflow-y: auto !important;
+// }
 
 .context-dialog-wrapper .ckeditor {
     width: 100%;

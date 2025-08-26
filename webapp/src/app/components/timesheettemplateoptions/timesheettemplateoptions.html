@@ -1,0 +1,96 @@
+<div class="checkbox-section">
+    <!-- Header -->
+    <div class="checkbox-header">
+        <span>Timesheet Template Settings</span>
+        <button mat-icon-button class="close-btn" (click)="onNoClick()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="checkbox-content">
+        <!-- Volunteer Enrollment Settings -->
+         <br>
+        <h2>Timesheet Template Settings</h2>
+
+        <div class="checkbox-group">
+            <h3>Volunteer Enrollment Settings</h3>
+            <mat-checkbox [(ngModel)]="requireLocationOnEnroll" name="requireLocationOnEnroll">
+                Require a Timesheet Template and a Timesheet Position to be assigned when enrolling volunteers.
+            </mat-checkbox>
+            <mat-checkbox [(ngModel)]="locationVisibleToStaff" name="locationVisibleToStaff">
+                Make Timesheet Template and Timesheet Position assignment fields visible (but not required) when
+                enrolling volunteers.
+            </mat-checkbox>
+        </div>
+
+        <!-- Volunteer Editing Options -->
+        <div class="checkbox-group">
+            <h3>Volunteer Editing Options</h3>
+            <mat-checkbox [(ngModel)]="requireLocationOnEditOrImport" name="requireLocationOnEditOrImport">
+                Require staffs to review or add Timesheet Template & Timesheet Position assignments when volunteers are
+                assigned to a Type 1 Association:
+            </mat-checkbox>
+
+            @if(requireLocationOnEditOrImport) {
+            <div class="type1-association">
+                <div class="timesheet-radio-group">
+                    <mat-radio-button value="all">
+                        Timesheet Positions
+                    </mat-radio-button>
+                    <a href="#" class="timesheet-link">
+                        <img src="external-link.png" alt="Timesheet Positions" height="19">
+                    </a>
+                </div>
+
+                <!-- Staff Roles Section -->
+                <div class="staff-roles-section">
+                    <p>Which staffs will be required to review or add these assignments?</p>
+                    <span style="margin-top: 15px; margin-left: 15px;">Select at least one staff role:</span>
+                    <div class="role-section">
+                        @for (role of availableRoles; track $index) {
+                        <mat-checkbox [(ngModel)]="role.selected">
+                            {{ role.name }}
+                        </mat-checkbox>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Staff Access Section -->
+        <div class="checkbox-group">
+            <h3>Staff Access to Data in this Field</h3>
+            <mat-radio-group [(ngModel)]="staffAccessOption" name="staffAccessOption">
+                <mat-radio-button value="all">
+                    Grant access to all staffs whose roles give them access to volunteer profiles.
+                </mat-radio-button>
+                <br />
+                <mat-radio-button value="limited">
+                    Limit access to staffs with the following roles:
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        @if(staffAccessOption === 'limited') {
+        <div class="roll-fields-access">
+            <br>
+            <span class="select-all" (click)="selectAllRoles()">{{selectAlllink}}</span>
+            <div class="roll-options">
+                @for (role of availableRoles; track $index) {
+                <mat-checkbox [(ngModel)]="role.selected" (change)="onRoleChange()">
+                    {{ role.name }}
+                </mat-checkbox>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-button">
+        <button mat-button-raised color="primary" (click)="saveSettings()">Update</button>
+        <button mat-button-raised (click)="onNoClick()">Cancel</button>
+    </div>
+</div>

@@ -47,6 +47,7 @@ export class Createfield {
   selectedPanelId: string = '';
   selectedSubPanel: Subpanelinterface | string = '';
   selectedColumnWidth: any = '';
+  selectedFieldColSide: number = 0;
   staffAccess = 'all';
   volunteerCanSee = false;
   radioGroup = false;

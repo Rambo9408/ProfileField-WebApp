@@ -1,0 +1,96 @@
+.checkbox-section {
+    // padding: 0px 20px 20px;
+    border: 5px solid #1976d2; // Material blue 700
+    font-family: Arial;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /* Scrollable content area */
+    .checkbox-content {
+        margin-top: 30px;
+        width: 470px;
+        margin-left: 40px;
+        // padding-bottom: 10px;
+    }
+
+    .type1-association {
+        padding-left: 40px;
+
+        .timesheet-radio-group {
+            border: 2px dashed blue;
+            display: flex;
+            align-items: center;
+
+            mat-radio-button {
+                margin-right: 10px;
+            }
+        }
+
+        .staff-roles-section {
+            background: #f3f3f3;
+            padding: 5px 0px 12px 5px;
+
+            .role-section {
+                display: flex;
+                margin: 14px;
+                border: 2px dashed blue;
+                background: white;
+                width: 90%;
+                flex-direction: column;
+            }
+        }
+    }
+
+    .checkbox-header {
+        width: 545px;
+        height: 25px;
+        align-items: center;
+        display: flex;
+        padding: 0px 0px 5px 10px;
+        background: #1976d2;
+        font-size: 15px;
+        color: white;
+        justify-content: space-between;
+        position: fixed;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    .checkbox-group {
+        padding: 0px 30px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .roll-fields-access {
+        border: 2px dashed #1976d2;
+        margin-left: 73px;
+        width: 80%;
+
+        .select-all {
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
+            padding-left: 30px;
+        }
+
+        .roll-options {
+            display: flex;
+            flex-direction: column;
+            padding-left: 30px;
+        }
+    }
+
+    .action-button {
+        padding: 25px;
+        gap: 10px;
+        display: flex;
+        justify-content: center;
+    }
+}

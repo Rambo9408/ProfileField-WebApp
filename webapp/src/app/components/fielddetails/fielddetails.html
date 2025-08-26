@@ -1,4 +1,4 @@
-@if(leftFields && rightFields){
+<!-- @if(leftFields && rightFields){
 <div class="profile-field-container panel-grid">
   <div class="panel-column" cdkDropList #leftColumn="cdkDropList" [cdkDropListData]="leftFields"
     [cdkDropListConnectedTo]="[rightColumn]" (cdkDropListDropped)="dropField($event)">
@@ -18,7 +18,7 @@
     }
   </div>
 </div>
-}
+} -->
 <!-- <div *ngIf="leftFields || rightFields" class="profile-field-container">
   <div class="panel-row" *ngFor="let i of rows">
     <div class="panel-cells">
@@ -33,7 +33,7 @@
   </div>
 </div> -->
 
-@if(fullWidthField.length > 0){
+<!-- @if(fullWidthField.length > 0){
 <div class="profile-field-container panel-grid">
   <div class="panel-column">
     @for (field of fullWidthField; track $index) {
@@ -43,7 +43,7 @@
     }
   </div>
 </div>
-}
+} -->
 
 <!-- <div *ngIf="fullWidthField?.length" class="profile-field-container panel-grid">
   <div class="panel-row" *ngFor="let field of fullWidthField">
@@ -54,10 +54,57 @@
   </div>
 </div> -->
 
+@if(leftFields.length > 0 || rightFields.length > 0){
+<div class="profile-field-container panel-grid">
+  <div class="panel-column" cdkDropList id="leftColumn" #leftColumn="cdkDropList" [cdkDropListData]="leftFields"
+    [cdkDropListConnectedTo]="[rightColumn, fullWidthColumn]" (cdkDropListDropped)="dropField($event)">
+    @for(field of leftFields; track field._id){
+    <div class="panel-cell" cdkDrag>
+      @if(field.fieldName === 'Timesheet Template'){
+        <a [title]="field.fieldName" (click)="openTimesheetTemplateOption(field._id!)">{{ field.fieldName }}</a>
+      }
+      @else {
+        {{ field.fieldName }}
+      }
+    </div>
+    }
+  </div>
+
+  <div class="panel-column" cdkDropList id="rightColumn" #rightColumn="cdkDropList" [cdkDropListData]="rightFields"
+    [cdkDropListConnectedTo]="[leftColumn, fullWidthColumn]" (cdkDropListDropped)="dropField($event)">
+    @for(field of rightFields; track field._id){
+    <div class="panel-cell" cdkDrag>
+      {{ field.fieldName }}
+    </div>
+    }
+  </div>
+</div>
+}
+
+@if(fullWidthField.length > 0){
+<div class="profile-field-container full-width-section">
+  <div class="full-width-column" cdkDropList #fullWidthColumn="cdkDropList" [cdkDropListData]="fullWidthField"
+    [cdkDropListConnectedTo]="[fullWidthColumn]" (cdkDropListDropped)="dropField($event)">
+    @for(field of fullWidthField; track field._id){
+    <div class="panel-cell full-width-field" cdkDrag>
+      @if(field.fieldName === 'Location Assignment'){
+        <a [title]="field.fieldName" (click)="openLocationFieldOptions(field._id!)">{{ field.fieldName }}</a>
+      }
+      @else {
+        {{ field.fieldName }}
+      }
+    </div>
+    }
+  </div>
+</div>
+}
+
+
+
 @if(fullWidthSubPanelField.length > 0){
 <div class="profile-field-container panel-grid">
   <div class="panel-column" cdkDropList #subPanelColumn="cdkDropList" [cdkDropListData]="fullWidthSubPanelField"
-    [cdkDropListConnectedTo]="['leftColumn', 'rightColumn']" (cdkDropListDropped)="dropField($event)">
+    [cdkDropListConnectedTo]="[fullWidthColumn]" (cdkDropListDropped)="dropField($event)">
     @for (field of fullWidthSubPanelField; track field.panelId) {
     <div class="panel-cell subpanel-field" cdkDrag>
       <a cdkDragHandle [title]="field.fieldName" (click)="editField(field._id!)">{{ field.fieldName }}</a>
