@@ -1,6 +1,11 @@
 <div class="dialog-container">
     <div class="checkbox-header">
-        <span>clone "{{subPanelName}}"</span>
+        @if(data.content === 'clone'){
+            <span>clone "{{subPanelName}}"</span>
+        }
+        @else {
+            <span>Create a Panel</span>
+        }
         <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
@@ -8,15 +13,15 @@
     <div mat-dialog-content class="form-container">
         <div class="hedder-content">
             @if(data.content === 'clone'){
-            <h2 mat-dialog-title class="section-label">Clone The {{panelName}} Panel.</h2>
+            <h2 mat-dialog-title style="margin: 0px; padding: 0px;">Clone The {{panelName}} Panel.</h2>
             }
             @else {
-            <h2 mat-dialog-title class="section-label">Create a Panel</h2>
+            <h2 mat-dialog-title style="margin: 0px; padding: 0px;">Create a Panel</h2>
             }
         </div>
 
         <div class="form-section">
-            <label class="section-label" style=" margin-bottom: 16px;"><span class="required">*</span>Required Items</label>
+            <label style=" margin-bottom: 16px;display: block; font-weight: bold;"><span class="required">*</span>Required Items</label>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>*Panel Name</mat-label>
                 <input matInput [(ngModel)]="panelName" required>
