@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subpanelservice } from '../../services/subpanelservice';
 import { Loacationfieldoptions } from '../loacationfieldoptions/loacationfieldoptions';
 import { Timesheettemplateoptions } from '../timesheettemplateoptions/timesheettemplateoptions';
+import { Panelservice } from '../../services/panelservice';
 
 @Component({
   selector: 'app-fielddetails',
@@ -21,6 +22,7 @@ export class Fielddetails implements OnChanges {
   @Input() fields !: Fieldinterface[];
   @Input() fieldsOfSubPanel !: Fieldinterface[];
 
+  isSubpanelField: boolean = false;
   leftFields: Fieldinterface[] = [];
   rightColumn: string = 'rightColumn';
   leftColumn: string = 'leftColumn';
@@ -34,6 +36,7 @@ export class Fielddetails implements OnChanges {
 
   constructor(
     private fieldService: Fieldservice,
+    private panelService: Panelservice,
     private subPanelService: Subpanelservice,
     private cdRef: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -102,8 +105,9 @@ export class Fielddetails implements OnChanges {
 
     // Handle subpanel fields separately
     if (this.fieldsOfSubPanel) {
-      this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort((a, b) => a.orderId - b.orderId);
+      this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].filter(f => f.subpanelId).sort((a, b) => a.orderId - b.orderId);
       this.fullWidthSubPanelField = this.subPanelFieldsOrder.filter(f => f.colWidth === 100);
+      this.isSubpanelField = true;
     }
   }
 
@@ -141,8 +145,11 @@ export class Fielddetails implements OnChanges {
       next: (res) => {
         // this.fields = res.filter(f => !f.subpanelId);
         // this.fieldsOfSubPanel = res.filter(f => f.subpanelId);
-        this.processFields();
-        this.cdRef.detectChanges();
+        if(res){
+          this.processFields();
+          this.panelService.notifyPanelRefresh();
+          this.cdRef.detectChanges();
+        }
       },
       error: (err) => {
         console.error("Error refreshing fields:", err);
@@ -227,7 +234,12 @@ export class Fielddetails implements OnChanges {
         this.subPanelService.notifySubPanelRefresh();
       } else {
         this.fieldService.updateField(id, result).subscribe({
-          next: () => this.subPanelService.notifySubPanelRefresh(),
+          next: (res) =>{
+            if(res){
+              this.subPanelService.notifySubPanelRefresh();
+              this.panelService.notifyPanelRefresh();
+            }
+          },
           error: (error) => console.error('Error updating field:', error)
         });
       }
@@ -245,6 +257,8 @@ export class Fielddetails implements OnChanges {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Handle the result from the dialog
+        this.panelService.notifyPanelRefresh();
+        this.subPanelService.notifySubPanelRefresh();
       }
     });
   }

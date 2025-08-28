@@ -1,6 +1,11 @@
 <div class="context-dialog-wrapper">
     <div class="field-title">
+        @if (data.content === 'Update') {
+        <span>Edit a Field</span>
+        }
+        @else {
         <span>Create a Field</span>
+        }
         <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
@@ -8,7 +13,12 @@
 
     <div mat-dialog-content class="form-container">
         <div class="hedder-content">
-            <p mat-dialog-title><strong>Create a Field</strong></p>
+            @if (data.content === 'Update') {
+            <p mat-dialog-title style="margin: 0px;font-weight: bold; padding: 0px;">Edit a Field</p>
+            }
+            @else {
+            <p mat-dialog-title style="margin: 0px; padding: 0px; font-weight: bold;">Create a Field</p>
+            }
         </div>
         <p class="required">*Required Items</p>
         <form #fieldForm="ngForm" (ngSubmit)="onCreate(fieldForm)">
@@ -123,7 +133,7 @@
             <!-- @if (filteredSubPanels.length > 0) { -->
             @if (subPanels.length > 0) {
             <div class="dropdown-section">
-                <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
+                <label class="dropdown-label"> Add to Sub-panel:</label>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel">
                         <mat-option value="">Select One</mat-option>

@@ -53,26 +53,26 @@ export class Subpanelview {
   }
 
   deleteContextBlock(id: string) {
-      console.log("contextBlock id: ", id);
-      const dialogRef = this.dialog.open(Confirmdelete, {
-        width: '600px',
-        data: { id }
-      });
-      
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.contextBlockService.deleteContextBlock(id).subscribe({
-            next: (res) => {
-              console.log("Context Block deleted successfully:", res);
-              
-            },
-            error: (err) => {
-              console.error("Error deleting Context Block:", err);
-            }
-          });
-        }
-      });
-    }
+    console.log("contextBlock id: ", id);
+    const dialogRef = this.dialog.open(Confirmdelete, {
+      width: '600px',
+      data: { id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.contextBlockService.deleteContextBlock(id).subscribe({
+          next: (res) => {
+            console.log("Context Block deleted successfully:", res);
+
+          },
+          error: (err) => {
+            console.error("Error deleting Context Block:", err);
+          }
+        });
+      }
+    });
+  }
 
   editSubPanel(pid: string) {
     const dialogRef = this.dialog.open(Createsubpanel, {
@@ -110,23 +110,24 @@ export class Subpanelview {
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if (result) {
-        // this.subPanelService.addSubPanel(result).subscribe({
-        //   next: (response) => {
-        //     // console.log('Subpanel Cloned:', response);
-        //     this.triggerRefresh();
-        //     this.panelService.notifyPanelRefresh();
-        //     this.cdr.detectChanges();
-        //   },
-        //   error: (error) => {
-        //     console.error('Error Cloning subpanel:', error);
-        //   }
-        // });
+        this.subPanelService.addSubPanel(result).subscribe({
+          next: (response) => {
+            // console.log('Subpanel Cloned:', response);
+            if (response) {
+              this.triggerRefresh();
+              this.panelService.notifyPanelRefresh();
+              this.cdr.detectChanges();
+            }
+          },
+          error: (error) => {
+            console.error('Error Cloning subpanel:', error);
+          }
+        });
       }
     });
   }
-  
+
   deleteSubPanel(id: string) {
     this.subPanelService.deleteSubPanel(id).subscribe({
       next: res => {

@@ -6,7 +6,6 @@ const FieldType = require('../models/fieldtype');
 const addPanelType = async (req, res) => {
     try {
         const { contentType, panelName, fieldId, subpanelId, isPanelOpen, hideFromVolunteers } = req.body;
-        console.log("Request Body: ", req.body);
 
         if (!panelName || panelName.trim() === '') {
             return res.status(400).send({ message: "Panel Name is required." });

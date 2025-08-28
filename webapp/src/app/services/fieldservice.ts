@@ -60,7 +60,7 @@ export class Fieldservice {
     return this.http.put<Fieldinterface[]>(this.updateOrderUrl, fields).pipe(tap(() => this.refreshFields()),catchError(this.handleError));
   }
 
-  public refreshFields() {
+  refreshFields() {
     this.http.get<Fieldinterface[]>(this.getUrl).subscribe((fields) => {
       this.fieldsSubject.next(fields);
     });

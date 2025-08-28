@@ -81,7 +81,7 @@
 </div>
 }
 
-@if(fullWidthField.length > 0){
+@if(fullWidthField.length > 0 && !isSubpanelField){
 <div class="profile-field-container full-width-section">
   <div class="full-width-column" cdkDropList #fullWidthColumn="cdkDropList" [cdkDropListData]="fullWidthField"
     [cdkDropListConnectedTo]="[fullWidthColumn]" (cdkDropListDropped)="dropField($event)">
@@ -101,7 +101,7 @@
 
 
 
-@if(fullWidthSubPanelField.length > 0){
+@if(fullWidthSubPanelField.length > 0 && isSubpanelField){
 <div class="profile-field-container panel-grid">
   <div class="panel-column" cdkDropList #subPanelColumn="cdkDropList" [cdkDropListData]="fullWidthSubPanelField"
     [cdkDropListConnectedTo]="[fullWidthColumn]" (cdkDropListDropped)="dropField($event)">

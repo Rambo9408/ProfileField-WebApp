@@ -162,7 +162,7 @@ export class Panellists {
       next: (panel) => {
         const dialogRef = this.dialog.open(Createpanel, {
           width: '600px',
-            data: { ...panel, content: 'edit' }
+          data: { ...panel, content: 'edit' }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -171,7 +171,7 @@ export class Panellists {
             this.panelService.updatePanel(pid, result.formData).subscribe({
               next: (response) => {
                 // console.log('Panel updated successfully:', response);
-                if(response){
+                if (response) {
                   this.panelService.notifyPanelRefresh();
                   this.cdr.detectChanges();
                 }
@@ -189,6 +189,7 @@ export class Panellists {
 
     });
   }
+
   createSubPanel(pid: string) {
     // console.log("Create sub-panel for panel with ID:", pid);
     this.dialog.open(Createsubpanel, {
@@ -214,6 +215,7 @@ export class Panellists {
       }
     });
   }
+
   clonePanel(pid: string) {
     console.log("Add field to panel with ID:", pid);
     this.panelService.getPanelById(pid).subscribe({
@@ -227,7 +229,8 @@ export class Panellists {
           if (result) {
             this.panelService.addPanel(result.formData).subscribe({
               next: (response) => {
-                if(response){
+                if (response) {
+                  this.subpanelService.notifySubPanelRefresh();
                   this.panelService.notifyPanelRefresh(); // Notify other components to refresh
                   this.cdr.detectChanges();
                 }
@@ -245,6 +248,7 @@ export class Panellists {
 
     });
   }
+
   deletePanel(pid: string) {
     // console.log("Delete panel with ID:", pid);
     this.panelService.deletePanel(pid).subscribe({
@@ -265,13 +269,13 @@ export class Panellists {
       width: '600px',
       data: { id }
     });
-    
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.contextBlockService.deleteContextBlock(id).subscribe({
           next: (res) => {
             console.log("Context Block deleted successfully:", res);
-            
+
           },
           error: (err) => {
             console.error("Error deleting Context Block:", err);
@@ -304,5 +308,4 @@ export class Panellists {
       }
     });
   }
-
 }

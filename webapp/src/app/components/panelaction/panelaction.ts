@@ -61,7 +61,7 @@ export class Panelaction {
       if (result) {
         if (this.flag === 1) {
           // console.log(`${type} created/updated:`, result);
-          this.panelService.addPanel(result).subscribe({
+          this.panelService.addPanel(result.formData).subscribe({
             next: (response) => {
               if(response){
                 dialogRef.close();
@@ -74,10 +74,13 @@ export class Panelaction {
           });
         } else if (this.flag === 4) {
           this.fieldService.addField(result).subscribe({
-            next: (response) => {
+            next: (res) => {
               // console.log('Field created:', response);
-              this.fieldService.refreshFields();
-              this.panelService.notifyPanelRefresh();
+              if(res){
+                this.fieldService.refreshFields();
+                this.subPanelService.notifySubPanelRefresh();
+                this.panelService.notifyPanelRefresh();
+              }
             },
             error: (error) => {
               console.error('Error creating field:', error);
@@ -86,9 +89,12 @@ export class Panelaction {
         } else if (this.flag === 2) {
           console.log(`${type} created/updated:`, result);
           this.subPanelService.addSubPanel(result).subscribe({
-            next: (response) => {
-              console.log('Subpanel created:', response);
-              this.panelService.notifyPanelRefresh();
+            next: (res) => {
+              if(res){
+                this.fieldService.refreshFields();
+                this.subPanelService.notifySubPanelRefresh();
+                this.panelService.notifyPanelRefresh();
+              }
             },
             error: (error) => {
               console.error('Error creating subpanel:', error);
@@ -98,7 +104,11 @@ export class Panelaction {
           
           this.contextBlockService.addContextBlock(result.formData).subscribe({
             next: (res) => {
-              console.log('ContextBlock Created: ', res);
+              if(res){
+                this.fieldService.refreshFields();
+                this.subPanelService.notifySubPanelRefresh();
+                this.panelService.notifyPanelRefresh();
+              }
             },
             error: (err) => {
               console.error('Error creating subpanel:', err);
