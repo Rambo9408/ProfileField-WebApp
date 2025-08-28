@@ -1,11 +1,24 @@
 .context-dialog-wrapper {
     border: 5px solid #1976d2; // Material blue 700
-    padding: 20px;
+    // padding: 20px;
+
+    .field-title {
+        height: 25px;
+        align-items: center;
+        display: flex;
+        padding: 0px 0px 5px 10px;
+        background: #1976d2;
+        font-size: 15px;
+        color: white;
+        justify-content: space-between;
+        font-family: sans-serif;
+    }
 
     .form-container {
         display: flex;
         flex-direction: column;
         gap: 16px;
+        padding: 0px 26px 0px 40px;
 
         .dropdown-section {
             .dropdown-label {
@@ -39,7 +52,7 @@
             align-items: center;
             margin-bottom: 10px;
 
-            .deleteLink{
+            .deleteLink {
                 margin-left: 10px;
                 cursor: pointer;
             }
@@ -99,13 +112,16 @@
 
     .btn-group {
         display: flex;
-        justify-content: flex-end;
         gap: 10px;
+        justify-content: center;
+        margin: 30px;
     }
 
     .dropdown-section,
     .checkbox-section {
         margin-top: 10px;
+        display: flex;
+        flex-direction: column;
     }
 
     .required {
@@ -122,4 +138,11 @@
 .context-dialog-wrapper .ckeditor {
     width: 100%;
     display: block;
+}
+
+::ng-deep .ql-toolbar {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 8px;
 }

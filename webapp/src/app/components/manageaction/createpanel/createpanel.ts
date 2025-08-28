@@ -8,10 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
+import { CommonModule } from '@angular/common';
+import { Panelservice } from '../../../services/panelservice';
 
 @Component({
   selector: 'app-createpanel',
   imports: [
+    CommonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -26,31 +29,35 @@ import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
 })
 export class Createpanel {
   panelName: string = '';
+  originalPanelName: string = '';
   visibility: string = 'all';
   showOnImport: string = 'yes';
   openOnLoad: string = 'yes';
   hideFromVolunteers = false;
   includeSubPanel = false;
-  subpanelId : Subpanelinterface[] = [];
+  subpanelId: Subpanelinterface[] = [];
   btnValue: string = 'Create';
-  subPanelName : string = '';
+  subPanelName: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<Createpanel>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private panelService: Panelservice
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
-    if(this.data.content === "clone"){
+    if (this.data.content === "clone") {
       this.panelName = this.data.panelName;
+      this.originalPanelName = this.data.panelName;
       this.hideFromVolunteers = true;
       this.subpanelId = this.data.subpanelId;
-      this.data.subpanelId.forEach((subpanel: Subpanelinterface)=>{
-        this.subPanelName = subpanel.subPanelName;
-      });
+      if (this.subpanelId.length > 0) {
+        this.data.subpanelId.forEach((subpanel: Subpanelinterface) => {
+          this.subPanelName = subpanel.subPanelName;
+        });
+      }
     }
-    if (this.data) {
+    if (this.data.content === "edit") {
       this.panelName = this.data.panelName;
       this.visibility = this.data.visibility || 'all';
       this.showOnImport = this.data.isShownOnImport ? 'yes' : 'no';
@@ -66,12 +73,22 @@ export class Createpanel {
 
   onCreate(): void {
     const payload = {
+      contentType: this.data.content || '',
       panelName: this.panelName,
       visibility: this.visibility,
       isShownOnImport: (this.showOnImport === 'yes') ? true : false,
       isPanelOpen: (this.openOnLoad === 'yes') ? true : false,
-      hideFromVolunteers: this.hideFromVolunteers
+      hideFromVolunteers: this.hideFromVolunteers,
+      subpanelId: this.subpanelId
     };
-    this.dialogRef.close(payload);
+
+    this.panelService.getPanels().subscribe(panels => {
+      const panelExists = panels.some((panel: any) => panel.panelName.toLowerCase() === this.panelName.toLowerCase());
+      if (panelExists) {
+        alert("A panel with this name already exists. Please choose a different name.");
+      } else {
+        this.dialogRef.close({ action: this.data.content, formData: payload });
+      }
+    });
   }
 }

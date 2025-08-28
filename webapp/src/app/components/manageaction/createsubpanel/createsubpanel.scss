@@ -2,6 +2,22 @@
   width: 100%;
 }
 
+.form-container {
+  padding: 50px;
+}
+
+.field-title {
+  height: 25px;
+  align-items: center;
+  display: flex;
+  padding: 0px 0px 5px 10px;
+  background: #1976d2;
+  font-size: 15px;
+  color: white;
+  justify-content: space-between;
+  font-family: sans-serif;
+}
+
 .required-note {
   color: red;
 }
@@ -18,16 +34,16 @@
 
 .dialog-container {
   border: 5px solid #1976d2; // Material blue 700
-//   border-radius: 8px;
+  //   border-radius: 8px;
+  // padding: 16px;
+}
+
+.mat-mdc-dialog-surface {
+  border-radius: 0px !important;
   padding: 16px;
 }
 
-.mat-mdc-dialog-surface{
-    border-radius: 0px !important;
-    padding: 16px;
-}
-
-.hedder-content{
-    display: flex;
-    justify-content: space-between;
+.hedder-content {
+  display: flex;
+  justify-content: space-between;
 }

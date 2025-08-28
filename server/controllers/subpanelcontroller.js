@@ -5,7 +5,7 @@ const FieldType = require("../models/fieldtype");
 const addSubPanel = async (req, res) => {
     try {
         const data = req.body;
-
+        console.log("Request Body: ", data);
         if (!data.subPanelName || data.subPanelName.trim() === '') {
             return res.status(400).send({ message: "SubPanel Name is required." });
         }

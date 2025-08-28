@@ -26,7 +26,11 @@ export class Panelservice {
       errorMsg = `Client error: ${error.error.message}`;
     } else {
       // Server-side error
-      errorMsg = `Server error: ${error.status} - ${error.message || error.error.message}`;
+       if (error.status === 400 && error.error?.message?.includes('already exists')) {
+        errorMsg = 'already exists';
+      } else {
+        errorMsg = `Server error: ${error.status} - ${error.message || error.error.message}`;
+      }
     }
 
     console.error(errorMsg);

@@ -1,12 +1,14 @@
 <div class="context-dialog-wrapper">
-    <div class="hedder-content">
-        <h2 mat-dialog-title><strong>Context Block</strong></h2>
-        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close">
+    <div class="field-title">
+        <span>Create a Context Block</span>
+        <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
     </div>
     <div mat-dialog-content class="form-container">
-
+        <div class="hedder-content">
+            <h2 mat-dialog-title>Create a Context Block</h2>
+        </div>
         <!-- Toolbar -->
         <!-- <div class="editor-toolbar">
             <button type="button" class="toolbar-button" (click)="formatText('bold')">B</button>
@@ -29,7 +31,7 @@
          </div> -->
 
         <div class="ckeditor-container">
-            <quill-editor [(ngModel)]="contentBlockInfo" [modules]="quillModules" theme="snow" style="height: 300px;"
+            <quill-editor [(ngModel)]="contentBlockInfo" [modules]="quillModules" theme="snow" style="height: 300px;width: 470px;"
                 placeholder="Type your content here">
             </quill-editor>
         </div>

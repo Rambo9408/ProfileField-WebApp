@@ -1,11 +1,31 @@
 <div class="dialog-container">
-    <div class="hedder-content">
-        <h2 mat-dialog-title><strong>Sub-Panel</strong></h2>
-        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close">
+    <div class="field-title">
+        @if(data.content === 'clone'){
+        <span>clone "{{originalSubPanelName}}"</span>
+        }
+        @else if (data.content === 'edit') {
+        <span>Edit a Sub-Panel</span>
+        }
+        @else {
+        <span>Create a Sub-Panel</span>
+        }
+        <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
     </div>
     <div mat-dialog-content class="form-container">
+        <div class="hedder-content">
+            @if(data.content === 'clone'){
+            <p mat-dialog-title style="margin: 0px; font-weight: bold; padding: 0px;">Clone The {{originalSubPanelName}}
+                Panel.</p>
+            }
+            @else if (data.content === 'edit') {
+            <p mat-dialog-title style="margin: 0px;font-weight: bold; padding: 0px;">Edit a Sub-Panel</p>
+            }
+            @else {
+            <p mat-dialog-title style="margin: 0px; padding: 0px; font-weight: bold;">Create a Sub-Panel</p>
+            }
+        </div>
         <p class="required-note">*Required Items</p>
         <form (ngSubmit)="onCreate()" #form="ngForm">
             <mat-form-field appearance="outline" class="full-width">

@@ -99,9 +99,34 @@ export class Subpanelview {
       });
     });
   }
-  addSubPanel(id: string) {
 
+  cloneSubPanel(id: string) {
+    const dialogRef = this.dialog.open(Createsubpanel, {
+      width: '600px',
+      data: {
+        panelId: id,
+        content: 'clone'
+      },
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result) {
+        // this.subPanelService.addSubPanel(result).subscribe({
+        //   next: (response) => {
+        //     // console.log('Subpanel Cloned:', response);
+        //     this.triggerRefresh();
+        //     this.panelService.notifyPanelRefresh();
+        //     this.cdr.detectChanges();
+        //   },
+        //   error: (error) => {
+        //     console.error('Error Cloning subpanel:', error);
+        //   }
+        // });
+      }
+    });
   }
+  
   deleteSubPanel(id: string) {
     this.subPanelService.deleteSubPanel(id).subscribe({
       next: res => {

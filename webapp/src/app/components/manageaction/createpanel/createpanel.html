@@ -1,10 +1,13 @@
 <div class="dialog-container">
     <div class="checkbox-header">
         @if(data.content === 'clone'){
-            <span>clone "{{subPanelName}}"</span>
+        <span>clone "{{originalPanelName}}"</span>
+        }
+        @else if (data.content === 'edit') {
+        <span>Edit a Panel</span>
         }
         @else {
-            <span>Create a Panel</span>
+        <span>Create a Panel</span>
         }
         <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
@@ -13,24 +16,30 @@
     <div mat-dialog-content class="form-container">
         <div class="hedder-content">
             @if(data.content === 'clone'){
-            <h2 mat-dialog-title style="margin: 0px; padding: 0px;">Clone The {{panelName}} Panel.</h2>
+            <p mat-dialog-title style="margin: 0px; font-weight: bold; padding: 0px;">Clone The {{originalPanelName}}
+                Panel.</p>
+            }
+            @else if (data.content === 'edit') {
+            <p mat-dialog-title style="margin: 0px;font-weight: bold; padding: 0px;">Edit a Panel</p>
             }
             @else {
-            <h2 mat-dialog-title style="margin: 0px; padding: 0px;">Create a Panel</h2>
+            <p mat-dialog-title style="margin: 0px; padding: 0px; font-weight: bold;">Create a Panel</p>
             }
         </div>
-
+        <p class="required">* Required Items</p>
         <div class="form-section">
-            <label style=" margin-bottom: 16px;display: block; font-weight: bold;"><span class="required">*</span>Required Items</label>
+            <label style=" margin-bottom: 16px;display: block; font-weight: bold;"><span class="required">*</span>Panel
+                Name</label>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>*Panel Name</mat-label>
-                <input matInput [(ngModel)]="panelName" required>
+                <input matInput [(ngModel)]="panelName" name="panelName" required>
             </mat-form-field>
         </div>
 
         <div class="form-section">
             <label class="section-label"><span class="required">*</span>Volunteer Visibility Settings:</label>
-            <mat-checkbox [(ngModel)]="hideFromVolunteers">Temporarily hide this panel from
+            <mat-checkbox [ngStyle]="{ 'background-color': hideFromVolunteers ? '#ffffd8' : 'transparent' }"
+                [(ngModel)]="hideFromVolunteers">Temporarily hide this panel from
                 volunteers.
             </mat-checkbox>
             <br>

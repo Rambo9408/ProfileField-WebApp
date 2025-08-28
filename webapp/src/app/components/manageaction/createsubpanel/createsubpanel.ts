@@ -35,6 +35,7 @@ import { Subpanelservice } from '../../../services/subpanelservice';
 export class Createsubpanel {
   subPanelName: string = '';
   panelId: string = '';
+  originalSubPanelName: string = '';
   btnText: string = 'Create';
   panels: Panelinterface[] = [];
 
@@ -52,6 +53,9 @@ export class Createsubpanel {
     if (this.data.content === "Update") {
       this.getSubPanelByID(this.data.panelId);
       this.btnText = this.data.content;
+    } else if (this.data.content === "clone") {
+      this.getSubPanelByID(this.data.panelId);
+      this.btnText = this.data.content;
     }
   }
 
@@ -60,7 +64,7 @@ export class Createsubpanel {
       next: (response) => {
         const subpanel = response.data;
         const panelOfSubPanel = subpanel.panelId;
-
+        this.originalSubPanelName = subpanel.subPanelName;
         this.subPanelName = subpanel.subPanelName;
         this.panelId = panelOfSubPanel?._id ?? '';
         this.cdr.detectChanges();

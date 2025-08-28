@@ -1,25 +1,29 @@
 <div class="context-dialog-wrapper">
-    <div class="hedder-content">
-        <h2 mat-dialog-title><strong>Create a Field</strong></h2>
-        <button mat-icon-button (click)="dialogRef.close()" aria-label="Close">
+    <div class="field-title">
+        <span>Create a Field</span>
+        <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
     </div>
 
     <div mat-dialog-content class="form-container">
+        <div class="hedder-content">
+            <p mat-dialog-title><strong>Create a Field</strong></p>
+        </div>
         <p class="required">*Required Items</p>
         <form #fieldForm="ngForm" (ngSubmit)="onCreate(fieldForm)">
             <!-- Panel Name -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Field Name</mat-label>
-                <input matInput [(ngModel)]="fieldName" name="fieldName" required>
-            </mat-form-field>
-            <br>
+            <div class="field-type-label">
+                <label><span class="required">*</span> Field Type</label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Field Name</mat-label>
+                    <input matInput [(ngModel)]="fieldName" name="fieldName" required>
+                </mat-form-field>
+            </div>
             <!-- Field Description -->
             <span class="info-text">
                 Individuals can choose to see this when viewing and entering data into the field.
             </span>
-            <br>
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Field Description</mat-label>
@@ -90,7 +94,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            
+
             <!-- @if(selectedColumnWidth == 50){
             <div class="field-col-side">
                 <label class="fieldSide-dropdown">Field Column Side:</label>

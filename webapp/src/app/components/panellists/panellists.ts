@@ -162,17 +162,19 @@ export class Panellists {
       next: (panel) => {
         const dialogRef = this.dialog.open(Createpanel, {
           width: '600px',
-          data: panel
+            data: { ...panel, content: 'edit' }
         });
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
             // console.log("Panel updated:", result);
-            this.panelService.updatePanel(pid, result).subscribe({
+            this.panelService.updatePanel(pid, result.formData).subscribe({
               next: (response) => {
                 // console.log('Panel updated successfully:', response);
-                this.panelService.notifyPanelRefresh(); // Notify other components to refresh
-                this.cdr.detectChanges();
+                if(response){
+                  this.panelService.notifyPanelRefresh();
+                  this.cdr.detectChanges();
+                }
               },
               error: (error) => {
                 console.error('Error updating panel:', error);
@@ -223,12 +225,12 @@ export class Panellists {
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            // console.log("Panel cloned:", result);
-            this.panelService.addPanel(result).subscribe({
+            this.panelService.addPanel(result.formData).subscribe({
               next: (response) => {
-                console.log('Panel cloned successfully:', response);
-                this.panelService.notifyPanelRefresh(); // Notify other components to refresh
-                this.cdr.detectChanges();
+                if(response){
+                  this.panelService.notifyPanelRefresh(); // Notify other components to refresh
+                  this.cdr.detectChanges();
+                }
               },
               error: (error) => {
                 console.error('Error cloning panel:', error);

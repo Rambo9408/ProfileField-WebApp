@@ -60,10 +60,13 @@ export class Panelaction {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (this.flag === 1) {
-          console.log(`${type} created/updated:`, result);
+          // console.log(`${type} created/updated:`, result);
           this.panelService.addPanel(result).subscribe({
             next: (response) => {
-              this.panelService.notifyPanelRefresh();
+              if(response){
+                dialogRef.close();
+                this.panelService.notifyPanelRefresh();
+              } 
             },
             error: (error) => {
               console.error('Error creating panel:', error);

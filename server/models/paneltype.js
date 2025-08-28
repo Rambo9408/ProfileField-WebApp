@@ -35,6 +35,11 @@ const PanelTypeSchema = new mongoose.Schema(
             type: Boolean,
             default: true,
             required: false
+        },
+        hideFromVolunteers: {
+            type: Boolean,
+            default: false,
+            required: false
         }
     },
     { timestamps: true }
