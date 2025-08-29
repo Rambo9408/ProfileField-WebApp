@@ -46,7 +46,10 @@
                 <label><span class="required">*</span> Field Type</label>
                 @if(selectedFieldType){
                 <div class="selected-fieldType">
-                    <span [(ngModel)]="fieldType" name="fieldType" [innerHTML]="selectedFieldType"></span>
+                    <!-- <span [(ngModel)]="fieldType" name="fieldType" [innerHTML]="selectedFieldType"></span> -->
+                    <span class="selected-fieldType">{{ selectedFieldType }}</span>
+                    <input type="hidden" [(ngModel)]="fieldType" name="fieldType" />
+
                 </div>
                 }
                 <a class="field-type-toggle" (click)="radioGroupEnable()">{{selectedFieldType ? 'Edit' : 'Assign'}}</a>

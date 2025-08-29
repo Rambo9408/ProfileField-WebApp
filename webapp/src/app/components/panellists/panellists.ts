@@ -85,19 +85,20 @@ export class Panellists {
   }
 
   getContextBlockContent(panelId: string, subPanelId?: string) {
-    if (this.panelContextBlocks) {
-      return;
-    }
-
     this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
       next: (res) => {
-        this.panelContextBlocks = res.data.filter(
-          (block: any) => !block.subPanel || block.subPanel === ''
-        );
-        this.safeContent = this.panelContextBlocks.map(block =>
-          this.sanitizer.bypassSecurityTrustHtml(block.content)
-        );
-        this.cdr.detectChanges();
+        console.log("Context block data:", res.data);
+
+        // this.panelContextBlocks = res.data.filter(
+        //   (block: any) => !block.subPanel || block.subPanel === ''
+        // );
+        if(panelId === res.data[0]?.panelId){
+          this.panelContextBlocks = res.data;        
+          this.safeContent = this.panelContextBlocks.map(block =>
+            this.sanitizer.bypassSecurityTrustHtml(block.content)
+          );
+          this.cdr.detectChanges();
+        }
       },
       error: (err) => {
         console.error(`Error fetching context blocks for ${panelId}:`, err);
@@ -301,10 +302,24 @@ export class Panellists {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // console.log("Context block created/updated:", result);
-        // this.contextBlockService.notifyContextBlockRefresh();
-        // this.getContextBlockContent(this.panelContextBlocks[0]?.panelId?._id || '');
-        this.cdr.detectChanges();
+        const contextBlockId = this.panelContextBlocks[0]?._id;
+        if (contextBlockId) {
+          this.contextBlockService.updateContextBlock(contextBlockId, result.formData).subscribe({
+            next: (res) => {
+              // console.log("Context block updated successfully:", res);
+              if (res) {
+                this.contextBlockService.notifyContextBlockRefresh();
+                this.getContextBlockContent(this.panelContextBlocks[0]?.panelId);
+                this.cdr.detectChanges();
+              }
+            },
+            error: (err) => {
+              console.error("Error updating context block:", err);
+            }
+          });
+        } else {
+          console.error("Context block ID is undefined, cannot update context block.");
+        }
       }
     });
   }

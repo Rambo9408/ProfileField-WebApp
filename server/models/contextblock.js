@@ -24,7 +24,7 @@ const attachmentSchema = new mongoose.Schema({
 }, { _id: false });
 
 const contextBlockSchema = new mongoose.Schema({
-  panel: {
+  panelId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "PanelType", // Your panel model reference
     required: true

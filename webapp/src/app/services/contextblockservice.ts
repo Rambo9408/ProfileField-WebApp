@@ -3,15 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { Contextblockinterface } from '../interfaces/contextblockinterface';
 import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Contextblockservice {
+  private contextBlockSubject = new BehaviorSubject<any[]>([]);
+  contextBlocks$ = this.contextBlockSubject.asObservable();
+
   private getUrl = "http://localhost:3000/api/getContextBlock";
   private addUrl = "http://localhost:3000/api/addContextBlock";
-  // private updateUrl = "http://localhost:3000/api/updateField";
+  private updateUrl = "http://localhost:3000/api/updateContextBlock";
   // private updateOrderUrl = "http://localhost:3000/api/updateFieldOrder";
   private deleteUrl = "http://localhost:3000/api/deleteContextBlock";
 
@@ -52,5 +55,16 @@ export class Contextblockservice {
   deleteContextBlock(_id: string): Observable<Contextblockinterface> {
     return this.http.delete<Contextblockinterface>(`${this.deleteUrl}/${_id}`)
       .pipe(catchError(this.handleError));
+  }
+
+  updateContextBlock(_id: string, contextBlock: Contextblockinterface): Observable<Contextblockinterface> {
+    return this.http.put<Contextblockinterface>(`${this.updateUrl}/${_id}`, contextBlock)
+      .pipe(catchError(this.handleError));
+  }
+
+  notifyContextBlockRefresh() {
+    this.http.get<Contextblockinterface[]>(this.getUrl).subscribe((contextBlocks) => {
+      this.contextBlockSubject.next(contextBlocks);
+    });
   }
 }

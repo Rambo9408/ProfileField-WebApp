@@ -32,8 +32,9 @@ export class Subpanelview {
 
   @Output() refreshSubpanels = new EventEmitter<void>();
   fields: Fieldinterface[] = [];
-  panelContextBlocks !: Contextblockinterface[];
+  panelContextBlocks: Contextblockinterface[] = [];
   safeContent: SafeHtml[] = [];
+  subPanelId: Subpanelinterface[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -47,6 +48,7 @@ export class Subpanelview {
 
   ngOnInit(): void {
     this.fields = this.subpanel.fieldId as Fieldinterface[];
+    this.subPanelId = [this.subpanel];
     if (this.parentPanelId['_id'] && this.subpanel._id) {
       this.getContextBlockContent(this.parentPanelId['_id']!, this.subpanel._id);
     }
@@ -181,10 +183,24 @@ export class Subpanelview {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // console.log("Context block created/updated:", result);
-        // this.contextBlockService.notifyContextBlockRefresh();
-        // this.getContextBlockContent(this.panelContextBlocks[0]?.panelId?._id || '');
-        this.cdr.detectChanges();
+        const contextBlockId = this.panelContextBlocks[0]?._id;
+        if (contextBlockId) {
+          this.contextBlockService.updateContextBlock(contextBlockId, result.formData).subscribe({
+            next: (res) => {
+              // console.log("Context block updated successfully:", res);
+              if(res){
+                this.contextBlockService.notifyContextBlockRefresh();
+                this.getContextBlockContent(this.panelContextBlocks[0]?.panelId);
+                this.cdr.detectChanges();
+              }
+            },
+            error: (err) => {
+              console.error("Error updating context block:", err);
+            }
+          });
+        } else {
+          console.error("Context block ID is undefined, cannot update context block.");
+        }
       }
     });
   }

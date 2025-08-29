@@ -123,6 +123,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  width: 655px;
 }
 
 .editanddellink {
@@ -134,31 +135,14 @@
   text-decoration: underline;
   font-size: 13px;
 }
-
-::ng-deep .context-content figure.table {
-  display: block;
-  margin: 10px 0;
-  width: 100%;
-  overflow-x: auto;
-  /* Allow horizontal scroll for big tables */
-}
-
-::ng-deep .context-content figure.table table {
-  width: 100%;
+::ng-deep .context-content table {
+  border: 1px solid #000;
   border-collapse: collapse;
-  border: 1px solid #ccc;
-  background-color: #fff;
 }
 
-::ng-deep .context-content figure.table td,
-::ng-deep .context-content figure.table th {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-  min-width: 50px;
-}
-
-::ng-deep .context-content figure.table th {
-  background-color: #f5f5f5;
-  font-weight: bold;
+::ng-deep .context-content td {
+  border: 1px solid #000;
+  padding: 5px;
+  min-width: 60px;
+  min-height: 25px;
 }

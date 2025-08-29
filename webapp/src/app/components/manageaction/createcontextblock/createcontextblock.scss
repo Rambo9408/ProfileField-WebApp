@@ -23,6 +23,7 @@
         .dropdown-section {
             .dropdown-label {
                 margin-right: 10px;
+                padding-bottom: 10px;
             }
         }
 
@@ -67,48 +68,6 @@
         }
 
     }
-
-    // .editor-toolbar {
-    //     display: flex;
-    //     gap: 8px;
-    //     background-color: #f0f0f0;
-    //     padding: 6px;
-    //     border: 1px solid #ccc;
-    //     border-radius: 6px;
-
-    //     .toolbar-button {
-    //         border: none;
-    //         background-color: #e2e2e2;
-    //         border-radius: 4px;
-    //         padding: 4px 8px;
-    //         font-weight: bold;
-    //         cursor: pointer;
-    //         transition: background 0.2s;
-
-    //         &:hover {
-    //             background-color: #d1d1d1;
-    //         }
-    //     }
-    // }
-
-    // .editor-content {
-    //     min-height: 150px;
-    //     max-height: 250px;
-    //     /* Limit height to avoid overflow */
-    //     padding: 10px;
-    //     border: 1px solid #1976d2;
-    //     border-radius: 4px;
-    //     background-color: #fff;
-    //     font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    //     ;
-    //     outline: none;
-    //     white-space: pre-wrap;
-    //     overflow-y: auto;
-    //     /* Enables scroll if content is long */
-    //     word-break: break-word;
-    //     /* Break long words if needed */
-    // }
-
 
     .btn-group {
         display: flex;

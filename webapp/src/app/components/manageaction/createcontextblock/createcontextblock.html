@@ -1,13 +1,23 @@
 <div class="context-dialog-wrapper">
     <div class="field-title">
+        @if (data.content === 'edit') {
+        <span>Edit a Context Block</span>
+        }
+        @else {
         <span>Create a Context Block</span>
+        }
         <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
             <mat-icon>close</mat-icon>
         </button>
     </div>
     <div mat-dialog-content class="form-container">
         <div class="hedder-content">
-            <h2 mat-dialog-title>Create a Context Block</h2>
+             @if (data.content === 'edit') {
+            <p mat-dialog-title style="margin: 0px;font-weight: bold; padding: 0px;">Edit a Context Block</p>
+            }
+            @else {
+            <p mat-dialog-title style="margin: 0px; padding: 0px; font-weight: bold;">Create a Context Block</p>
+            }
         </div>
         <!-- Toolbar -->
         <!-- <div class="editor-toolbar">
@@ -44,7 +54,7 @@
         <div class="file-attachement-box">
             <p>Please name this file:</p>
 
-            @for (attachment of attachments; track $index) {
+            @for (attachment of attachments; track attachments) {
             <div class="attachment-item">
                 <div class="input-form-fileds">
                     <input class="inputClass" [(ngModel)]="attachment.fileName" placeholder="Enter The File Name">
@@ -82,7 +92,7 @@
 
         @if (subPanels.length > 0) {
         <div class="dropdown-section">
-            <label class="dropdown-label"><span class="required">*</span> Add to Sub-panel:</label>
+            <label class="dropdown-label">Add to Sub-panel:</label>
             <mat-form-field appearance="fill" class="full-width">
                 <mat-select [(ngModel)]="selectedSubPanel" name="selectedSubPanel">
                     <mat-option value="">Select One</mat-option>

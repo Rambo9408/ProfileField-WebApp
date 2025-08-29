@@ -11,6 +11,8 @@ import { Subpanelservice } from '../../services/subpanelservice';
 import { Loacationfieldoptions } from '../loacationfieldoptions/loacationfieldoptions';
 import { Timesheettemplateoptions } from '../timesheettemplateoptions/timesheettemplateoptions';
 import { Panelservice } from '../../services/panelservice';
+import { Subpanelinterface } from '../../interfaces/subpanelinterface';
+import { Panelinterface } from '../../interfaces/panelinterface';
 
 @Component({
   selector: 'app-fielddetails',
@@ -21,6 +23,7 @@ import { Panelservice } from '../../services/panelservice';
 export class Fielddetails implements OnChanges {
   @Input() fields !: Fieldinterface[];
   @Input() fieldsOfSubPanel !: Fieldinterface[];
+  @Input() subPanelId !: Subpanelinterface[];
 
   isSubpanelField: boolean = false;
   leftFields: Fieldinterface[] = [];
@@ -32,7 +35,18 @@ export class Fielddetails implements OnChanges {
   fullWidthField: Fieldinterface[] = [];
   fieldOrder: Fieldinterface[] = [];
   subPanelFieldsOrder: Fieldinterface[] = [];
+  panels : Panelinterface[] = [];
+  otherPanels : any[] = [];
   maxRows: number = 0;
+
+  fixedPanels: string[] = [
+    'Name & Contact Details',
+    'Location Assignment',
+    'Communications History(Outbound)',
+    'Timesheet Settings',
+    'Log Completion Rate',
+    'Associations'
+  ];
 
   constructor(
     private fieldService: Fieldservice,
@@ -52,6 +66,19 @@ export class Fielddetails implements OnChanges {
 
   ngOnChanges(): void {
     this.processFields();
+  }
+
+  ngOnInit(): void {
+    this.panelService.getPanels().subscribe({
+      next: (res) => {
+        this.panels = res.filter(r => !this.fixedPanels.includes(r.panelName));
+        this.otherPanels = this.panels.map(panel => panel._id!) as string[];
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error("Error fetching panels:", err);
+      }
+    });
   }
 
   // processFields() {
@@ -111,41 +138,12 @@ export class Fielddetails implements OnChanges {
     }
   }
 
-
-  // processFields() {
-  //   if (this.fields) {
-  //     const sortedFields = [...this.fields].sort((a, b) => a.orderId - b.orderId);
-
-  //     const halfWidthFields = sortedFields.filter(f => f.colWidth === 50);
-  //     this.fullWidthField = sortedFields.filter(f => f.colWidth === 100);
-
-  //     this.leftFields = [];
-  //     this.rightFields = [];
-
-  //     halfWidthFields.forEach((field, index) => {
-  //       if (index % 2 === 0) {
-  //         this.leftFields.push(field);
-  //       } else {
-  //         this.rightFields.push(field);
-  //       }
-  //     });
-
-  //     this.maxRows = Math.max(this.leftFields.length, this.rightFields.length);
-  //   }
-
-  //   // Handle subpanel fields separately
-  //   if (this.fieldsOfSubPanel) {
-  //     this.subPanelFieldsOrder = [...this.fieldsOfSubPanel].sort((a, b) => a.orderId - b.orderId);
-  //     this.fullWidthSubPanelField = this.subPanelFieldsOrder.filter(f => f.colWidth === 100);
-  //   }
-  // }
-
   refreshFields() {
     this.fieldService.getFields().subscribe({
       next: (res) => {
-        // this.fields = res.filter(f => !f.subpanelId);
-        // this.fieldsOfSubPanel = res.filter(f => f.subpanelId);
-        if(res){
+        if (res) {
+          this.fields = res.filter(f => !f.subpanelId);
+          this.fieldsOfSubPanel = res.filter(f => f.subpanelId);
           this.processFields();
           this.panelService.notifyPanelRefresh();
           this.cdRef.detectChanges();
@@ -176,8 +174,6 @@ export class Fielddetails implements OnChanges {
         movedItem.colId = 0;
       } else if (event.container.id === 'rightColumn') {
         movedItem.colId = 1;
-      } else {
-        movedItem.colId = 2; // Full-width column
       }
     }
 
@@ -212,20 +208,6 @@ export class Fielddetails implements OnChanges {
       },
       autoFocus: false
     });
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.fieldService.updateField(id, result).subscribe({
-    //       next: (response) => {
-    //         console.log('Subpanel Updated:', response);
-    //         // this.cdRef.detectChanges();
-    //         this.refreshFields(); 
-    //       },
-    //       error: (error) => {
-    //         console.error('Error Updating subpanel:', error);
-    //       }
-    //     });
-    //   }
-    // });
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return;
@@ -234,8 +216,8 @@ export class Fielddetails implements OnChanges {
         this.subPanelService.notifySubPanelRefresh();
       } else {
         this.fieldService.updateField(id, result).subscribe({
-          next: (res) =>{
-            if(res){
+          next: (res) => {
+            if (res) {
               this.subPanelService.notifySubPanelRefresh();
               this.panelService.notifyPanelRefresh();
             }

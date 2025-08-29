@@ -1,10 +1,20 @@
-<h2 mat-dialog-title>Delete Context Block</h2>
-<div class="delete-context-block">
-    <mat-dialog-content>
-        <p><strong>Click the Delete button to permanently delete this Context Block.</strong></p>
-    </mat-dialog-content>
-    <mat-dialog-actions class="delete-btn-action">
-        <button mat-raised-button color="warn" (click)="onConfirm()">Delete</button>
-        <button mat-button (click)="onCancel()">Cancel</button>
-    </mat-dialog-actions>
+<div class="confirm-delete-dialog">
+    <div class="field-title">
+        <span>Delete Context Block</span>
+        <button mat-icon-button style="color: white;" (click)="dialogRef.close()" aria-label="Close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="confirm-delete-content">
+        <h2 mat-dialog-title>Delete Context Block</h2>
+        <div class="delete-context-block">
+            <mat-dialog-content>
+                <p><strong>Click the Delete button to permanently delete this Context Block.</strong></p>
+            </mat-dialog-content>
+            <mat-dialog-actions class="delete-btn-action">
+                <button mat-raised-button color="warn" (click)="onConfirm()">Delete</button>
+                <button mat-button (click)="onCancel()">Cancel</button>
+            </mat-dialog-actions>
+        </div>
+    </div>
 </div>

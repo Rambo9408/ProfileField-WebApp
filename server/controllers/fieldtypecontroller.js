@@ -12,7 +12,7 @@ const addFieldType = async (req, res) => {
             selectedPanelId,
             selectedSubPanel
         } = req.body;
-
+        
         if (!fieldName || fieldName.trim() === '') {
             return res.status(400).json({ message: "Field name is required." });
         }
@@ -60,11 +60,13 @@ const addFieldType = async (req, res) => {
         await panel.save();
 
         // Add field to subpanel(s) if applicable
-        if (selectedPanelId) {
+        if (selectedSubPanel && selectedSubPanel._id) {
             const subPanels = await SubPanel.find({ panelId: selectedPanelId });
             for (const subPanel of subPanels) {
-                subPanel.fieldId.push(savedField._id);
-                await subPanel.save();
+                if(subPanel._id.equals(selectedSubPanel._id)) {
+                    subPanel.fieldId.push(savedField._id);
+                    await subPanel.save();
+                }
             }
         }
 

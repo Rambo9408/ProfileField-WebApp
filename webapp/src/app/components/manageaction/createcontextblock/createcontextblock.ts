@@ -113,7 +113,9 @@ export class Createcontextblock {
       this.contentBlockInfo = block.content || '';
       this.volunteerAccess = block.volunteerAccess || false;
       this.showAttachedFileOptions = block.includeAttachments || false;
-      this.attachments = block.attachments || [];
+      this.attachments = (block.attachments && block.attachments.length > 0)
+        ? block.attachments
+        : [{ file: undefined, fileName: '', originalFileName: '' }];
       this.contextBlockId = block._id;  // <-- capture ID for editing
 
       this.isEditMode = this.data.content === 'edit';
@@ -135,12 +137,12 @@ export class Createcontextblock {
   }
 
   insertCustomTable(rows: number, cols: number) {
-    let table = '<table style="border-collapse: collapse; width: 100%;border: 1px solid #000;">';
+    let table = '<table style="border-collapse: collapse; width: 100%;border: 2px solid #000;">';
 
     for (let r = 0; r < rows; r++) {
       table += '<tr>';
       for (let c = 0; c < cols; c++) {
-        table += `<td style="border: 1px solid #000; padding: 6px;">&nbsp;</td>`;
+        table += `<td style="border: 2px solid #000; padding: 6px;">&nbsp;</td>`;
       }
       table += '</tr>';
     }
@@ -179,10 +181,9 @@ export class Createcontextblock {
         return;
       }
     }
-    console.log(this.contentBlockInfo);
 
     const formData = new FormData();
-    formData.append('panel', this.selectedPanel);
+    formData.append('panelId', this.selectedPanel);
     formData.append('subPanel', this.selectedSubPanel || '');
     formData.append('content', this.contentBlockInfo);
     formData.append('volunteerAccess', String(this.volunteerAccess));
@@ -210,6 +211,10 @@ export class Createcontextblock {
     });
 
     // this.dialogRef.close(formData);
+    // formData.forEach((value, key) => {
+    //   console.log(`Key: ${key}, Value: ${value}`);
+    // });
+
     this.dialogRef.close({ isEdit: this.isEditMode, formData });
   }
 
