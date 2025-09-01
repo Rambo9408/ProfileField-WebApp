@@ -144,8 +144,7 @@ export class Subpanelview {
   }
 
   getContextBlockContent(panelId: string, subPanelId?: string) {
-    // Avoid duplicate API calls if we already fetched the data
-    if (this.panelContextBlocks) {
+    if (this.panelContextBlocks.length > 0) {
       return;
     }
 
@@ -157,7 +156,6 @@ export class Subpanelview {
         this.safeContent = this.panelContextBlocks.map(block =>
           this.sanitizer.bypassSecurityTrustHtml(block.content)
         );
-        // console.log(`Fetched context blocks for panel ${panelId}:`, res.data);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -187,8 +185,7 @@ export class Subpanelview {
         if (contextBlockId) {
           this.contextBlockService.updateContextBlock(contextBlockId, result.formData).subscribe({
             next: (res) => {
-              // console.log("Context block updated successfully:", res);
-              if(res){
+              if (res) {
                 this.contextBlockService.notifyContextBlockRefresh();
                 this.getContextBlockContent(this.panelContextBlocks[0]?.panelId);
                 this.cdr.detectChanges();

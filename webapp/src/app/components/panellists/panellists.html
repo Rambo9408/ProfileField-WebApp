@@ -41,37 +41,81 @@
 
     <div class="panel-body" (click)="getContextBlockContent(panel._id!)"
       [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
-      @if (panelContextBlocks) {
+      <!-- @if (panelContextBlocks) {
       <div class="context-blocks">
         @for (block of panelContextBlocks; track block._id) {
-          @if(block.panelId === panel._id) { 
+        @if(block.panelId === panel._id && !block.subPanel) {
+        <div class="context-block">
+          <div class="context-block-content">
+            <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+            <div class="context-actions">
+              <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
+              <span (click)="deleteContextBlock(block._id!)" class="editanddellink">Delete Context Block</span>
+            </div>
+          </div>
+          @if (block.attachments) {
+          <div class="context-attachments">
+            <b>Key Files</b>
+            <div class="attachments-preview">
+              @for (file of block.attachments; track $index) {
+              <div class="attachment-item">
+                @if (file.fileType?.startsWith('image/')) {
+                <img [src]="getAttachmentUrl(file.filePath!)" [alt]="file.fileName" class="attachment-image" />
+                }
+
+                @else if (file.fileType === 'application/pdf') {
+                <embed [src]="getAttachmentUrl(file.filePath!)" type="application/pdf" class="attachment-pdf" />
+                }
+
+                @else {
+                <a [href]="file.filePath" target="_blank" class="attachment-link">
+                  {{ file.fileName }}
+                </a>
+                }
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+        }
+      </div>
+      } -->
+
+      @if (panelContextBlocks[panel._id!] && panelContextBlocks[panel._id!].length > 0) {
+      <div class="context-blocks">
+        @for (block of panelContextBlocks[panel._id!]; track block._id) {
+          @if(block.panelId === panel._id && !block.subPanel) {
             <div class="context-block">
               <!-- Render HTML content -->
               <div class="context-block-content">
-                <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+                <div class="context-content" [innerHTML]="safeContent[panel._id!][$index]"></div>
                 <div class="context-actions">
-                  <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
-                  <span (click)="deleteContextBlock(block._id!)" class="editanddellink">Delete Context Block</span>
+                  <span (click)="openContextBlock(panel._id!, block._id!)" class="editanddellink">Edit Context Block</span>
+                  <span (click)="deleteContextBlock(block._id!, panel._id!)" class="editanddellink">Delete Context
+                    Block</span>
                 </div>
               </div>
+    
               <!-- Show attachments if available -->
-              @if (block.attachments) {
+              @if (block.attachments && block.attachments.length > 0) {
               <div class="context-attachments">
                 <b>Key Files</b>
                 <div class="attachments-preview">
                   @for (file of block.attachments; track $index) {
                   <div class="attachment-item">
                     <!-- @if (file.fileType?.startsWith('image/')) {
-                    <img [src]="getAttachmentUrl(file.filePath!)" [alt]="file.fileName" class="attachment-image" />
-                    }
+                      <img [src]="getAttachmentUrl(file.filePath!)" [alt]="file.fileName" class="attachment-image" />
+                      }
     
-                    @else if (file.fileType === 'application/pdf') {
-                    <embed [src]="getAttachmentUrl(file.filePath!)" type="application/pdf" class="attachment-pdf" />
-                    }
+                      @else if (file.fileType === 'application/pdf') {
+                      <embed [src]="getAttachmentUrl(file.filePath!)" type="application/pdf" class="attachment-pdf" />
+                      }
     
-                    @else { -->
+                      @else { -->
                     <a [href]="file.filePath" target="_blank" class="attachment-link">
-                      {{ file.fileName }}
+                      {{ file.originalFileName || file.fileName }}
                     </a>
                     <!-- } -->
                   </div>
@@ -90,9 +134,9 @@
         <app-fielddetails [fields]="panel.fieldId"></app-fielddetails>
       </div>
       } @else {
-        <!-- @if(!panelContextBlocks){ -->
-          <span>(No Fields Added)</span>
-        <!-- } -->
+      <!-- @if(!panelContextBlocks){ -->
+      <span>(No Fields Added)</span>
+      <!-- } -->
       }
 
       @if (getSubPanelsForPanel(panel._id!).length > 0) {

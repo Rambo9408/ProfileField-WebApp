@@ -47,14 +47,14 @@ import { Confirmdelete } from '../confirmdelete/confirmdelete';
   ]
 })
 export class Panellists {
-  safeContent: SafeHtml[] = [];
 
   isOpen = false;
   fields: Fieldinterface[] = [];
   subPanels: Subpanelinterface[] = [];
   selectedContextBlocks: Contextblockinterface[] = [];
-  // panelContextBlocks: { [panelId: string]: Contextblockinterface[] } = {};
-  panelContextBlocks !: Contextblockinterface[];
+  panelContextBlocks: { [panelId: string]: Contextblockinterface[] } = {};
+  safeContent: { [panelId: string]: SafeHtml[] } = {};
+
   openPanels: { [panelId: string]: boolean } = {};
   fixedPanels: string[] = [
     'Name & Contact Details',
@@ -87,25 +87,22 @@ export class Panellists {
   getContextBlockContent(panelId: string, subPanelId?: string) {
     this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
       next: (res) => {
-        console.log("Context block data:", res.data);
+        // console.log("Context block data:", res.data);
+        this.panelContextBlocks[panelId] = res.data;
+        this.safeContent[panelId] = res.data.map(block =>
+          this.sanitizer.bypassSecurityTrustHtml(block.content)
+        );
 
-        // this.panelContextBlocks = res.data.filter(
-        //   (block: any) => !block.subPanel || block.subPanel === ''
-        // );
-        if(panelId === res.data[0]?.panelId){
-          this.panelContextBlocks = res.data;        
-          this.safeContent = this.panelContextBlocks.map(block =>
-            this.sanitizer.bypassSecurityTrustHtml(block.content)
-          );
-          this.cdr.detectChanges();
-        }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(`Error fetching context blocks for ${panelId}:`, err);
-        this.panelContextBlocks = [];
+        this.panelContextBlocks[panelId] = [];
+        this.safeContent[panelId] = [];
       }
     });
   }
+
 
   getSubPanelsForPanel(panelId: string): Subpanelinterface[] {
     const data = this.subPanels.filter(subpanel =>
@@ -264,19 +261,18 @@ export class Panellists {
     });
   }
 
-  deleteContextBlock(id: string) {
-    console.log("contextBlock id: ", id);
+  deleteContextBlock(blockId: string, panelId: string) {
     const dialogRef = this.dialog.open(Confirmdelete, {
       width: '600px',
-      data: { id }
+      data: { id: blockId }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.contextBlockService.deleteContextBlock(id).subscribe({
+        this.contextBlockService.deleteContextBlock(blockId).subscribe({
           next: (res) => {
             console.log("Context Block deleted successfully:", res);
-
+            this.getContextBlockContent(panelId); // Refresh current panel only
           },
           error: (err) => {
             console.error("Error deleting Context Block:", err);
@@ -291,7 +287,7 @@ export class Panellists {
     return `${baseUrl}${path}`;
   }
 
-  openContextBlock() {
+  openContextBlock(panelId: string, blockId: string) {
     const dialogRef = this.dialog.open(Createcontextblock, {
       width: '800px',
       data: {
@@ -301,25 +297,19 @@ export class Panellists {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const contextBlockId = this.panelContextBlocks[0]?._id;
-        if (contextBlockId) {
-          this.contextBlockService.updateContextBlock(contextBlockId, result.formData).subscribe({
-            next: (res) => {
-              // console.log("Context block updated successfully:", res);
-              if (res) {
-                this.contextBlockService.notifyContextBlockRefresh();
-                this.getContextBlockContent(this.panelContextBlocks[0]?.panelId);
-                this.cdr.detectChanges();
-              }
-            },
-            error: (err) => {
-              console.error("Error updating context block:", err);
+      if (result && blockId) {
+        this.contextBlockService.updateContextBlock(blockId, result.formData).subscribe({
+          next: (res) => {
+            if (res) {
+              this.contextBlockService.notifyContextBlockRefresh();
+              this.getContextBlockContent(panelId); // Refresh current panel
+              this.cdr.detectChanges();
             }
-          });
-        } else {
-          console.error("Context block ID is undefined, cannot update context block.");
-        }
+          },
+          error: (err) => {
+            console.error("Error updating context block:", err);
+          }
+        });
       }
     });
   }
