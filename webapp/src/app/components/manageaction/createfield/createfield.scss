@@ -20,6 +20,30 @@
         font-weight: bold;
     }
 
+    .alert-content {
+        width: 45%;
+        // padding-top: 5px;
+
+        .alert-label {
+            // font-weight: bold;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+
+            .alertLink {
+                color: #000099;
+                text-decoration: underline;
+                font-weight: normal;
+                cursor: pointer;
+
+                &:hover {
+                    color: #0056d2;
+                }
+            }
+        }
+    }
+
+
     .form-container {
         display: flex;
         flex-direction: column;
@@ -153,7 +177,7 @@
 
     .dropdown-section,
     .checkbox-section {
-        margin-top: 10px;
+        margin-top: 15px;
     }
 
     .required {
@@ -212,6 +236,53 @@
         }
     }
 
+    .remainder-container {
+        border: 2px dashed blue;
+        margin-left: 8px;
+        padding: 16px;
+
+        .first-remainder,
+        .optional-reminder {
+            margin-top: 10px;
+
+            .remainder-label {
+                font-weight: bold;
+            }
+
+            .date-selected {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .selected-date {
+                color: #2c3e50;
+            }
+        }
+
+        .action-btn {
+            // text-align: center;
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+    }
+
+}
+
+.calendar-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.alertLink {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .mat-mdc-dialog-content {

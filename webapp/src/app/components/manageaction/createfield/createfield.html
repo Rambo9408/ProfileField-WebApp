@@ -219,6 +219,121 @@
                 </mat-checkbox>
             </div>
 
+            @if(volunteerCanEdit){
+            <div class="checkbox-section">
+                <span class="checkbox-label">Reminder Alerts to Volunteers:</span>
+                <div class="alert-content">
+                    <div class="alert-label">
+                        - E-mail Alert
+                        <span class="alertLink" (click)="openCalendar('email')">Use</span>
+                        <input type="hidden" [(ngModel)]="emailAlertDate" name="emailAlertDate" />
+                    </div>
+                </div>
+                @if(emailAlertDate){
+                <div class="remainder-container">
+                    <div class="first-remainder">
+                        <span class="remainder-label">When should the first reminder be sent?</span>
+                        <div class="date-selected">
+                            <span class="alertLink" (click)="pickerFirst.open()">{{ selectedDate ? 'Edit Date' :
+                                'Set Date'
+                                }}</span>
+                            @if(selectedDate){
+                            <div class="selected-date">
+                                {{ selectedDate | date:'dd-MMM-yyyy' }}
+                            </div>
+
+                            <span type="button" (click)="undoSelectedDate('0')" class="alertLink">Undo</span>
+                            }
+                            <!-- Hidden input to attach picker -->
+                            <input matInput [matDatepicker]="pickerFirst" [(ngModel)]="selectedDate"
+                                name="alertDate" style="display: none" />
+                            <mat-datepicker #pickerFirst></mat-datepicker>
+                        </div>
+                    </div>
+
+                    <div class="optional-reminder">
+                        <span class="remainder-label">When should the last reminder be sent? (Optional)</span>
+                        <div class="date-selected">
+                            <span class="alertLink" (click)="pickerOptional.open()">
+                                {{ selectedDateOptional ? 'Edit Date (optional)': 'Set Date (optional)' }}</span>
+                            @if(selectedDateOptional){
+                            <div class="selected-date">
+                                {{ selectedDateOptional | date:'dd-MMM-yyyy' }}
+                            </div>
+
+                            <span type="button" (click)="undoSelectedDate('1')" class="alertLink">Undo</span>
+                            }
+                            <!-- Hidden input to attach picker -->
+                            <input matInput [matDatepicker]="pickerOptional" [(ngModel)]="selectedDateOptional"
+                                name="alertDate" [min]="selectedDate" style="display: none" />
+                            <mat-datepicker #pickerOptional></mat-datepicker>
+                        </div>
+                    </div>
+
+                    <div class="action-btn">
+                        <button mat-raised-button type="button" (click)="saveReminder('email')" class="btn-save">Apply</button>
+                        <button mat-button type="button" (click)="cancelReminder('email')" class="btn-cancel">Cancel</button>
+                    </div>
+                </div>
+                }
+                <div class="alert-content">    
+                    <div class="alert-label">
+                        - Text Message Alert
+                        <span class="alertLink" (click)="openCalendar('sms')">Use</span>
+                        <input type="hidden" [(ngModel)]="smsAlertDate" name="smsAlertDate" />
+                    </div>
+                </div>
+
+                @if(smsAlertDate){
+                <div class="remainder-container">
+                    <div class="first-remainder">
+                        <span class="remainder-label">When should the first reminder be sent?</span>
+                        <div class="date-selected">
+                            <span class="alertLink" (click)="pickerFirst.open()">{{ selectedDate ? 'Edit Date' :
+                                'Set Date'
+                                }}</span>
+                            @if(selectedDate){
+                            <div class="selected-date">
+                                {{ selectedDate | date:'dd-MMM-yyyy' }}
+                            </div>
+
+                            <span type="button" (click)="undoSelectedDate('0')" class="alertLink">Undo</span>
+                            }
+                            <!-- Hidden input to attach picker -->
+                            <input matInput [matDatepicker]="pickerFirst" [(ngModel)]="selectedDate"
+                                name="alertDate" style="display: none" />
+                            <mat-datepicker #pickerFirst></mat-datepicker>
+                        </div>
+                    </div>
+
+                    <div class="optional-reminder">
+                        <span class="remainder-label">When should the last reminder be sent? (Optional)</span>
+                        <div class="date-selected">
+                            <span class="alertLink" (click)="pickerOptional.open()">{{ selectedDateOptional ? 'Edit Date (optional)' :
+                                'Set Date (optional)'
+                                }}</span>
+                            @if(selectedDateOptional){
+                            <div class="selected-date">
+                                {{ selectedDateOptional | date:'dd-MMM-yyyy' }}
+                            </div>
+
+                            <span type="button" (click)="undoSelectedDate('1')" class="alertLink">Undo</span>
+                            }
+                            <!-- Hidden input to attach picker -->
+                            <input matInput [matDatepicker]="pickerOptional" [(ngModel)]="selectedDateOptional"
+                                name="alertDate" [min]="selectedDate" style="display: none" />
+                            <mat-datepicker #pickerOptional></mat-datepicker>
+                        </div>
+                    </div>
+                    <div class="action-btn">
+                        <button mat-raised-button type="button" (click)="saveReminder('email')" class="btn-save">Apply</button>
+                        <button mat-button type="button" (click)="cancelReminder('email')" class="btn-cancel">Cancel</button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+
             <!-- Volunteer Access -->
             <div class="checkbox-section">
                 <label class="checkbox-label">Staff Access to Data in this Field:</label>

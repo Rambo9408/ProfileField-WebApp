@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
+    provideNativeDateAdapter(),
     importProvidersFrom(
       FormsModule,
       ReactiveFormsModule,

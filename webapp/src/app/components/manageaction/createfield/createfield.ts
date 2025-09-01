@@ -14,6 +14,7 @@ import { Subpanelservice } from '../../../services/subpanelservice';
 import { Panelinterface } from '../../../interfaces/panelinterface';
 import { Subpanelinterface } from '../../../interfaces/subpanelinterface';
 import { Fieldservice } from '../../../services/fieldservice';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-createfield',
@@ -29,7 +30,8 @@ import { Fieldservice } from '../../../services/fieldservice';
     MatInputModule,
     CommonModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatDatepickerModule
   ],
   templateUrl: './createfield.html',
   styleUrl: './createfield.scss'
@@ -60,7 +62,12 @@ export class Createfield {
   volunteerQuickAccess = false;
   volunteerReviewRequired = false;
   isEditable = false;
-
+  emailAlertDate: Date | null = null;
+  smsAlertDate: Date | null = null;
+  selectedDateOptional: Date | null = null;// for date picker
+  selectedDate: Date | null = null;// for date picker
+  showCalendar: boolean = false;// for date picker
+  optionalSelectedDate: Date | null = null;
   panels: Panelinterface[] = [];
   subPanels: Subpanelinterface[] = [];
   columnWidths = [50, 100];
@@ -141,11 +148,9 @@ export class Createfield {
     });
   }
 
-
-
   getPanels() {
     this.panelService.getPanels().subscribe((panels: Panelinterface[]) => {
-      console.log("panels getting: ", panels);
+      // console.log("panels getting: ", panels);
       // this.panels = panels.filter(panel => panel.isRemovable).map(panel => panel.panelName);
       // this.subPanels = panels.filter(panel => panel.subpanelId?.length).flatMap(panel => panel.subpanelId ?? []);
       this.panels = panels.filter(panel => panel.isRemovable);
@@ -218,6 +223,48 @@ export class Createfield {
       this.selectedFieldType = selectedRadio.nativeElement.innerText.trim();
     }
     this.radioGroup = false;
+  }
+
+  openCalendar(type: string) {
+    if (type === 'email') {
+      // this.emailAlertDate = new Date().toISOString();
+      this.emailAlertDate = new Date();
+    } else if (type === 'sms') {
+      // this.smsAlertDate = new Date().toISOString();
+      this.smsAlertDate = new Date();
+    }
+  }
+
+  onDateSelected(event: any) {
+    this.selectedDate = event.value;
+  }
+
+  saveReminder(type: string) {
+    if (type === 'email') {
+      this.emailAlertDate = this.selectedDate;
+    } else if (type === 'sms') {
+      this.smsAlertDate = this.selectedDate;
+    }
+  }
+
+  cancelReminder(type: string) {
+    if (type === 'email') {
+      this.emailAlertDate = null;
+    } else if (type === 'sms') {
+      this.smsAlertDate = null;
+    }
+  }
+
+  undoSelectedDate(id: string) {
+    if (id === '0') {
+      this.selectedDate = null;
+    } else if (id === '1') {
+      this.selectedDateOptional = null;
+    }
+  }
+
+  onOptionalDateSelected(event: any) {
+    this.selectedDateOptional = event.value;
   }
 
 }

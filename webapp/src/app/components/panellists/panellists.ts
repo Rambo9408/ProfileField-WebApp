@@ -87,7 +87,7 @@ export class Panellists {
   getContextBlockContent(panelId: string, subPanelId?: string) {
     this.contextBlockService.getContextBlock(panelId, subPanelId).subscribe({
       next: (res) => {
-        // console.log("Context block data:", res.data);
+        console.log("Context block data:", res.data);
         this.panelContextBlocks[panelId] = res.data;
         this.safeContent[panelId] = res.data.map(block =>
           this.sanitizer.bypassSecurityTrustHtml(block.content)
@@ -285,6 +285,17 @@ export class Panellists {
   getAttachmentUrl(path: string): string {
     const baseUrl = 'http://localhost:3000';
     return `${baseUrl}${path}`;
+  }
+
+  downloadAttachment(file: any) {
+    const link = document.createElement('a');
+    link.href = this.getAttachmentUrl(file.filePath);
+    link.download = file.fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // this.contextBlockService.downloadAttachment(file);
   }
 
   openContextBlock(panelId: string, blockId: string) {

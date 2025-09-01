@@ -14,11 +14,18 @@
 }
 
 .panel-cell a {
-  color: blue;          /* Default link color */
+  color: blue;
   text-decoration: underline;
-  cursor: pointer;      /* Show pointer cursor */
+  cursor: pointer;
 }
 
+.panel-cell:hover,
+.full-width-field:hover {
+  background: #E3F3FF;
+}
+
+
 .panel-cell a:hover {
-  color: darkblue;      /* Optional hover effect */
+  color: darkblue;
+  /* Optional hover effect */
 }

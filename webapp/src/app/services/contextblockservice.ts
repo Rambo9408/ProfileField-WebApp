@@ -46,7 +46,6 @@ export class Contextblockservice {
     );
   }
 
-
   addContextBlock(Field: FormData): Observable<Contextblockinterface> {
     return this.http.post<Contextblockinterface>(this.addUrl, Field)
       .pipe(catchError(this.handleError));
@@ -60,6 +59,17 @@ export class Contextblockservice {
   updateContextBlock(_id: string, contextBlock: Contextblockinterface): Observable<Contextblockinterface> {
     return this.http.put<Contextblockinterface>(`${this.updateUrl}/${_id}`, contextBlock)
       .pipe(catchError(this.handleError));
+  }
+
+  downloadAttachment(file: any) {
+    this.http.get(file.filePath, { responseType: 'blob' }).subscribe((blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = file.fileName || 'download';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   }
 
   notifyContextBlockRefresh() {

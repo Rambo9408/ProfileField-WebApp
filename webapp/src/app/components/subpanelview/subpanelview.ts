@@ -170,6 +170,17 @@ export class Subpanelview {
     return `${baseUrl}${path}`;
   }
 
+  downloadAttachment(file: any) {
+    const link = document.createElement('a');
+    link.href = this.getAttachmentUrl(file.filePath);
+    link.download = file.fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // this.contextBlockService.downloadAttachment(file);
+  }
+
   openContextBlock() {
     const dialogRef = this.dialog.open(Createcontextblock, {
       width: '800px',

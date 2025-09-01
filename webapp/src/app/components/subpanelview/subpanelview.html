@@ -23,33 +23,35 @@
             @if (panelContextBlocks) {
             <div class="context-blocks">
                 @for (block of panelContextBlocks; track $index) {
-                    @if(block.subPanel === subpanel._id) { 
-                        <div class="context-block">
-                            <!-- Render HTML content -->
-                            <div class="context-block-content">
-                                <div class="context-content" [innerHTML]="safeContent[$index]"></div>
-                                <div class="context-actions">
-                                    <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
-                                    <span (click)="deleteContextBlock(block._id!)" class="editanddellink">Delete Context Block</span>
-                                </div>
-                            </div>
-                            <!-- Show attachments if available -->
-                            @if (block.attachments) {
-                            <div class="context-attachments">
-                                <b>Key Files</b>
-                                <div class="attachments-preview">
-                                    @for (file of block.attachments; track $index) {
-                                    <div class="attachment-item">
-                                        <a [href]="file.filePath" target="_blank" class="attachment-link">
-                                            {{ file.fileName }}
-                                        </a>
-                                    </div>
-                                    }
-                                </div>
+                @if(block.subPanel === subpanel._id) {
+                <div class="context-block">
+                    <!-- Render HTML content -->
+                    <div class="context-block-content">
+                        <div class="context-content" [innerHTML]="safeContent[$index]"></div>
+                        <div class="context-actions">
+                            <span (click)="openContextBlock()" class="editanddellink">Edit Context Block</span>
+                            <span (click)="deleteContextBlock(block._id!)" class="editanddellink">Delete Context
+                                Block</span>
+                        </div>
+                    </div>
+                    <!-- Show attachments if available -->
+                    @if (block.attachments) {
+                    <div class="context-attachments">
+                        <b>Key Files</b>
+                        <div class="attachments-preview">
+                            @for (file of block.attachments; track $index) {
+                            <div class="attachment-item">
+                                <a href="javascript:void(0)" (click)="downloadAttachment(file)" target="_blank"
+                                    class="attachment-link">
+                                    {{ file.originalFileName || file.fileName }}
+                                </a>
                             </div>
                             }
                         </div>
+                    </div>
                     }
+                </div>
+                }
                 }
             </div>
             }

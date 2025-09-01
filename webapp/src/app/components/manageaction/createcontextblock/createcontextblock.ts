@@ -105,24 +105,37 @@ export class Createcontextblock {
   ngOnInit() {
     this.getPanels();
     this.cdr.detectChanges();
-    if (this.data && this.data.contextBlocks && this.data.contextBlocks.length > 0) {
-      const block = this.data.contextBlocks[0];
+    if (this.data && this.data.contextBlocks) {
+      // Get the first panelId key
+      const panelIds = Object.keys(this.data.contextBlocks);
 
-      this.selectedPanel = block.panel || '';
-      this.selectedSubPanel = block.subPanel || '';
-      this.contentBlockInfo = block.content || '';
-      this.volunteerAccess = block.volunteerAccess || false;
-      this.showAttachedFileOptions = block.includeAttachments || false;
-      this.attachments = (block.attachments && block.attachments.length > 0)
-        ? block.attachments
-        : [{ file: undefined, fileName: '', originalFileName: '' }];
-      this.contextBlockId = block._id;  // <-- capture ID for editing
+      if (panelIds.length > 0) {
+        const firstPanelId = panelIds[0];
+        const blocksArray = this.data.contextBlocks[firstPanelId];
 
-      this.isEditMode = this.data.content === 'edit';
+        if (blocksArray && blocksArray.length > 0) {
+          const block = blocksArray[0]; // ✅ Access the first block
 
-      this.onPanelChange(this.selectedPanel, this.selectedSubPanel);
+          this.selectedPanel = block.panelId || '';
+          this.selectedSubPanel = block.subPanel || '';
+          this.contentBlockInfo = block.content || '';
+          this.volunteerAccess = block.volunteerAccess || false;
+          this.showAttachedFileOptions = block.includeAttachments || false;
+
+          // Attachments
+          this.attachments = (block.attachments && block.attachments.length > 0)
+            ? block.attachments
+            : [{ file: undefined, fileName: '', originalFileName: '' }];
+
+          this.contextBlockId = block._id; // ✅ Set ID for editing
+          this.isEditMode = this.data.content === 'edit';
+
+          this.onPanelChange(this.selectedPanel, this.selectedSubPanel);
+        }
+      }
     }
   }
+
 
   openTableDialog() {
     const dialogRef = this.dialog.open(Tabledialog, {
