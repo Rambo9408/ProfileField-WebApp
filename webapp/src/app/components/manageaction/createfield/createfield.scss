@@ -272,6 +272,24 @@
 
 }
 
+
+.remainder-text-labels {
+    padding-left: 20px;
+
+    .first-reminder,
+    .last-reminder {
+        display: flex;
+        margin-bottom: 10px;
+        gap: 15px;
+    }
+
+    .label-action {
+        display: flex;
+        gap: 10px;
+    }
+}
+
+
 .calendar-container {
     margin-top: 10px;
     display: flex;
@@ -292,4 +310,26 @@
 p {
     margin: 0;
     padding: 0;
+}
+
+::ng-deep .cdk-overlay-pane {
+    position: absolute !important;
+    transform: none !important;
+}
+
+::ng-deep .mat-datepicker-content {
+    z-index: 2000 !important;
+    /* Ensure it's above dialog */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .custom-datepicker {
+    margin-top: 5px !important;
+    /* Adjust gap between link & calendar */
+}
+
+::ng-deep .mat-datepicker-popup {
+    transform-origin: top left !important;
+    top: auto !important;
+    left: auto !important;
 }

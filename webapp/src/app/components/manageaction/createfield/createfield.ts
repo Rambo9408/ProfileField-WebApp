@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Output, QueryList, ViewChildren } from '@angular/core';
-import { FormsModule, NgForm, NgModel } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -62,8 +62,23 @@ export class Createfield {
   volunteerQuickAccess = false;
   volunteerReviewRequired = false;
   isEditable = false;
+  // emailAlertDate: Date | null = null;
+  // smsAlertDate: Date | null = null;
+
+  // EMAIL ALERT STATES
   emailAlertDate: Date | null = null;
+  emailFirstReminder: Date | null = null;
+  emailLastReminder: Date | null = null;
+  emailDateLabelDisplay: boolean = false;
+  emailAlertOptions: boolean = false;
+
+  // SMS ALERT STATES
   smsAlertDate: Date | null = null;
+  smsFirstReminder: Date | null = null;
+  smsLastReminder: Date | null = null;
+  smsDateLabelDisplay: boolean = false;
+  smsAlertOptions: boolean = false;
+
   selectedDateOptional: Date | null = null;// for date picker
   selectedDate: Date | null = null;// for date picker
   showCalendar: boolean = false;// for date picker
@@ -71,7 +86,9 @@ export class Createfield {
   panels: Panelinterface[] = [];
   subPanels: Subpanelinterface[] = [];
   columnWidths = [50, 100];
-
+  // dateLabelDisplay: boolean = false;
+  // emailAlertOptions: boolean = false;
+  // smsAlertOptions: boolean = false;
   confirmationAction: string | null = null;
 
 
@@ -170,10 +187,22 @@ export class Createfield {
 
   onCreate(fieldForm: NgForm): void {
     // console.log('Field created with panel:', fieldForm.value);
+    const payload = {
+      ...fieldForm.value,
+      emailReminder: {
+        first: this.emailFirstReminder,
+        last: this.emailLastReminder
+      },
+      smsReminder: {
+        first: this.smsFirstReminder,
+        last: this.smsLastReminder
+      }
+    };
+
     if (this.data?.fieldId) {
-      this.dialogRef.close({ action: 'update', field: fieldForm.value });
+      this.dialogRef.close({ action: 'update', field: payload });
     } else {
-      this.dialogRef.close(fieldForm.value);
+      this.dialogRef.close(payload);
     }
   }
   onCancel(): void {
@@ -227,11 +256,11 @@ export class Createfield {
 
   openCalendar(type: string) {
     if (type === 'email') {
-      // this.emailAlertDate = new Date().toISOString();
-      this.emailAlertDate = new Date();
+      this.emailAlertOptions = true;
+      this.emailFirstReminder = this.emailFirstReminder || new Date();
     } else if (type === 'sms') {
-      // this.smsAlertDate = new Date().toISOString();
-      this.smsAlertDate = new Date();
+      this.smsAlertOptions = true;
+      this.smsFirstReminder = this.smsFirstReminder || new Date();
     }
   }
 
@@ -241,30 +270,50 @@ export class Createfield {
 
   saveReminder(type: string) {
     if (type === 'email') {
-      this.emailAlertDate = this.selectedDate;
+      this.emailDateLabelDisplay = true;
+      this.emailAlertOptions = false;
     } else if (type === 'sms') {
-      this.smsAlertDate = this.selectedDate;
+      this.smsDateLabelDisplay = true;
+      this.smsAlertOptions = false;
     }
   }
 
   cancelReminder(type: string) {
     if (type === 'email') {
-      this.emailAlertDate = null;
+      this.emailAlertOptions = false;
     } else if (type === 'sms') {
-      this.smsAlertDate = null;
+      this.smsAlertOptions = false;
     }
   }
 
-  undoSelectedDate(id: string) {
-    if (id === '0') {
-      this.selectedDate = null;
-    } else if (id === '1') {
-      this.selectedDateOptional = null;
-    }
+  undoEmailDate(type: string) {
+    this.clearEmailDate(type);
   }
+
+  undoSmsDate(type: string) {
+    this.clearSmsDate(type);
+  }
+
+
+  // undoSelectedDate(id: string) {
+  //   if (id === '0') {
+  //     this.selectedDate = null;
+  //   } else if (id === '1') {
+  //     this.selectedDateOptional = null;
+  //   }
+  // }
 
   onOptionalDateSelected(event: any) {
     this.selectedDateOptional = event.value;
   }
 
+  clearEmailDate(type: string) {
+    if (type === 'first') this.emailFirstReminder = null;
+    else if (type === 'last') this.emailLastReminder = null;
+  }
+
+  clearSmsDate(type: string) {
+    if (type === 'first') this.smsFirstReminder = null;
+    else if (type === 'last') this.smsLastReminder = null;
+  }
 }
