@@ -5,10 +5,11 @@ import { RouterLink } from '@angular/router';
 import { Panelinterface } from '../../interfaces/panelinterface';
 import { Panelservice } from '../../services/panelservice';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Fieldstoimport } from "../fieldstoimport/fieldstoimport";
 
 @Component({
   selector: 'app-mappingfields',
-  imports: [Midheader, Header, RouterLink],
+  imports: [Midheader, Header, RouterLink, Fieldstoimport],
   templateUrl: './mappingfields.html',
   styleUrl: './mappingfields.scss',
   animations: [

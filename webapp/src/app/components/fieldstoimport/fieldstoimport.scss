@@ -33,3 +33,21 @@
         }
     }
 }
+
+.fields-list-mappingmode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    .field-item-mappingmode {
+        display: flex;
+        margin-bottom: 8px;
+
+        .mapping-input {
+            margin-left: 10px;
+
+            select {
+                width: 150px;
+            }
+        }
+    }
+}

@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class Fieldstoimport {
   @Input() fieldIds: Fieldinterface[] = [];
+  @Input() mappingMode: boolean = false;
   @Output() selectedFieldsChange = new EventEmitter<Fieldinterface[]>();
   isSelected: { [key: string]: boolean } = {};
   linkText: string = "Select All";

@@ -44,8 +44,8 @@
 
                     <!-- <div class="panel-body" (click)="getFieldsForPanel(panel._id!)" -->
                     <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
-                        
-                     
+                        <app-fieldstoimport [fieldIds]="panel.fieldId" [mappingMode]="true">
+                        </app-fieldstoimport>
                     </div>
                     }
                     }
