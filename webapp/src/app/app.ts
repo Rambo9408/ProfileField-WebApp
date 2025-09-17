@@ -5,10 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { MAT_DATEPICKER_SCROLL_STRATEGY } from '@angular/material/datepicker';
+import { Router, RouterOutlet } from '@angular/router';
+import { Mappingfields } from "./components/mappingfields/mappingfields";
 
 @Component({
   selector: 'app-root',
-  imports: [Profilepagelayout, CommonModule, FormsModule],
+  imports: [Profilepagelayout, RouterOutlet, CommonModule, FormsModule, Mappingfields],
   providers: [
     provideNativeDateAdapter(),
     {
@@ -23,4 +25,9 @@ import { MAT_DATEPICKER_SCROLL_STRATEGY } from '@angular/material/datepicker';
 
 export class App {
   protected title = 'webapp';
+
+  constructor(
+    public router: Router
+  ) { }
+
 }

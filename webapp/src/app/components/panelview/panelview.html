@@ -33,3 +33,25 @@
     </tbody>
   </table>
 </div>
+
+<div class="viewpnlCls">
+  <b>Import Volunteers</b>
+  <div class="info-text">
+    <span class="text-val">
+      Please use two semicolons (;;) to separate multiple entries in a given cell.
+      For all date fields, please format your dates as m/d/yyyy (example: 1/1/2022).
+    </span>
+  </div>
+  
+  <div class="full-sec-dashed-box">
+    <div class="file-input">
+      <b style="margin-right: 10px;">Select File:</b>
+      <input type="file" (change)="onFileSelected($event)"
+        accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+
+    </div>
+    <div class="margin-top-10">
+      <button class="btn btn-primary margin-top-10" (click)="importVolunteers()">Upload Excel File</button>
+    </div>
+  </div>
+</div>

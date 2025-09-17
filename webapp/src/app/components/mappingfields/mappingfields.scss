@@ -1,0 +1,160 @@
+:host {
+    display: block;
+    background-color: #3366cc; // Blue background like in screenshot
+    min-height: 100vh;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.profile-page-layout {
+    background-color: #66cc33;
+    margin: 0 auto;
+    border-radius: 14px;
+    padding: 15px;
+    width: 730px;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    // border: 10px solid #7ddc37; // Green border
+}
+
+.app-header {
+    margin: 5px auto;
+    background: white;
+    // margin: 5px 5px 5px 5px;
+    border-radius: 14px;
+    max-width: 1033px;
+}
+
+.header-actions {
+    padding: 0px 7px 5px 7px;
+}
+
+.page-heading {
+    display: flex;
+    padding-left: 10px;
+    align-items: center;
+    gap: 5px;
+}
+
+.page-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.top-controls {
+    // height: 120px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    // margin-bottom: 20px;
+    // border: 2px solid red;
+    padding: 10px;
+}
+
+.panel-list {
+    // border: 2px solid red;
+    padding: 10px;
+}
+
+.body-container {
+    padding: 30px 0px 20px 20px;
+
+    .mapping-fields-text {
+        font-size: 13px;
+        font-weight: bold;
+        color: #007700;
+    }
+
+    .mapping-fields-table {
+        margin-top: 30px;
+
+        .optionTable {
+            display: flex;
+            justify-content: space-between;
+
+            .buttonpreview {
+                float: left;
+                text-align: left;
+                width: 100px;
+            }
+
+            .buttontext {
+                float: right;
+                text-align: left;
+                width: 100px;
+            }
+
+            .pull-right,
+            .pull-left {
+                border: groove 0.1rem;
+                background: white;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+            }
+        }
+
+        .profile-panel {
+            margin: 15px 0;
+
+            .panel-header {
+                // padding-bottom: 10px;
+                // cursor: pointer;
+                display: flex;
+                align-items: center;
+                font-weight: bold;
+
+                .panel-header-content {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    .panel-img-icon {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+                }
+
+                .toggle-icon {
+                    // margin: 6px 10px 10px 0px;
+                    cursor: pointer;
+                    color: #66cc33;
+                }
+
+                .panel-actions {
+                    display: flex;
+                    gap: 5px;
+
+                    .action-btn {
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+
+                        img {
+                            width: 16px;
+                            height: 16px;
+                        }
+                    }
+                }
+            }
+
+            .panel-body {
+                padding: 10px 0px 10px 30px;
+                width: 92%;
+            }
+        }
+    }
+}

@@ -10,3 +10,38 @@
     </div>
     <app-panellists [panelNames]="panelNames"></app-panellists>
 </div>
+<div>
+    <div class="profile-panel">
+        @for (panel of panelNames; track panel._id) {
+        @if (panel.panelName === "Name & Contact Details") {
+        <div class="panel-header">
+            <span class="toggle-icon" (click)="togglePanel(panel._id!)" style="font-size: 2.1rem;">
+                {{ openPanels[panel._id!] ? '▾' : '▸' }}
+            </span>
+
+            <div class="panel-header-content">
+                <span class="panel-title">{{ panel.panelName }}</span>
+            </div>
+        </div>
+
+        <!-- <div class="panel-body" (click)="getFieldsForPanel(panel._id!)" -->
+        <div class="panel-body"
+            [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
+
+            @if (panel.fieldId.length > 0) {
+            <div class="panel-actions">
+                <app-fieldstoimport [fieldIds]="panel.fieldId" (selectedFieldsChange)="onSelectedFieldsChange(panel._id!, $event)"></app-fieldstoimport>
+            </div>
+            } @else {
+            <!-- @if(!panelContextBlocks){ -->
+            <span>(No Fields Added)</span>
+            <!-- } -->
+            }
+        </div>
+        }
+        }
+    </div>
+    <div class="Download-template-section">
+        <button class="dld-btn" (click)="downloadTemplate()">Download Template</button>
+    </div>
+</div>

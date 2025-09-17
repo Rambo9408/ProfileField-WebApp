@@ -1,5 +1,5 @@
 .viewpnlCls {
-  padding-left:10px;
+  padding-left: 10px;
   line-height: 1.5;
   width: 460px;
 }
@@ -23,5 +23,27 @@
       padding: 5px;
       font-weight: bold;
     }
+  }
+}
+
+.viewpnlCls {
+  .info-text {
+    margin-top: 10px;
+
+    .text-val {
+      color: rgb(0, 119, 0);
+      width: 100%;
+      font-weight: bold;
+    }
+  }
+
+  .full-sec-dashed-box {
+    display: flex;
+    border: 2px dashed blue;
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: 40px;
+    flex-direction: column;
+    gap: 15px;
   }
 }

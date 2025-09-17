@@ -13,7 +13,7 @@
 }
 
 .top-controls {
-    height: 120px;
+    // height: 120px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -25,4 +25,64 @@
 .panel-list {
     // border: 2px solid red;
     padding: 10px;
+}
+
+.profile-panel {
+    margin: 15px 0;
+
+    .panel-header {
+        // padding-bottom: 10px;
+        // cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+
+        .panel-header-content {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .panel-img-icon {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
+        .toggle-icon {
+            // margin: 6px 10px 10px 0px;
+            cursor: pointer;
+            color: #66cc33;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 5px;
+
+            .action-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+
+                img {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+    }
+
+    .panel-body {
+        padding: 10px 0px 10px 30px;
+        width: 92%;
+    }
+}
+
+.Download-template-section{
+    margin-left: 20px;
+
+    .dld-btn{
+        margin-bottom: 20px;
+    }
 }

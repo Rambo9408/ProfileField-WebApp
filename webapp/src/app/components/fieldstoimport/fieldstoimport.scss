@@ -1,0 +1,35 @@
+.fields-to-import {
+    .header-link {
+        margin-bottom: 10px;
+
+        .select-all {
+            font-size: 13px;
+            text-decoration: underline;
+            color: #3366cc;
+            cursor: pointer;
+        }
+    }
+
+    .fields-list {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: #f9f9f9;
+
+        .field-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+
+            input[type="checkbox"] {
+                margin-right: 10px;
+            }
+
+            label {
+                font-size: 14px;
+                color: #333;
+            }
+        }
+    }
+}

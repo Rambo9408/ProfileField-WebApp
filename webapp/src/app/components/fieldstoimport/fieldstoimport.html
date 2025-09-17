@@ -1,0 +1,22 @@
+<div class="fields-to-import">
+    <div class="header-link">
+        <span class="select-all" (click)="toggleSelection()">{{ linkText }}</span>
+    </div>
+    @if(fieldIds.length > 0){
+    <div class="fields-list">
+        @for (field of fieldIds; track $index) {
+        <div class="field-item">
+            <input type="checkbox" [(ngModel)]="isSelected[field._id!]" (ngModelChange)="updateLinkText()" />
+            <span>
+                {{ field.fieldName }}
+            </span>
+        </div>
+        }
+    </div>
+    }
+    @else {
+    <ng-template #noFields>
+        <p>No fields available for import.</p>
+    </ng-template>
+    }
+</div>
