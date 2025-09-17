@@ -85,10 +85,14 @@
                 float: left;
                 text-align: left;
                 width: 100px;
+                margin-top: 7px;
+                padding-left: 7px;
             }
 
             .buttontext {
                 float: right;
+                margin-top: 7px;
+                padding-left: 7px;
                 text-align: left;
                 width: 100px;
             }
@@ -98,10 +102,10 @@
                 border: groove 0.1rem;
                 background: white;
                 cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 10px;
+                // display: flex;
+                // align-items: center;
+                // gap: 10px;
+                padding: 5px;
             }
         }
 

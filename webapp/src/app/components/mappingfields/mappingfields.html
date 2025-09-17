@@ -29,6 +29,7 @@
                         <span class="buttonpreview">Preview Import</span>
                     </button>
                 </div>
+                
                 <div class="profile-panel">
                     @for (panel of panelNames; track panel._id) {
                     @if (panel.panelName === "Name & Contact Details") {
@@ -49,6 +50,17 @@
                     </div>
                     }
                     }
+                </div>
+
+                 <div class="optionTable">
+                    <button class="pull-left" [routerLink]="['/']">
+                        <img src="nav_left_green.png" alt="Left Arrow" height="30" class="nav-left" />
+                        <span class="buttontext">Build Template</span>
+                    </button>
+                    <button class="pull-right" (click)="validateFieldMapping();">
+                        <img src="nav_right_green.png" alt="Right Arrow" height="30" class="nav-right" />
+                        <span class="buttonpreview">Preview Import</span>
+                    </button>
                 </div>
             </div>
         </div>
