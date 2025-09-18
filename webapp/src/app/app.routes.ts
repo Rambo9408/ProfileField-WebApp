@@ -8,5 +8,9 @@ export const routes: Routes = [
     {
         path: '',
         loadComponent: () => import('./components/profilepagelayout/profilepagelayout').then((c) => c.Profilepagelayout)
+    },
+    {
+        path: 'mappingpreview',
+        loadComponent: () => import('./components/mappingpreview/mappingpreview').then((c) => c.Mappingpreview)
     }
 ];

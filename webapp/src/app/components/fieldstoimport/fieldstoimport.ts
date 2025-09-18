@@ -25,7 +25,7 @@ export class Fieldstoimport {
   validFieldsForMapping: string[] = [
     'First Name',
     'Last Name',
-    'Email',
+    'E-mail',
     'Mobile',
     'Logs Participation'
   ];

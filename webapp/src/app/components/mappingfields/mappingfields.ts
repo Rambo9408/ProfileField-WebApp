@@ -6,6 +6,8 @@ import { Panelinterface } from '../../interfaces/panelinterface';
 import { Panelservice } from '../../services/panelservice';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Fieldstoimport } from "../fieldstoimport/fieldstoimport";
+import { MatDialog } from '@angular/material/dialog';
+import { Fieldsmappingpopup } from '../fieldsmappingpopup/fieldsmappingpopup';
 
 @Component({
   selector: 'app-mappingfields',
@@ -39,6 +41,7 @@ export class Mappingfields {
 
   constructor(
     private panelService: Panelservice,
+    private dialog: MatDialog,
     private cdr: ChangeDetectorRef
   ) {
     const nav = history.state;
@@ -75,6 +78,16 @@ export class Mappingfields {
   }
 
   validateFieldMapping() {
-    alert("Field Mapping Validated Successfully");
+    this.dialog.open(Fieldsmappingpopup, {
+      width: '600px',
+      height: '400px',
+      autoFocus: false,
+      data: {
+        excelHeaders: this.excelHeaders,
+        excelData: this.excelData,
+        panels: this.panelNames
+      }
+    });
+    // alert("Field Mapping Validated Successfully");
   }
 }

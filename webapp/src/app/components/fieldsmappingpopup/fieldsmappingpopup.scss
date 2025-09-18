@@ -1,0 +1,20 @@
+.popup-container {
+    padding: 20px 20px;
+
+    .popup-header {
+        font-size: 14px;
+        color: green;
+        font-weight: bold;
+        // padding: ;
+    }
+
+    .popup-body {
+        margin: 10px 0px 10px 20px;
+    }
+
+    .popup-footer {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+}

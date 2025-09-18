@@ -1,0 +1,21 @@
+<div class="popup-container">
+    <div class="popup-header">
+        <span class="popup-title">The following fields have not been mapped to an Excel column</span>
+    </div>
+    <div class="popup-body">
+        @for (panel of panels; track $index) {
+          <div class="panel">
+            <b>{{panel.panelName}}</b>
+            <ul>
+                @for (field of panel.fieldId; track field._id) {
+                    <li>{{ field.fieldName }}</li>
+                }
+            </ul>
+          </div>
+        }
+    </div>
+    <div class="popup-footer">
+        <input type="button" class="crm_button" (click)="dialogRef.close()" value="Finish Mapping Columns" name="Action">
+        <input type="button" class="crm_button" (click)="mappingPreviewPage()" value="Skip and Import" name="Action">
+    </div>
+</div>
