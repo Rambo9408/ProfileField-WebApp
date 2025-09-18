@@ -16,6 +16,8 @@
         border: 1px solid #ccc;
         padding: 10px;
         background-color: #f9f9f9;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
 
         .field-item {
             display: flex;
@@ -50,4 +52,12 @@
             }
         }
     }
+}
+
+.field-item-mappingmode.no-match span {
+    color: grey;
+}
+
+.field-item-mappingmode.match span {
+    color: red;
 }

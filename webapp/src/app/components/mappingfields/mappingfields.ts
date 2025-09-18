@@ -34,11 +34,17 @@ import { Fieldstoimport } from "../fieldstoimport/fieldstoimport";
 export class Mappingfields {
   panelNames !: Panelinterface[];
   openPanels: { [panelId: string]: boolean } = {};
+  excelHeaders: { name: string, display: string }[] = [];
+  excelData: { [key: string]: any }[] = [];
 
   constructor(
     private panelService: Panelservice,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {
+    const nav = history.state;
+    this.excelHeaders = nav?.excelHeaders || [];
+    this.excelData = nav?.excelData || [];
+  }
 
   ngOnInit(): void {
     this.loadPanelNames();

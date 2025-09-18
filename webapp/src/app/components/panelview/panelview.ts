@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-panelview',
@@ -30,6 +31,8 @@ import { Router } from '@angular/router';
 })
 export class Panelview {
   selectedOption: number = 1;
+  excelHeaders: any[] = [];
+  excelData: any[] = [];
 
   constructor(
     private route: Router
@@ -37,30 +40,54 @@ export class Panelview {
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
 
-    if (file) {
-      const validTypes = [
-        'application/vnd.ms-excel', // .xls
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // .xlsx
-      ];
-      const validExtensions = ['.xls', '.xlsx'];
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      const fileName = file.name.toLowerCase();
-      const isValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
-      const isValidType = validTypes.includes(file.type);
+      // Convert to JSON (first row = headers)
+      const sheetJson = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-      if (isValidExtension || isValidType) {
-        console.log('Valid Excel file selected:', file);
-        // ✅ proceed with upload
-      } else {
-        alert('Please upload a valid Excel file (.xls or .xlsx)');
-        (event.target as HTMLInputElement).value = ''; // reset input
-      }
-    }
+      // First row = headers
+      const rawHeaders = Array.isArray(sheetJson[0]) ? sheetJson[0].map(h => String(h)) : [];
+      const cleanHeaders = rawHeaders.map(h =>
+        h.includes(":") ? h.split(":").pop()?.trim() || h : h
+      );
+      this.excelHeaders = cleanHeaders.map((header, i) => ({
+        name: header,
+        display: `${header} (Col: ${String.fromCharCode(65 + i)})`
+      }));
+
+      // Remaining rows = values
+      const rows = sheetJson.slice(1);
+      this.excelData = rows.map(row => {
+        const obj: { [key: string]: any } = {};
+        const rowArray = row as any[];
+        rawHeaders.forEach((header, i) => {
+          obj[header] = rowArray[i] ?? "";
+        });
+        return obj;
+      });
+
+      console.log("Headers:", this.excelHeaders);
+      console.log("Data Rows:", this.excelData);
+    };
+    reader.readAsArrayBuffer(file);
   }
 
   importVolunteers() {
-    this.route.navigate(['/importFieldMapping']);
+    if (this.excelHeaders.length === 0 || this.excelData.length === 0) {
+      alert("Please upload an Excel file first.");
+      return;
+    }
+
+    // ✅ redirect happens only when user clicks
+    this.route.navigate(['/importFieldMapping'], {
+      state: { excelHeaders: this.excelHeaders, excelData: this.excelData }
+    });
   }
 
 }

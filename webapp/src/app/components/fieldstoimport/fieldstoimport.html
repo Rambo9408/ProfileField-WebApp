@@ -7,7 +7,9 @@
     <div class="fields-list">
         @for (field of fieldIds; track $index) {
         <div class="field-item">
+            @if(validFieldsForMapping.includes(field.fieldName)){
             <input type="checkbox" [(ngModel)]="isSelected[field._id!]" (ngModelChange)="updateLinkText()" />
+            }
             <span>
                 {{ field.fieldName }}
             </span>
@@ -25,15 +27,23 @@
 @if(fieldIds.length > 0){
 <div class="fields-list-mappingmode">
     @for (field of fieldIds; track $index) {
-    <div class="field-item-mappingmode">
-        <span style="width: 105px;">{{ field.fieldName }}</span>
+    <div class="field-item-mappingmode" [ngClass]="hasMatch(field.fieldName) ? 'match' : 'no-match'">
+        <span style="width: 105px;">
+            @if(hasMatch(field.fieldName)) {
+            *{{ field.fieldName }}
+            }@else{
+            {{ field.fieldName }}
+            }
+        </span>
+        @if (hasMatch(field.fieldName)) {
         <div class="mapping-input">
-            <!-- <select [(ngModel)]="field.mapping" class="form-control"> -->
-            <select  class="form-control">
-                <option value="None">None</option>
-                <option [value]="field.fieldName">{{ field.fieldName }}</option>
+            <select class="form-control" [(ngModel)]="mappings[field._id!]">
+                @for (header of excelHeaders; track $index) {
+                <option [value]="header.name">{{ header.display }}</option>
+                }
             </select>
         </div>
+        }
     </div>
     }
 </div>

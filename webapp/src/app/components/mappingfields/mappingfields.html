@@ -29,7 +29,7 @@
                         <span class="buttonpreview">Preview Import</span>
                     </button>
                 </div>
-                
+
                 <div class="profile-panel">
                     @for (panel of panelNames; track panel._id) {
                     @if (panel.panelName === "Name & Contact Details") {
@@ -45,14 +45,15 @@
 
                     <!-- <div class="panel-body" (click)="getFieldsForPanel(panel._id!)" -->
                     <div class="panel-body" [@slideToggle]="openPanels[panel._id!] ? 'open' : 'closed'">
-                        <app-fieldstoimport [fieldIds]="panel.fieldId" [mappingMode]="true">
+                        <app-fieldstoimport [fieldIds]="panel.fieldId" [mappingMode]="true"
+                            [excelHeaders]="excelHeaders" [excelData]="excelData">
                         </app-fieldstoimport>
                     </div>
                     }
                     }
                 </div>
 
-                 <div class="optionTable">
+                <div class="optionTable">
                     <button class="pull-left" [routerLink]="['/']">
                         <img src="nav_left_green.png" alt="Left Arrow" height="30" class="nav-left" />
                         <span class="buttontext">Build Template</span>
