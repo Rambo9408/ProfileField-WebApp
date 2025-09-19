@@ -12,5 +12,9 @@ export const routes: Routes = [
     {
         path: 'mappingpreview',
         loadComponent: () => import('./components/mappingpreview/mappingpreview').then((c) => c.Mappingpreview)
+    },
+    {
+        path: 'updatedAccountPage',
+        loadComponent: () => import('./components/updatedaccountpage/updatedaccountpage').then((c) => c.Updatedaccountpage) 
     }
 ];

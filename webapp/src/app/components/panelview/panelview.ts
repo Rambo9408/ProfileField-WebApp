@@ -66,7 +66,7 @@ export class Panelview {
       this.excelData = rows.map(row => {
         const obj: { [key: string]: any } = {};
         const rowArray = row as any[];
-        cleanHeaders.forEach((header, i) => {
+        rawHeaders.forEach((header, i) => {
           obj[header] = rowArray[i] ?? "";
         });
         return obj;

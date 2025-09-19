@@ -1,0 +1,48 @@
+<div class="profile-page-layout">
+    <div class="app-header">
+        <app-header></app-header>
+    </div>
+    <div class="header-actions">
+        <app-midheader></app-midheader>
+    </div>
+    <div class="container">
+        <div>
+            <div class="page-heading">
+                <img src="photo_portrait.gif" alt="Logo" class="logo" />
+                <p class="page-name">Import Volunteers</p>
+            </div>
+        </div>
+        <hr>
+        <div class="content-section">
+            <div class="preview-text-block">
+                <p class="section-heading">New Accounts</p>
+                <p class="section-subheading">The following accounts have been imported and created. Import details have
+                    also been e-mailed to you.</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (row of excelData; track $index) {
+                            <tr>
+                                <td>
+                                    <a href="#">{{ row['firstName'] }} {{ row['lastName'] }}</a>
+                                </td>
+                                <td>{{ row['email'] }}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="back-link">
+                <span [routerLink]="['/mappingpreview']">Back to Import Home</span>
+            </div>
+        </div>
+    </div>
+</div>
