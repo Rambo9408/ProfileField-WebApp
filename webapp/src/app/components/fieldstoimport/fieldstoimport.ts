@@ -41,6 +41,8 @@ export class Fieldstoimport {
 
   private setupMappings() {
     this.mappings = {}; // reset
+    this.selectFields = [];
+
     this.fieldIds.forEach(field => {
       const match = this.excelHeaders.find(
         h => h.name.trim().toLowerCase() === field.fieldName.trim().toLowerCase()
@@ -106,5 +108,27 @@ export class Fieldstoimport {
     if (!this.excelHeaders) return false;
     return this.excelHeaders.some(h => h.name.trim().toLowerCase() === fieldName.trim().toLowerCase());
   }
+
+  getAvailableHeaders(fieldId: string): { name: string, display: string }[] {
+    // Collect headers already in use, except for current field
+    const usedHeaders = Object.entries(this.mappings)
+      .filter(([id, mapped]) => id !== fieldId && mapped !== "None")
+      .map(([_, mapped]) => mapped);
+
+    // Always start with "None"
+    const options: { name: string, display: string }[] = [
+      { name: "None", display: "None" }
+    ];
+
+    // Add headers not already mapped, plus the one currently mapped for this field
+    this.excelHeaders.forEach(h => {
+      if (!usedHeaders.includes(h.name) || this.mappings[fieldId] === h.name) {
+        options.push(h);
+      }
+    });
+
+    return options;
+  }
+
 
 }

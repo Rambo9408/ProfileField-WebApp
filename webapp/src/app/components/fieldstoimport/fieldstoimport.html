@@ -38,7 +38,7 @@
         @if (hasMatch(field.fieldName)) {
         <div class="mapping-input">
             <select class="form-control" [(ngModel)]="mappings[field._id!]">
-                @for (header of excelHeaders; track $index) {
+                @for (header of getAvailableHeaders(field._id!); track $index) {
                 <option [value]="header.name">{{ header.display }}</option>
                 }
             </select>
