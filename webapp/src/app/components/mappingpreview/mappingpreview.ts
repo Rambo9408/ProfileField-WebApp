@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { Header } from "../header/header";
+import { Midheader } from "../midheader/midheader";
 
 @Component({
   selector: 'app-mappingpreview',
-  imports: [],
+  imports: [Header, Midheader],
   templateUrl: './mappingpreview.html',
   styleUrl: './mappingpreview.scss'
 })

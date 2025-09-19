@@ -1,0 +1,51 @@
+:host {
+    display: block;
+    background-color: #3366cc; // Blue background like in screenshot
+    min-height: 100vh;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.profile-page-layout {
+    background-color: #66cc33;
+    margin: 0 auto;
+    border-radius: 14px;
+    padding: 15px;
+    width: 730px;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    // border: 10px solid #7ddc37; // Green border
+}
+
+.app-header {
+    margin: 5px auto;
+    background: white;
+    // margin: 5px 5px 5px 5px;
+    border-radius: 14px;
+    max-width: 1033px;
+}
+
+.header-actions {
+    padding: 0px 7px 5px 7px;
+}
+
+.page-heading {
+    display: flex;
+    padding-left: 10px;
+    align-items: center;
+    gap: 5px;
+}
+
+.page-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+}
