@@ -62,16 +62,22 @@ export class Fieldstoimport {
 
   selectAllFields() {
     this.fieldIds.forEach(field => {
-      this.isSelected[field._id!] = true;
+      if (this.validFieldsForMapping.includes(field.fieldName)) {
+        this.isSelected[field._id!] = true;
+      }
     });
     this.linkText = "Select None";
+    this.updateSelectedFields();
   }
 
   deselectAllFields() {
     this.fieldIds.forEach(field => {
-      this.isSelected[field._id!] = false;
+      if (this.validFieldsForMapping.includes(field.fieldName)) {
+        this.isSelected[field._id!] = false;
+      }
     });
     this.linkText = "Select All";
+    this.updateSelectedFields();
   }
 
   toggleSelection() {
@@ -83,7 +89,10 @@ export class Fieldstoimport {
   }
 
   updateLinkText() {
-    const allSelected = this.fieldIds.every(field => this.isSelected[field._id!]);
+    const validFields = this.fieldIds.filter(field =>
+      this.validFieldsForMapping.includes(field.fieldName)
+    );
+    const allSelected = validFields.every(field => this.isSelected[field._id!]);
     this.linkText = allSelected ? "Select None" : "Select All";
     this.updateSelectedFields();
   }
