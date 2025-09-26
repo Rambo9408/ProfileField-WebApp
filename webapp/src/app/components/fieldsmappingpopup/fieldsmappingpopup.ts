@@ -23,11 +23,16 @@ export class Fieldsmappingpopup {
   ) { }
 
   ngOnInit(): void {
-    console.log("Fieldsmappingpopup data:", this.data);
+    // console.log("Fieldsmappingpopup data:", this.data);
     if (this.data) {
       this.excelHeaders = this.data.excelHeaders || [];
       this.excelData = this.data.excelData || [];
-      this.panels = this.data.panels || [];
+      this.panels = (this.data.panels || []).map((panel: Panelinterface) => ({
+        ...panel,
+        fieldId: panel.fieldId.filter(
+          (field: any) => !this.excelHeaders.some(h => h.name === field.fieldName)
+        )
+      }));
     }
   }
 
